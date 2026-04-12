@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { compilePdf } from '../typst/compiler';
+import { compilePdf } from '@/typst/compiler';
+import { Button } from '@/components/ui/button';
 
 interface ToolbarProps {
   content: string;
@@ -29,11 +30,11 @@ export function Toolbar({ content, template }: ToolbarProps) {
   }
 
   return (
-    <div className="toolbar">
-      <span className="toolbar-title">Typst Editor</span>
-      <button onClick={handleExportPdf} disabled={exporting}>
+    <div className="flex items-center justify-between px-4 py-2 border-b bg-background">
+      <span className="text-sm font-semibold text-foreground">Typst Editor</span>
+      <Button variant="outline" size="sm" onClick={handleExportPdf} disabled={exporting}>
         {exporting ? 'Exporting...' : 'Export PDF'}
-      </button>
+      </Button>
     </div>
   );
 }
