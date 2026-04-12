@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { compileSvg } from '../typst/compiler';
+import { compileSvg } from '@/typst/compiler';
 
 interface TypstCompilerResult {
   svg: string | null;

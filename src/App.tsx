@@ -1,5 +1,4 @@
-import { TypstEditor } from './components/TypstEditor';
-import './App.css';
+import { TypstEditor } from '@/components/TypstEditor';
 
 const TEMPLATE = `\
 #set page(paper: "us-letter", margin: 1in)
