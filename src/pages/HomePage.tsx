@@ -77,7 +77,10 @@ export function HomePage() {
           </Link>
 
           {/* Lore Books */}
-          <div className="md:col-span-4 group bg-surface-container-low rounded-md p-12 flex flex-col justify-between transition-all duration-300 hover:bg-surface-container-high">
+          <Link
+            to="/lore-books"
+            className="md:col-span-4 group bg-surface-container-low rounded-md p-12 flex flex-col justify-between transition-all duration-300 hover:bg-surface-container-high no-underline"
+          >
             <div>
               <span className="material-symbols-outlined text-3xl text-secondary mb-6 block">
                 workspace_premium
@@ -89,11 +92,11 @@ export function HomePage() {
                 Formalize history and legends into readable volumes.
               </p>
             </div>
-            <span className="mt-8 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 hover:gap-3 transition-all">
-              Roll Table
-              <span className="material-symbols-outlined text-lg">casino</span>
+            <span className="mt-8 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 group-hover:gap-3 transition-all">
+              Launch
+              <span className="material-symbols-outlined text-lg">open_in_new</span>
             </span>
-          </div>
+          </Link>
         </div>
       </div>
     </>

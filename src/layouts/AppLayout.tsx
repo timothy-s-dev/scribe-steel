@@ -10,9 +10,7 @@ interface NavItem {
 const mainNav: NavItem[] = [
   { label: 'Monster Cards', icon: 'skull', to: '/', placeholder: true },
   { label: 'Letters and Notes', icon: 'architecture', to: '/letters-and-notes' },
-  { label: 'Lore Books', icon: 'auto_stories', to: '/', placeholder: true },
-  { label: 'Combat Tracker', icon: 'swords', to: '/', placeholder: true },
-  { label: 'Vault', icon: 'inventory_2', to: '/', placeholder: true },
+  { label: 'Lore Books', icon: 'auto_stories', to: '/lore-books' },
   { label: 'Settings', icon: 'settings', to: '/', placeholder: true },
 ];
 

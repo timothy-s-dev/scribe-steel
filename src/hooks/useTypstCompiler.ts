@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { compileSvg } from '@/typst/compiler';
+import { compileSvg, type VirtualFile } from '@/typst/compiler';
 
 interface TypstCompilerResult {
   svg: string | null;
@@ -10,6 +10,8 @@ interface TypstCompilerResult {
 export function useTypstCompiler(
   content: string,
   template: string,
+  files: VirtualFile[] = [],
+  inputs?: Record<string, string>,
 ): TypstCompilerResult {
   const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export function useTypstCompiler(
     timerRef.current = setTimeout(async () => {
       try {
         const source = template + content;
-        const result = await compileSvg(source);
+        const result = await compileSvg(source, files, inputs);
         if (generation !== generationRef.current) return;
         setSvg(result);
         setError(null);
@@ -39,7 +41,7 @@ export function useTypstCompiler(
     }, 300);
 
     return () => clearTimeout(timerRef.current);
-  }, [content, template]);
+  }, [content, template, inputs]);
 
   return { svg, error, loading };
 }
