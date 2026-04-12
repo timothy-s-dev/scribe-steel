@@ -1,24 +1,19 @@
-import { TypstEditor } from '@/components/TypstEditor';
-
-const TEMPLATE = `\
-#set page(paper: "us-letter", margin: 1in)
-#set text(size: 11pt)
-
-`;
-
-const INITIAL_CONTENT = `= Hello, Typst!
-
-This is a live editor with preview.
-
-== Features
-
-- Side-by-side editing
-- Live preview
-- PDF export
-`;
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AppLayout } from '@/layouts/AppLayout';
+import { HomePage } from '@/pages/HomePage';
+import { LettersAndNotesPage } from '@/pages/LettersAndNotesPage';
 
 function App() {
-  return <TypstEditor template={TEMPLATE} initialContent={INITIAL_CONTENT} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="letters-and-notes" element={<LettersAndNotesPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

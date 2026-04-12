@@ -12,13 +12,13 @@ export function TypstEditor({ template, initialContent = '' }: TypstEditorProps)
   const [content, setContent] = useState(initialContent);
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden">
       <Toolbar content={content} template={template} />
       <div className="flex min-h-0 flex-1">
-        <div className="flex-1 min-w-0 overflow-hidden border-r">
+        <div className="flex-1 min-w-0 overflow-hidden">
           <Editor value={content} onChange={setContent} />
         </div>
-        <div className="flex-1 min-w-0 overflow-auto bg-muted/30 p-4">
+        <div className="flex-1 min-w-0 overflow-auto bg-surface-container-low p-6">
           <Preview content={content} template={template} />
         </div>
       </div>
