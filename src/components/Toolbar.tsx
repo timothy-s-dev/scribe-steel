@@ -30,11 +30,15 @@ export function Toolbar({ content, template }: ToolbarProps) {
   }
 
   return (
-    <div className="flex items-center justify-between px-4 py-2 border-b bg-background">
-      <span className="text-sm font-semibold text-foreground">Typst Editor</span>
-      <Button variant="outline" size="sm" onClick={handleExportPdf} disabled={exporting}>
+    <div className="flex items-center justify-between px-4 py-2 bg-surface-container">
+      <span className="text-sm font-semibold font-body text-on-surface">Typst Editor</span>
+      <button
+        onClick={handleExportPdf}
+        disabled={exporting}
+        className="px-4 py-1.5 text-xs font-label font-bold tracking-wide uppercase bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-bright transition-colors disabled:opacity-50"
+      >
         {exporting ? 'Exporting...' : 'Export PDF'}
-      </Button>
+      </button>
     </div>
   );
 }

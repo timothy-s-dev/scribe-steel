@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', '@base-ui/react'],
+    include: ['react', 'react-dom', 'react-router-dom', '@base-ui/react'],
     exclude: [
       '@myriaddreamin/typst-ts-web-compiler',
       '@myriaddreamin/typst-ts-renderer',
