@@ -2,9 +2,9 @@ import { useState, useMemo, useCallback } from 'react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
+import { useAllGroups } from '@/hooks/useAllGroups';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import { getAllMonsters } from '@/data/bestiary';
 import type { Monster } from '@/data/types';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
 
@@ -152,7 +152,8 @@ export function EncounterSheetPage() {
   }, []);
 
   // Auto-fill creature from bestiary
-  const allMonsters = useMemo(() => getAllMonsters(), []);
+  const allGroups = useAllGroups();
+  const allMonsters = useMemo(() => allGroups.flatMap((g) => g.monsters), [allGroups]);
   const fillFromBestiary = useCallback(
     (gid: number, cid: number, monsterName: string) => {
       const m = allMonsters.find((mon) => mon.name === monsterName);
@@ -352,7 +353,7 @@ export function EncounterSheetPage() {
                   <CreatureRow
                     key={c.id}
                     creature={c}
-                    monsters={allMonsters}
+                    monsterGroups={allGroups}
                     onUpdate={(field, value) => updateCreature(g.id, c.id, field, value)}
                     onFill={(name) => fillFromBestiary(g.id, c.id, name)}
                     onRemove={() => removeCreature(g.id, c.id)}
@@ -466,13 +467,13 @@ function AddButton({ onClick, children }: { onClick: () => void; children: React
 
 function CreatureRow({
   creature,
-  monsters,
+  monsterGroups,
   onUpdate,
   onFill,
   onRemove,
 }: {
   creature: CreatureEntry;
-  monsters: Monster[];
+  monsterGroups: { name: string; monsters: Monster[]; custom?: boolean }[];
   onUpdate: (field: keyof CreatureEntry, value: string | number | null) => void;
   onFill: (name: string) => void;
   onRemove: () => void;
@@ -488,17 +489,21 @@ function CreatureRow({
           placeholder="Creature name"
         />
         <select
-          className={`${smallInputClass} w-28 text-xs`}
+          className={`${smallInputClass} w-40 text-xs`}
           value=""
           onChange={(e) => {
             if (e.target.value) onFill(e.target.value);
           }}
         >
           <option value="">Fill from...</option>
-          {monsters.map((m) => (
-            <option key={m.name} value={m.name}>
-              {m.name}
-            </option>
+          {monsterGroups.map((group) => (
+            <optgroup key={group.name} label={`${group.name}${group.custom ? ' (Custom)' : ''}`}>
+              {group.monsters.map((m) => (
+                <option key={m.name} value={m.name}>
+                  {m.name} — L{m.level} {m.role} (EV {m.ev})
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
         <button
