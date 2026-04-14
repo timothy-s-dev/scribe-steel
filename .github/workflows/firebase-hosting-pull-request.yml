@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '25'
-      - run: npm ci && npm run build
+      - run: npm install && npm run build
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
