@@ -1,0 +1,753 @@
+{
+  "factions": [
+    {
+      "name": "Demons",
+      "malice": [
+        {
+          "cost": 3,
+          "name": "Fogburst",
+          "description": "One demon minion suddenly explodes into a burst of Roiling Fog, expanding out to cover the area within 3 squares of them. The fog dissipates after 2 rounds."
+        },
+        {
+          "cost": 7,
+          "name": "Abyssal Evolution",
+          "description": "A demon minion of your choice transforms into a non-minion horde demon of the same level."
+        },
+        {
+          "cost": 7,
+          "name": "Abyssal Rift",
+          "description": "Create 2 anywhere, size 2, spaces in rifts are connected for demons. 25 Stamina, damage immunity 2, holy weakness 5. Magic/Psionics Reason/Intuition test as a maneuver: <11 regains 5 stamina, 12-16 nothing, 17+ closes"
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Pitling",
+          "level": 1,
+          "role": "Minion Artillery",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 3,
+          "size": "1T",
+          "speed": 5,
+          "stamina": 3,
+          "stability": 0,
+          "freeStrike": 2,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": "Fly",
+          "characteristics": {
+            "might": -2,
+            "agility": 2,
+            "reason": -2,
+            "intuition": -2,
+            "presence": -2
+          },
+          "abilities": [
+            {
+              "name": "Spit",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Ranged", "Strike", "Weapon"],
+              "distance": "Ranged 10",
+              "target": "One creature per minion",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "2 poison damage" },
+                { "tier": "12-16", "result": "4 poison damage" },
+                { "tier": "17+", "result": "5 poison damage" }
+              ]
+            }
+          ],
+          "traits": [
+            {
+              "name": "Horrid Stench",
+              "description": "Any enemy who has three or more pitlings within 2 squares of them can't regain Stamina."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the pitling can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Ensnarer",
+          "level": 1,
+          "role": "Minion Brute",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 3,
+          "size": "1M",
+          "speed": 5,
+          "stamina": 5,
+          "stability": 0,
+          "freeStrike": 2,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": null,
+          "characteristics": {
+            "might": 2,
+            "agility": 0,
+            "reason": -1,
+            "intuition": -1,
+            "presence": -1
+          },
+          "abilities": [
+            {
+              "name": "Barbed Tongues",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Melee", "Strike", "Weapon"],
+              "distance": "Melee 3",
+              "target": "One creature or object per minion",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "2 damage; pull 1" },
+                { "tier": "12-16", "result": "4 damage; pull 2" },
+                { "tier": "17+", "result": "5 damage; pull 3" }
+              ],
+              "effect": "If the target is pulled adjacent to the ensnarer, the ensnarer can make a free strike against them."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the ensnarer can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Frenzied",
+          "level": 1,
+          "role": "Minion Harrier",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 3,
+          "size": "1M",
+          "speed": 6,
+          "stamina": 4,
+          "stability": 0,
+          "freeStrike": 1,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 2,
+            "reason": -1,
+            "intuition": -1,
+            "presence": -1
+          },
+          "abilities": [
+            {
+              "name": "Rip and Tear",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Charge", "Melee", "Strike", "Weapon"],
+              "distance": "Melee 1",
+              "target": "One creature or object per minion",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "1 damage" },
+                { "tier": "12-16", "result": "2 damage" },
+                { "tier": "17+", "result": "3 damage" }
+              ]
+            }
+          ],
+          "traits": [
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the frenzied can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Bendrak",
+          "level": 2,
+          "role": "Horde Hexer",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 4,
+          "size": "1L",
+          "speed": 5,
+          "stamina": 15,
+          "stability": 0,
+          "freeStrike": 2,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 1,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 2
+          },
+          "abilities": [
+            {
+              "name": "Warp Perceptions",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Magic", "Ranged", "Strike"],
+              "distance": "Ranged 10",
+              "target": "One creature",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "4 psychic damage" },
+                { "tier": "12-16", "result": "5 psychic damage; P < 1 weakened (save ends)" },
+                { "tier": "17+", "result": "7 psychic damage; P < 2 weakened (save ends)" }
+              ],
+              "effect": "If the target makes a strike while weakened this way, the bendrak can choose a second target within distance for the strike. The first target takes half of any damage from the strike and the second target takes any remaining damage."
+            },
+            {
+              "name": "Vanish",
+              "type": "1 Malice",
+              "action": "Maneuver",
+              "keywords": ["Magic", "Ranged"],
+              "distance": "Ranged 10",
+              "target": "Self or one ally",
+              "effect": "The target is invisible until the start of their next turn. They can then move up to 3 squares and attempt to hide."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Lethe",
+              "description": "While the bendrak is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the bendrak can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Muceron",
+          "level": 3,
+          "role": "Horde Brute",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 5,
+          "size": "1M",
+          "speed": 5,
+          "stamina": 30,
+          "stability": 0,
+          "freeStrike": 3,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": null,
+          "characteristics": {
+            "might": 2,
+            "agility": 2,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 1
+          },
+          "abilities": [
+            {
+              "name": "Barbed Tongues",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Melee", "Strike", "Weapon"],
+              "distance": "Melee 2",
+              "target": "One creature or object",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "5 damage; pull 2" },
+                { "tier": "12-16", "result": "7 damage; pull 3" },
+                { "tier": "17+", "result": "8 damage; pull 4" }
+              ],
+              "effect": "If the target is pulled adjacent to the muceron, the muceron can either make a free strike or use the Grab maneuver against them."
+            },
+            {
+              "name": "Tongue Pull",
+              "type": "2 Malice",
+              "action": "Maneuver",
+              "keywords": ["Ranged", "Strike", "Weapon"],
+              "distance": "Ranged 5",
+              "target": "Three creatures or objects",
+              "effect": "The muceron pulls each target up to 5 squares."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Lethe",
+              "description": "While the muceron is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the muceron can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Remasch",
+          "level": 2,
+          "role": "Horde Ambusher",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 4,
+          "size": "1S",
+          "speed": 5,
+          "stamina": 20,
+          "stability": 0,
+          "freeStrike": 3,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": "Teleport",
+          "characteristics": {
+            "might": 0,
+            "agility": 2,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 2
+          },
+          "abilities": [
+            {
+              "name": "Abyssal Strike",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Magic", "Melee", "Strike", "Weapon"],
+              "distance": "Melee 1",
+              "target": "One creature or object",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "5 damage; the remasch can teleport up to 2 squares" },
+                { "tier": "12-16", "result": "6 damage; the remasch can teleport up to 3 squares" },
+                { "tier": "17+", "result": "8 damage; the remasch can teleport up to 5 squares" }
+              ]
+            },
+            {
+              "name": "Grasping Shadow",
+              "type": "3 Malice",
+              "action": "Maneuver",
+              "keywords": ["Magic"],
+              "distance": "Self",
+              "target": "Self",
+              "effect": "The remasch can teleport up to 2 squares and uses Abyssal Strike."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Lethe",
+              "description": "While the remasch is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the remasch can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Ruinant",
+          "level": 1,
+          "role": "Horde Harrier",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 3,
+          "size": "1M",
+          "speed": 6,
+          "stamina": 15,
+          "stability": 0,
+          "freeStrike": 1,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 2,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 1
+          },
+          "abilities": [
+            {
+              "name": "Bloodletting Claws",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Melee", "Strike", "Weapon"],
+              "distance": "Melee 1",
+              "target": "Two creatures or objects",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "3 damage" },
+                { "tier": "12-16", "result": "4 damage" },
+                { "tier": "17+", "result": "5 damage; M < 2 bleeding (save ends)" }
+              ]
+            },
+            {
+              "name": "Salt Wounds",
+              "type": "3 Malice",
+              "action": "Maneuver",
+              "keywords": ["Magic", "Ranged", "Strike"],
+              "distance": "Ranged 10",
+              "target": "Three creatures",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "1 corruption damage" },
+                { "tier": "12-16", "result": "2 corruption damage" },
+                { "tier": "17+", "result": "3 corruption damage" }
+              ]
+            }
+          ],
+          "traits": [
+            {
+              "name": "Lethe",
+              "description": "While the ruinant is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the ruinant can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Torlas",
+          "level": 1,
+          "role": "Horde Controller",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 3,
+          "size": "1S",
+          "speed": 5,
+          "stamina": 10,
+          "stability": 0,
+          "freeStrike": 1,
+          "immunity": null,
+          "weakness": "Holy 3",
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 1,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 2
+          },
+          "abilities": [
+            {
+              "name": "Floor to Flesh",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Area", "Magic", "Ranged"],
+              "distance": "3 cube within 10",
+              "target": "Each enemy in the area",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "Slide 3" },
+                { "tier": "12-16", "result": "Slide 4" },
+                { "tier": "17+", "result": "Slide 5" }
+              ],
+              "effect": "The ground in the area turns into a morass of spongy flesh before the targets are force moved. Until the start of the torlas's next turn, the area is difficult terrain, and each creature who moves in the area takes 1 damage for each square moved."
+            },
+            {
+              "name": "Grasping Tendons",
+              "action": "Maneuver",
+              "keywords": ["Magic", "Ranged"],
+              "distance": "Ranged 10",
+              "target": "Three creatures",
+              "effect": "The torlas pulls each target up to 3 squares."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Lethe",
+              "description": "While the torlas is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the torlas can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "name": "Chorogaunt",
+          "level": 3,
+          "role": "Leader",
+          "keywords": ["Abyssal", "Demon"],
+          "ev": 20,
+          "size": "1L",
+          "speed": 5,
+          "stamina": 120,
+          "stability": 2,
+          "freeStrike": 5,
+          "immunity": null,
+          "weakness": "Holy 5",
+          "movement": null,
+          "characteristics": {
+            "might": 2,
+            "agility": 2,
+            "reason": 2,
+            "intuition": 2,
+            "presence": 3
+          },
+          "abilities": [
+            {
+              "name": "Agonizing Harmony",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Area", "Weapon"],
+              "distance": "5 burst",
+              "target": "Each enemy in the area",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "4 psychic damage; I < 1 slowed (save ends)" },
+                { "tier": "12-16", "result": "7 psychic damage; I < 2 slowed (save ends)" },
+                { "tier": "17+", "result": "10 psychic damage; I < 3 slowed (save ends)" }
+              ],
+              "effect": "One ally within 10 squares of the chorogaunt shifts up to their speed."
+            },
+            {
+              "name": "Chaotic Entrancing Harmony",
+              "action": "Maneuver",
+              "keywords": ["Area"],
+              "distance": "10 burst",
+              "target": "Each enemy in the area",
+              "effect": "The chorogaunt slides each target up to 3 squares, ignoring stability."
+            },
+            {
+              "name": "I Thrive on Pain",
+              "type": "3 Malice",
+              "action": "Triggered action",
+              "keywords": ["Magic"],
+              "distance": "Self",
+              "target": "Self",
+              "effect": "Any damage from the strike is halved, and the chorogaunt's abilities deal an extra 3 damage until the end of their next turn."
+            },
+            {
+              "name": "Frightening Tones",
+              "type": "Villain Action 1",
+              "action": "-",
+              "keywords": ["Ranged"],
+              "distance": "Ranged 10",
+              "target": "Three enemies",
+              "effect": "Each target must choose between taking 5 psychic damage, or being frightened (save ends)."
+            },
+            {
+              "name": "Bully the Weak",
+              "type": "Villain Action 2",
+              "action": "-",
+              "keywords": ["Magic", "Ranged"],
+              "distance": "Ranged 10",
+              "target": "One ally",
+              "effect": "The chorogaunt kills the target, and each other ally in the encounter deals an extra 3 damage with strikes until the end of the round. The Director gains Malice equal to the number of heroes in the encounter."
+            },
+            {
+              "name": "Running Cacophony",
+              "type": "Villain Action 3",
+              "action": "-",
+              "keywords": ["Magic"],
+              "distance": "Self",
+              "target": "Self",
+              "effect": "The chorogaunt shifts up to their speed, uses Agonizing Harmony, shifts up to their speed, and then uses Agonizing Harmony again."
+            }
+          ],
+          "traits": [
+            {
+              "name": "End Effect",
+              "description": "At the end of each of their turns, the chorogaunt can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            },
+            {
+              "name": "Lethe",
+              "description": "While the chorogaunt is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            },
+            {
+              "name": "Soulsight",
+              "description": "Any creature within 2 squares of the chorogaunt can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Humans",
+      "malice": [
+        {
+          "cost": 3,
+          "name": "Alchemical Device",
+          "description": "Maneuver (non-minion), 3 cube within 10, Power Roll + 0, [4/6/9] corruption damage and A<[0/1/2] slowed (save ends)"
+        },
+        {
+          "cost": 7,
+          "name": "Exploit Opening",
+          "description": "Each human acting this turn gains an edge on abilities until the end of their turn, or has a double edge on any ability that targets an enemy affected by a condition."
+        },
+        {
+          "cost": 7,
+          "name": "Staying Power",
+          "description": "Each non-minion human in the encounter regains Stamina equal to 5 times their level."
+        }
+      ],
+      "monsters": [
+        {
+          "name": "Human Death Acolyte",
+          "level": 1,
+          "role": "Minion Hexer",
+          "keywords": ["Human", "Humanoid"],
+          "ev": 3,
+          "size": "1M",
+          "speed": 5,
+          "stamina": 3,
+          "stability": 0,
+          "freeStrike": 1,
+          "immunity": "Corruption 1, psychic 1",
+          "weakness": null,
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 1,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 2
+          },
+          "abilities": [
+            {
+              "name": "Necrotic Bolt",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Ranged", "Strike", "Weapon"],
+              "distance": "Ranged 10",
+              "target": "One creature or object per minion",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "1 corruption damage" },
+                { "tier": "12-16", "result": "2 corruption damage" },
+                { "tier": "17+", "result": "3 corruption damage" }
+              ],
+              "effect": "One creature within 5 squares regains 1 Stamina."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Supernatural Insight",
+              "description": "The death acolyte ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        },
+        {
+          "name": "Human Death Cultist",
+          "level": 2,
+          "role": "Platoon Support",
+          "keywords": ["Human", "Humanoid"],
+          "ev": 8,
+          "size": "1M",
+          "speed": 5,
+          "stamina": 40,
+          "stability": 0,
+          "freeStrike": 4,
+          "immunity": "Corruption 2, psychic 2",
+          "weakness": null,
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 1,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 2
+          },
+          "abilities": [
+            {
+              "name": "Death Scythe",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Magic", "Melee", "Ranged", "Strike", "Weapon"],
+              "distance": "Melee 1 or ranged 10",
+              "target": "One creature or object",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "6 corruption damage" },
+                { "tier": "12-16", "result": "9 corruption damage" },
+                { "tier": "17+", "result": "12 corruption damage; I < 2 weakened (save ends)" }
+              ]
+            },
+            {
+              "name": "Rise, My Minions",
+              "type": "1 Malice per minion",
+              "action": "Maneuver",
+              "keywords": ["Area"],
+              "distance": "5 burst",
+              "target": "Each dead minion in the area",
+              "effect": "Each target who died during this encounter revives with full Stamina. They immediately die at the end of the encounter or if the death cultist is killed. A target can be revived multiple times by this ability."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Supernatural Insight",
+              "description": "The death cultist ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        },
+        {
+          "name": "Human Guard",
+          "level": 1,
+          "role": "Minion Brute",
+          "keywords": ["Human", "Humanoid"],
+          "ev": 3,
+          "size": "1M",
+          "speed": 5,
+          "stamina": 5,
+          "stability": 0,
+          "freeStrike": 2,
+          "immunity": "Corruption 1, psychic 1",
+          "weakness": null,
+          "movement": null,
+          "characteristics": {
+            "might": 2,
+            "agility": 0,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 0
+          },
+          "abilities": [
+            {
+              "name": "Halberd",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Melee", "Strike", "Weapon"],
+              "distance": "Melee 2",
+              "target": "One creature or object per minion",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "2 damage" },
+                { "tier": "12-16", "result": "4 damage" },
+                { "tier": "17+", "result": "5 damage" }
+              ],
+              "effect": "If the guard is flanked, they can make a free strike against a different target adjacent to them."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Supernatural Insight",
+              "description": "The guard ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        },
+        {
+          "name": "Human Scoundrel",
+          "level": 1,
+          "role": "Platoon Ambusher",
+          "keywords": ["Human", "Humanoid"],
+          "ev": 6,
+          "size": "1M",
+          "speed": 5,
+          "stamina": 30,
+          "stability": 0,
+          "freeStrike": 4,
+          "immunity": "Corruption 1, psychic 1",
+          "weakness": null,
+          "movement": null,
+          "characteristics": {
+            "might": 0,
+            "agility": 2,
+            "reason": 0,
+            "intuition": 0,
+            "presence": 1
+          },
+          "abilities": [
+            {
+              "name": "Rapier and Dagger",
+              "type": "Signature Ability",
+              "action": "Main action",
+              "keywords": ["Melee", "Strike", "Weapon"],
+              "distance": "Melee 1",
+              "target": "One creature or object",
+              "powerRoll": [
+                { "tier": "\u226411", "result": "6 damage" },
+                { "tier": "12-16", "result": "9 damage" },
+                { "tier": "17+", "result": "12 damage" }
+              ]
+            },
+            {
+              "name": "Dagger Storm",
+              "type": "5 Malice",
+              "action": "Main action",
+              "effect": "The scoundrel uses Rapier and Dagger against up to three targets. They shift up to 2 squares before or after each strike."
+            }
+          ],
+          "traits": [
+            {
+              "name": "Supernatural Insight",
+              "description": "The scoundrel ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,11 @@ export function useTypstCompiler(
   const [loading, setLoading] = useState(true);
   const generationRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const filesRef = useRef(files);
+  filesRef.current = files;
+
+  // Stable digest of virtual file contents for dependency tracking
+  const filesDigest = files.map((f) => f.path + '\0' + f.content).join('\n');
 
   useEffect(() => {
     const generation = ++generationRef.current;
@@ -26,7 +31,7 @@ export function useTypstCompiler(
     timerRef.current = setTimeout(async () => {
       try {
         const source = template + content;
-        const result = await compileSvg(source, files, inputs);
+        const result = await compileSvg(source, filesRef.current, inputs);
         if (generation !== generationRef.current) return;
         setSvg(result);
         setError(null);
@@ -41,7 +46,7 @@ export function useTypstCompiler(
     }, 300);
 
     return () => clearTimeout(timerRef.current);
-  }, [content, template, inputs]);
+  }, [content, template, filesDigest, inputs]);
 
   return { svg, error, loading };
 }

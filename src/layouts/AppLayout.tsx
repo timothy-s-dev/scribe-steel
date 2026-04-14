@@ -1,4 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import { SignInButton } from '@/components/SignInButton';
+import { SaveStatusBanner } from '@/components/SaveStatusBanner';
 
 interface NavItem {
   label: string;
@@ -8,7 +10,8 @@ interface NavItem {
 }
 
 const mainNav: NavItem[] = [
-  { label: 'Monster Cards', icon: 'skull', to: '/', placeholder: true },
+  { label: 'Monster Cards', icon: 'skull', to: '/monster-cards' },
+  { label: 'Encounter Sheet', icon: 'swords', to: '/encounter-sheet' },
   { label: 'Letters and Notes', icon: 'architecture', to: '/letters-and-notes' },
   { label: 'Lore Books', icon: 'auto_stories', to: '/lore-books' },
   { label: 'Settings', icon: 'settings', to: '/', placeholder: true },
@@ -72,6 +75,8 @@ export function AppLayout() {
         </nav>
 
         <div className="mt-auto pt-6 flex flex-col gap-y-1">
+          <SignInButton />
+          <div className="my-2" />
           {footerNav.map((item) => (
             <SidebarLink key={item.label} item={item} small />
           ))}
@@ -81,6 +86,7 @@ export function AppLayout() {
       <main className="flex-1 overflow-y-auto custom-scrollbar bg-surface relative">
         <Outlet />
       </main>
+      <SaveStatusBanner />
     </div>
   );
 }

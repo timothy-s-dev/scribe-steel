@@ -30,14 +30,9 @@ export interface VirtualFile {
   content: string;
 }
 
-let registeredFiles = new Set<string>();
-
 async function ensureFiles(files: VirtualFile[]) {
   for (const file of files) {
-    if (!registeredFiles.has(file.path)) {
-      await $typst.addSource(file.path, file.content);
-      registeredFiles.add(file.path);
-    }
+    await $typst.addSource(file.path, file.content);
   }
 }
 
