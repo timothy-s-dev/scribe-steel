@@ -12,6 +12,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { CreatingOverlay } from '@/components/CreatingOverlay';
 
 interface DocumentListProps {
   category: Category;
@@ -111,7 +112,8 @@ export function DocumentList({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4">
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 relative">
+        {creating && <CreatingOverlay />}
         {!isSignedIn ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
             <span className="material-symbols-outlined text-5xl text-on-surface-variant/30">
