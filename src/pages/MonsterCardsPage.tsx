@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
+import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import { getFactions, getAllMonsters } from '@/data/bestiary';
@@ -18,9 +19,10 @@ const CARD_SOURCE = [
 ].join('\n');
 
 export function MonsterCardsPage() {
+  const { settings } = useSettings();
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [printMode, setPrintMode] = useState(false);
-  const zoom = useZoom();
+  const [printMode, setPrintMode] = useState(settings.printFriendly);
+  const zoom = useZoom(settings.defaultZoom);
 
   const factions = getFactions();
 

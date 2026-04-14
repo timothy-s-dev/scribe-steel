@@ -3,6 +3,7 @@ import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
 import { TemplateParamsForm } from '@/components/TemplateParamsForm';
 import { useZoom, type ZoomState } from '@/hooks/useZoom';
+import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import {
@@ -141,10 +142,11 @@ export function TypstEditor({
   hideEditor = false,
   onChange,
 }: TypstEditorProps) {
+  const { settings } = useSettings();
   const [content, setContent] = useState(initialContent);
   const [paramValues, setParamValues] = useState<Record<string, string>>(initialParams);
-  const [printMode, setPrintMode] = useState(false);
-  const zoom = useZoom();
+  const [printMode, setPrintMode] = useState(settings.printFriendly);
+  const zoom = useZoom(settings.defaultZoom);
 
   const preamble = useMemo(
     () => generatePreamble(schema, paramValues),

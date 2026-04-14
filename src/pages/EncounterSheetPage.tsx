@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
+import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import { getAllMonsters } from '@/data/bestiary';
@@ -108,9 +109,10 @@ export function EncounterSheetPage() {
       ],
     },
   ]);
+  const { settings } = useSettings();
   const [notes, setNotes] = useState('');
-  const [printMode, setPrintMode] = useState(false);
-  const zoom = useZoom();
+  const [printMode, setPrintMode] = useState(settings.printFriendly);
+  const zoom = useZoom(settings.defaultZoom);
 
   // Malice handlers
   const addMalice = useCallback(() => setMalice((prev) => [...prev, emptyMalice()]), []);

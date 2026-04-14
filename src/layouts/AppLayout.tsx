@@ -46,7 +46,7 @@ const footerLinks: NavItem[] = [
 ];
 
 const footerActions: NavItem[] = [
-  { label: 'Settings', icon: 'settings', to: '/', placeholder: true },
+  { label: 'Settings', icon: 'settings', to: '/settings' },
 ];
 
 const inactiveClass = 'text-slate-400 font-medium hover:bg-surface-container-low hover:text-primary';

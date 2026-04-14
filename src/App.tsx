@@ -7,6 +7,7 @@ import { LoreBooksPage } from '@/pages/LoreBooksPage';
 import { LoreBooksEditorPage } from '@/pages/LoreBooksEditorPage';
 import { MonsterCardsPage } from '@/pages/MonsterCardsPage';
 import { EncounterSheetPage } from '@/pages/EncounterSheetPage';
+import { SettingsPage } from '@/pages/SettingsPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="letters-and-notes/:fileId" element={<LettersAndNotesEditorPage />} />
           <Route path="lore-books" element={<LoreBooksPage />} />
           <Route path="lore-books/:fileId" element={<LoreBooksEditorPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

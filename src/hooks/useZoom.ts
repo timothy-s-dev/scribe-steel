@@ -16,8 +16,8 @@ export interface ZoomState {
   setPageDimensions: (width: number, height: number) => void;
 }
 
-export function useZoom(): ZoomState {
-  const [mode, setMode] = useState<ZoomMode>('fit-width');
+export function useZoom(initialMode: ZoomMode = 'fit-width'): ZoomState {
+  const [mode, setMode] = useState<ZoomMode>(initialMode);
   const [manualZoom, setManualZoom] = useState(1);
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
