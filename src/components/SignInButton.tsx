@@ -23,7 +23,7 @@ export function SignInButton() {
     return (
       <button
         onClick={signOut}
-        className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full"
+        className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full cursor-pointer"
       >
         <span className="material-symbols-outlined text-lg">cloud_done</span>
         <span className="font-body">Sign Out</span>
@@ -34,7 +34,7 @@ export function SignInButton() {
   return (
     <button
       onClick={signIn}
-      className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full"
+      className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full cursor-pointer"
     >
       <span className="material-symbols-outlined text-lg">cloud_off</span>
       <span className="font-body">Sign in with Google</span>
