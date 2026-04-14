@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { ensureRootFolder } from '@/services/storage';
+import { findFile, readFile, createFile, updateFile } from '@/services/google-drive';
 import type { ZoomMode } from '@/hooks/useZoom';
 
 export interface AppSettings {
@@ -30,8 +32,6 @@ let driveFileId: string | null = null;
 
 async function loadFromDrive(): Promise<AppSettings | null> {
   try {
-    const { ensureRootFolder } = await import('@/services/storage');
-    const { findFile, readFile } = await import('@/services/google-drive');
     const rootId = await ensureRootFolder();
     const fid = await findFile('settings.json', rootId);
     if (fid) {
@@ -44,8 +44,6 @@ async function loadFromDrive(): Promise<AppSettings | null> {
 
 async function saveToDrive(settings: AppSettings) {
   try {
-    const { ensureRootFolder } = await import('@/services/storage');
-    const { findFile, createFile, updateFile } = await import('@/services/google-drive');
     const rootId = await ensureRootFolder();
     if (!driveFileId) {
       driveFileId = await findFile('settings.json', rootId);
