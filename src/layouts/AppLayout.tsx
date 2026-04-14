@@ -101,7 +101,7 @@ export function AppLayout() {
             Scribe Steel
           </h1>
           <p className="font-label text-xs tracking-widest uppercase text-outline opacity-70">
-            The Digital Grimoire
+            Print-Ready Play Aids
           </p>
         </Link>
 
