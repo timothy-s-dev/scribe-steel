@@ -64,8 +64,6 @@ function readOnlyPreambleExtensions(preambleLength: number) {
   });
 
   // Dim the preamble lines
-  const lineDeco = Decoration.line({ class: 'cm-readonly-line' });
-
   const decoField = StateField.define<DecorationSet>({
     create(state) {
       return buildDecos(state, preambleLength);

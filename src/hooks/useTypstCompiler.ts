@@ -17,7 +17,7 @@ export function useTypstCompiler(
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const generationRef = useRef(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const filesRef = useRef(files);
   filesRef.current = files;
 
