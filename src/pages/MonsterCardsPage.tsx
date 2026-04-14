@@ -27,7 +27,7 @@ export function MonsterCardsPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [printMode, setPrintMode] = useState(settings.printFriendly);
   const zoom = useZoom(settings.defaultZoom);
-  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
   const groups = useAllGroups();
 
@@ -59,8 +59,8 @@ export function MonsterCardsPage() {
     [groups],
   );
 
-  const toggleCollapse = useCallback((groupName: string) => {
-    setCollapsed((prev) => {
+  const toggleExpanded = useCallback((groupName: string) => {
+    setExpanded((prev) => {
       const next = new Set(prev);
       if (next.has(groupName)) next.delete(groupName);
       else next.add(groupName);
@@ -138,8 +138,8 @@ export function MonsterCardsPage() {
               key={group.name}
               group={group}
               selected={selected}
-              isCollapsed={collapsed.has(group.name)}
-              onToggleCollapse={() => toggleCollapse(group.name)}
+              isCollapsed={!expanded.has(group.name)}
+              onToggleCollapse={() => toggleExpanded(group.name)}
               onToggleGroup={() => toggleGroup(group.name)}
               onToggleMonster={toggleMonster}
             />
@@ -274,12 +274,12 @@ function GroupPicker({
 
   return (
     <div>
-      <div className="flex items-center gap-1 mb-1">
+      <div className="flex items-center gap-0.5 mb-1">
         <button
           onClick={onToggleCollapse}
-          className="p-0.5 text-on-surface-variant/50 hover:text-on-surface-variant transition-colors cursor-pointer"
+          className="flex items-center justify-center w-5 h-5 text-on-surface-variant/50 hover:text-on-surface-variant transition-colors cursor-pointer"
         >
-          <span className="material-symbols-outlined text-base">
+          <span className="material-symbols-outlined text-base leading-none">
             {isCollapsed ? 'chevron_right' : 'expand_more'}
           </span>
         </button>
@@ -291,7 +291,7 @@ function GroupPicker({
               if (el) el.indeterminate = someChecked && !allChecked;
             }}
             onChange={onToggleGroup}
-            className="accent-primary"
+            className="accent-primary -mt-px"
           />
           <span className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
             {group.name}
