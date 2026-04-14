@@ -7,6 +7,7 @@ interface NavItem {
   icon: string;
   to: string;
   placeholder?: boolean;
+  external?: boolean;
 }
 
 interface NavGroup {
@@ -39,9 +40,9 @@ const mainNav: NavEntry[] = [
 ];
 
 const footerLinks: NavItem[] = [
-  { label: 'Report a Bug', icon: 'bug_report', to: '/' },
-  { label: 'GitHub', icon: 'code', to: '/' },
-  { label: 'Release Notes', icon: 'history', to: '/' },
+  { label: 'Report a Bug', icon: 'bug_report', to: 'https://github.com/timothy-s-dev/scribe-steel/issues/new/choose', external: true },
+  { label: 'GitHub', icon: 'code', to: 'https://github.com/timothy-s-dev/scribe-steel', external: true },
+  { label: 'Release Notes', icon: 'history', to: 'https://github.com/timothy-s-dev/scribe-steel/releases', external: true },
 ];
 
 const footerActions: NavItem[] = [
@@ -56,6 +57,17 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
     'flex items-center gap-3 transition-all duration-200 ease-in-out',
     small ? 'px-4 py-2 text-xs' : indented ? 'pl-8 pr-4 py-2.5 text-sm tracking-wide' : 'px-4 py-3 text-sm tracking-wide',
   ].join(' ');
+
+  if (item.external) {
+    return (
+      <a href={item.to} target="_blank" rel="noopener noreferrer" className={`${base} ${inactiveClass}`}>
+        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`}>
+          {item.icon}
+        </span>
+        <span className="font-body">{item.label}</span>
+      </a>
+    );
+  }
 
   if (item.placeholder || small) {
     return (

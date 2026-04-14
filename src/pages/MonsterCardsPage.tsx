@@ -11,9 +11,6 @@ const TEMPLATE_FILE: VirtualFile = {
   content: monsterCardTyp,
 };
 
-const EMPTY_SOURCE =
-  '#set page(paper: "us-letter")\n#align(center + horizon)[#text(size: 14pt, fill: rgb("#94a3b8"))[Select monsters to generate cards]]';
-
 const CARD_SOURCE = [
   '#import "/templates/monster-card.typ": *',
   '#let _monsters = json("/data/selected-monsters.json")',
@@ -75,7 +72,7 @@ export function MonsterCardsPage() {
     [selectedMonsters, hasSelection],
   );
 
-  const source = hasSelection ? CARD_SOURCE : EMPTY_SOURCE;
+  const source = CARD_SOURCE;
 
   const inputs = useMemo(
     () => ({ print: printMode ? 'true' : 'false' }),
@@ -253,13 +250,21 @@ export function MonsterCardsPage() {
         </div>
 
         <div className="flex-1 min-h-0 overflow-hidden">
-          <Preview
-            content={source}
-            template=""
-            files={files}
-            zoom={zoom}
-            inputs={inputs}
-          />
+          {hasSelection ? (
+            <Preview
+              content={source}
+              template=""
+              files={files}
+              zoom={zoom}
+              inputs={inputs}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full bg-surface-container-low">
+              <p className="text-2xl font-body text-on-surface-variant/70">
+                Select monsters to generate cards
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
