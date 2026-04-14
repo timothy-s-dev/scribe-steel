@@ -28,23 +28,26 @@ interface SavedDocument {
 
 export function LettersAndNotesEditorPage() {
   const { fileId } = useParams<{ fileId: string }>();
+  const isNew = fileId === 'demo';
   const navigate = useNavigate();
   const { load, saveStatus } = useStorage();
   const { isSignedIn, isLoading: authLoading } = useAuth();
-  const [doc, setDoc] = useState<SavedDocument | null>(null);
-  const [docName, setDocName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [doc, setDoc] = useState<SavedDocument | null>(
+    isNew ? { version: 1, template: 'letters-and-notes', params: {}, body: '' } : null,
+  );
+  const [docName, setDocName] = useState(isNew ? 'Untitled' : '');
+  const [loading, setLoading] = useState(!isNew);
   const [error, setError] = useState<string | null>(null);
 
   const { triggerSave } = useAutoSave({
     category: 'letters-and-notes',
     name: docName,
-    fileId: fileId ?? null,
+    fileId: isNew ? null : (fileId ?? null),
   });
 
   // Load document from Drive (wait for auth to be ready)
   useEffect(() => {
-    if (!fileId || authLoading) return;
+    if (isNew || !fileId || authLoading) return;
     if (!isSignedIn) {
       setError('Sign in to load documents');
       setLoading(false);
@@ -59,10 +62,11 @@ export function LettersAndNotesEditorPage() {
       }
       setLoading(false);
     });
-  }, [fileId, load, isSignedIn, authLoading]);
+  }, [fileId, isNew, load, isSignedIn, authLoading]);
 
   // Get the name from the index cache
   useEffect(() => {
+    if (isNew) return;
     try {
       const raw = localStorage.getItem('scribe-steel-index-letters-and-notes');
       if (raw) {
@@ -71,7 +75,7 @@ export function LettersAndNotesEditorPage() {
         if (item) setDocName(item.name);
       }
     } catch { /* ignore */ }
-  }, [fileId]);
+  }, [fileId, isNew]);
 
   const handleChange = useCallback(
     (data: DocumentData) => {

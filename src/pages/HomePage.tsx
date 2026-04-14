@@ -1,6 +1,36 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+
+const tools = [
+  {
+    label: 'Monster Cards',
+    icon: 'skull',
+    to: '/monster-cards',
+    description: 'Pick monsters from the bestiary and generate printable 3x5 index cards with stats, abilities, and traits.',
+  },
+  {
+    label: 'Encounter Sheet',
+    icon: 'swords',
+    to: '/encounter-sheet',
+    description: 'Build a one-page GM reference sheet for running combats — creature groups, malice features, conditions, and notes.',
+  },
+  {
+    label: 'Letters and Notes',
+    icon: 'architecture',
+    to: '/letters-and-notes',
+    description: 'Create handwritten-style props to hand your players — letters, journal entries, mysterious notes.',
+  },
+  {
+    label: 'Lore Books',
+    icon: 'auto_stories',
+    to: '/lore-books',
+    description: 'Formatted in-world documents — histories, religious texts, research notes, anything your players might find on a shelf.',
+  },
+];
 
 export function HomePage() {
+  const { isSignedIn, isConfigured, signIn } = useAuth();
+
   return (
     <>
       {/* Background accents */}
@@ -9,95 +39,59 @@ export function HomePage() {
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-secondary-container rounded-full blur-[160px] opacity-10" />
       </div>
 
-      <div className="max-w-6xl mx-auto px-8 lg:px-12 pt-8 pb-16 relative z-10">
+      <div className="max-w-5xl mx-auto px-8 lg:px-12 pt-8 pb-16 relative z-10">
         {/* Hero */}
-        <header className="mb-20 space-y-6">
+        <header className="mb-16 space-y-6">
           <h2 className="font-headline text-5xl md:text-7xl font-bold tracking-tight text-on-surface leading-[1.1]">
-            What are we forging today?
+            Scribe Steel
           </h2>
-          <p className="text-lg md:text-xl text-outline leading-relaxed font-body">
-            Welcome to your personal digital grimoire. Scribe Steel is a
-            collection of tools for generating handouts and play aides for Draw
-            Steel.
-          </p>
+          <div className="space-y-4 text-lg text-outline leading-relaxed font-body">
+            <p>
+              Printable play aids for <strong className="text-on-surface">Draw Steel</strong> — monster reference cards, encounter sheets, handwritten letters, lore books, and more to come. Everything renders as a live preview and exports to PDF, ready to print.
+            </p>
+            <p className="text-base">
+              Templates are powered by <a href="https://typst.app" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Typst</a>, a modern typesetting language. The editor gives you direct access to the Typst source, so you can tweak layouts beyond what the form controls offer.
+            </p>
+            {isConfigured && !isSignedIn && (
+              <p className="text-base">
+                <button onClick={signIn} className="text-primary hover:underline cursor-pointer font-semibold">Sign in with Google</button> to save your work to Google Drive. You can try out the tools without signing in, but your work won't be saved between sessions.
+              </p>
+            )}
+          </div>
         </header>
 
-        {/* Bento grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Monster Cards — large featured card */}
-          <div className="md:col-span-8 group relative overflow-hidden bg-surface-container-low rounded-md transition-all duration-300 hover:bg-surface-container-high">
-            <div className="relative p-12 flex flex-col h-full justify-between min-h-[400px]">
-              <div>
+        {/* Tool grid */}
+        <section>
+          <h3 className="text-xs font-label font-bold tracking-widest uppercase text-on-surface-variant/50 mb-4">
+            Tools
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {tools.map((tool) => (
+              <Link
+                key={tool.to}
+                to={tool.to}
+                className="group bg-surface-container-low rounded-md p-8 flex flex-col transition-all duration-300 hover:bg-surface-container-high no-underline"
+              >
                 <div className="flex items-center gap-4 mb-4">
-                  <span className="material-symbols-outlined text-4xl text-primary">
-                    skull
+                  <span className="material-symbols-outlined text-3xl text-primary">
+                    {tool.icon}
                   </span>
                   <div className="h-px flex-1 bg-outline-variant/30" />
                 </div>
-                <h3 className="font-headline text-3xl mb-4 text-on-surface">
-                  Monster Cards
-                </h3>
-                <p className="text-outline max-w-md leading-relaxed">
-                  Stat blocks and tactical references for your adversaries.
+                <h4 className="font-headline text-xl mb-2 text-on-surface">
+                  {tool.label}
+                </h4>
+                <p className="text-sm text-outline leading-relaxed flex-1">
+                  {tool.description}
                 </p>
-              </div>
-              <div className="mt-8">
-                <button className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label font-bold tracking-wide rounded-md transition-all hover:translate-x-1">
-                  Open Forge
-                  <span className="material-symbols-outlined">
-                    arrow_forward
-                  </span>
-                </button>
-              </div>
-            </div>
+                <span className="mt-6 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 group-hover:gap-3 transition-all">
+                  Open
+                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                </span>
+              </Link>
+            ))}
           </div>
-
-          {/* Letters and Notes */}
-          <Link
-            to="/letters-and-notes"
-            className="md:col-span-4 group bg-surface-container-low rounded-md p-12 flex flex-col justify-between transition-all duration-300 hover:bg-surface-container-high no-underline"
-          >
-            <div>
-              <span className="material-symbols-outlined text-3xl text-secondary mb-6 block">
-                architecture
-              </span>
-              <h3 className="font-headline text-2xl mb-3 text-on-surface">
-                Letters and Notes
-              </h3>
-              <p className="text-sm text-outline leading-relaxed">
-                Create immersive correspondence and mysterious findings.
-              </p>
-            </div>
-            <span className="mt-8 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 group-hover:gap-3 transition-all">
-              Launch
-              <span className="material-symbols-outlined text-lg">
-                open_in_new
-              </span>
-            </span>
-          </Link>
-
-          {/* Lore Books */}
-          <Link
-            to="/lore-books"
-            className="md:col-span-4 group bg-surface-container-low rounded-md p-12 flex flex-col justify-between transition-all duration-300 hover:bg-surface-container-high no-underline"
-          >
-            <div>
-              <span className="material-symbols-outlined text-3xl text-secondary mb-6 block">
-                workspace_premium
-              </span>
-              <h3 className="font-headline text-2xl mb-3 text-on-surface">
-                Lore Books
-              </h3>
-              <p className="text-sm text-outline leading-relaxed">
-                Formalize history and legends into readable volumes.
-              </p>
-            </div>
-            <span className="mt-8 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 group-hover:gap-3 transition-all">
-              Launch
-              <span className="material-symbols-outlined text-lg">open_in_new</span>
-            </span>
-          </Link>
-        </div>
+        </section>
       </div>
     </>
   );

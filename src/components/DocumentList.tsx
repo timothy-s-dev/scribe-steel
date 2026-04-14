@@ -120,6 +120,12 @@ export function DocumentList({
             <p className="text-sm font-body text-on-surface-variant">
               Sign in with Google to save and manage documents.
             </p>
+            <button
+              onClick={() => navigate(`${basePath}/demo`)}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-label font-bold tracking-wide bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-container hover:text-primary transition-colors cursor-pointer"
+            >
+              Try without saving
+            </button>
           </div>
         ) : loading && items.length === 0 ? (
           <div className="flex items-center justify-center h-full">

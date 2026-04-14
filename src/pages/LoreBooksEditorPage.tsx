@@ -37,23 +37,26 @@ interface SavedDocument {
 
 export function LoreBooksEditorPage() {
   const { fileId } = useParams<{ fileId: string }>();
+  const isNew = fileId === 'demo';
   const navigate = useNavigate();
   const { load, saveStatus } = useStorage();
   const { isSignedIn, isLoading: authLoading } = useAuth();
-  const [doc, setDoc] = useState<SavedDocument | null>(null);
-  const [docName, setDocName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [doc, setDoc] = useState<SavedDocument | null>(
+    isNew ? { version: 1, template: 'lore-books', params: { title: '' }, body: '' } : null,
+  );
+  const [docName, setDocName] = useState(isNew ? 'Untitled' : '');
+  const [loading, setLoading] = useState(!isNew);
   const [error, setError] = useState<string | null>(null);
 
   const { triggerSave } = useAutoSave({
     category: 'lore-books',
     name: docName,
-    fileId: fileId ?? null,
+    fileId: isNew ? null : (fileId ?? null),
   });
 
   // Load document from Drive (wait for auth to be ready)
   useEffect(() => {
-    if (!fileId || authLoading) return;
+    if (isNew || !fileId || authLoading) return;
     if (!isSignedIn) {
       setError('Sign in to load documents');
       setLoading(false);
@@ -68,10 +71,11 @@ export function LoreBooksEditorPage() {
       }
       setLoading(false);
     });
-  }, [fileId, load, isSignedIn, authLoading]);
+  }, [fileId, isNew, load, isSignedIn, authLoading]);
 
   // Get the name from the index cache
   useEffect(() => {
+    if (isNew) return;
     try {
       const raw = localStorage.getItem('scribe-steel-index-lore-books');
       if (raw) {
