@@ -1,0 +1,1010 @@
+{
+  "name": "Time Raiders",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Gravity Well",
+      "icon": "🔳",
+      "keywords": [
+        "Area",
+        "Psionic",
+        "Ranged",
+        "Weapon"
+      ],
+      "usage": "Maneuver",
+      "distance": "5 cube within 3",
+      "target": "Special",
+      "cost": "3",
+      "effects": [
+        {
+          "name": "Effect",
+          "effect": "A time raider acting this turn activates a gravity well in the area. The gravity well sits at the center of the cube and lasts until the end of the encounter, or until a creature adjacent to the well uses a maneuver to deactivate it. The area is difficult terrain for enemies. Any enemy who ends their turn in the area is pulled up to 4 squares toward the well."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Recall Module",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Until the end of the round, each time raider gains a +3 bonus to speed, and can teleport up to their speed as a move action."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Psi-Cage",
+      "icon": "🌀",
+      "cost": "10",
+      "effects": [
+        {
+          "tier1": "10 psychic damage; slowed (EoT)",
+          "tier2": "7 psychic damage; slowed (EoT)",
+          "tier3": "No effect.",
+          "effect": "All time raiders in the encounter collectively create a psionic field over the encounter map, which lasts until the first time raider with the highest Stamina maximum drops to 0 Stamina or chooses to end the field (no action required). While the field is up, each non-time raider on the map makes a **Reason test** against this psionic effect at the start of each round."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Time Raider Archon",
+      "level": 3,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 5,
+      "stamina": 7,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": 2,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 1,
+      "presence": -1,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Brutal Flail",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage; one ally can make a free strike against the target"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The archon doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Armiger",
+      "level": 3,
+      "roles": [
+        "Platoon Defender"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 60,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 0,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Serrated Saber",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage",
+              "tier2": "10 damage",
+              "tier3": "13 damage; R < 2 weakened (save ends)"
+            },
+            {
+              "effect": "A creature weakened this way is also bleeding.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shared Sickness",
+          "icon": "❗️",
+          "keywords": [
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 20",
+          "target": "The triggering creature",
+          "trigger": "A creature deals damage to any ally of the armiger who the armiger has line of effect to.",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 psychic damage; R < 0 5 poison damage",
+              "tier2": "6 psychic damage; R < 1 5 poison damage",
+              "tier3": "9 psychic damage; R < 2 5 poison damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The armiger doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Kuran'zoi Heraldry",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any time raider who starts their turn with line of effect to the armiger can end one condition affecting the."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Cannonfall",
+      "level": 3,
+      "roles": [
+        "Platoon Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 40,
+      "speed": 5,
+      "size": "1L",
+      "stability": 3,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 0,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sunderbuss",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 10",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 sonic damage",
+              "tier2": "7 sonic damage",
+              "tier3": "10 sonic damage; prone; M < 2 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A layer of ground beneath the area that is 1 square deep is destroyed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Buss Buffe",
+          "icon": "❗️",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Free triggered action",
+          "distance": "5 burst",
+          "target": "Self and each ally in the area",
+          "trigger": "A creature damages the cannonfall with a ranged or area ability.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The damage is halved for the cannonfall and each target also affected by the triggering ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight Squared",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The cannonfall doesn't take a bane on strikes against creatures with concealment or cover."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Helix",
+      "level": 3,
+      "roles": [
+        "Platoon Controller"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 40,
+      "speed": 5,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 2,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blaster Volley",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 corruption damage; push 2",
+              "tier2": "8 corruption damage; push 4",
+              "tier3": "11 corruption damage; push 6, prone"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Kinetic Lane",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "4 x 2 line within 10",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The area is a psionically charged treadmill that pushes creatures and objects at high speed in one direction of the helix's choice. Any creature who enters the area or starts their turn there slides 3 squares toward the end of the area in the chosen direction. Each enemy in the area when it first appears takes 3 damage before they slide."
+            },
+            {
+              "effect": "The helix creates a second kinetic lane.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The helix doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Hijack",
+      "level": 3,
+      "roles": [
+        "Platoon Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 50,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 1,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Golden Sickles",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage",
+              "tier2": "11 damage",
+              "tier3": "14 damage; A < 2 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The hijack is hidden from any creature who is bleeding from this ability until that condition ends."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Psi-Sickle",
+          "icon": "🏹",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The hijack psychically latches their sickle onto the target and closes the distance between them. If the target is larger than the hijack, the hijack moves adjacent to the target. Otherwise, the target is pulled up to 4 squares toward the hijack."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The hijack doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Mind Punk",
+      "level": 3,
+      "roles": [
+        "Platoon Hexer"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 40,
+      "speed": 5,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 0,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 1,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Repelling Psihander",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures adjacent to each other",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "8 damage; M < 1 dazed (save ends)",
+              "tier3": "11 damage; M < 2 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target who ends their next turn adjacent to the other target falls prone."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Mindpunk",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Main action",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 psychic damage; R < 0 prone",
+              "tier2": "6 psychic damage; push 1; R < 1 prone and can't stand (save ends)",
+              "tier3": "9 psychic damage; push 2; R < 2 prone and can't stand (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The mind punk doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Myriad",
+      "level": 3,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 5,
+      "stamina": 8,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": 2,
+      "agility": 1,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 1,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fifth Fist",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage; slide 1",
+              "tier2": "5 damage; slide 2",
+              "tier3": "6 damage; slide 3, prone"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The myriad doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Nemesis",
+      "level": 3,
+      "roles": [
+        "Platoon Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 50,
+      "speed": 7,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 1,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 0,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Golden Scythe",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage; pull 1",
+              "tier2": "10 damage; pull 2",
+              "tier3": "13 damage; pull 3; A < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability can target creatures on parallel planes of existence and pull them onto the nemesis's plane."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Kinetic Crush",
+          "icon": "🏹",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 psychic damage; M < 0 slowed (save ends)",
+              "tier2": "10 psychic damage; M < 1 slowed (save ends)",
+              "tier3": "13 psychic damage; M < 2 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any creature slowed this way takes 2 damage for each square they move or are force moved until that condition ends."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The nemesis doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Tyrannis",
+      "level": 3,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 20,
+      "stamina": 120,
+      "speed": 10,
+      "movement": "Hover, teleport",
+      "size": "2",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 3,
+      "reason": 3,
+      "intuition": 1,
+      "presence": 0,
+      "immunities": [
+        "Psychic 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gatling Blaster",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2 or ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 corruption damage",
+              "tier2": "12 corruption damage",
+              "tier3": "15 corruption damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each target takes a −2 penalty to speed until the start of the tyrannis's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Air Raid!",
+          "icon": "🏹",
+          "keywords": [
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Three time raiders",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can fly up to their speed and make a free strike. If a target doesn't land in an unoccupied space, they fall."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Precog Reflexes",
+          "icon": "❗️",
+          "keywords": [
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance makes a strike against the tyrannis.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The strike takes a bane. After the strike resolves, the tyrannis can make a free strike against the target."
+            },
+            {
+              "effect": "The strike has a double bane instead.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the tyrannis can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The tyrannis doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "We Will Won!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "Self and three allies",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target gains 15 temporary Stamina, and has their speed doubled until the end of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Stick to the Plan!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Self and each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can end one effect on them or can move up to their speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Armageddon",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The tyrannis fires a sensor mine into each unoccupied square in the area, and creates a gravity well whose area contains one or more squares of the tyrannis's space (see Gravity Well). Whenever an enemy enters a square with a sensor mine in it, the mine explodes, dealing 3 damage to the enemy."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Time Raider Vertex",
+      "level": 3,
+      "roles": [
+        "Platoon Support"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Time Raider"
+      ],
+      "ev": 10,
+      "stamina": 62,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "2",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 1,
+      "agility": 1,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 0,
+      "immunities": [
+        "Psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Psionic Slam",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage, 2 psychic damage",
+              "tier2": "7 damage, 3 psychic damage",
+              "tier3": "9 damage, 4 psychic damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any power roll made against the target gains an edge until the start of the vertex's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Split Space",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "2 cube within 10",
+          "target": "Special",
+          "cost": "5",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "A portal fills the area, connecting to a location the vertex has experienced on any plane of existence, in person or otherwise. Any creature who enters the portal for the first time in a round or starts their turn there is instantly teleported to any unoccupied space in the portal at the chosen location. The portal lasts until the vertex uses this ability again, dismisses the portal (no action required), or is transported by the portal."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Invigorated March",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Maneuver",
+          "distance": "4 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target shifts up to half their speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Foresight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The vertex doesn't take a bane on strikes against creatures with concealment."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

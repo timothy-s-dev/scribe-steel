@@ -1,0 +1,307 @@
+{
+  "name": "Bredbeddle",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Engreen",
+      "icon": "⭐️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "The bredbeddle's axe lengthens and turns a ghastly green, granting a +1 bonus to the distance of the bredbeddle's melee strikes and the dimensions of their burst area abilities until the end of their turn."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Shadow Stockade",
+      "icon": "🔳",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "A ghostly size 1L stockade seeps out from under the bredbeddle's feet to fill an unoccupied square within 10 squares. When a size 1L or smaller enemy enters the stockade's square, they are restrained (save ends). When a restrained creature is no longer restrained, the stockade fades away. At the start of each of the bredbeddle's turns, they can slide an active stockade and any creature in it up to 5 squares."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Solo Action",
+      "icon": "☠️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "The bredbeddle takes an additional main action on their turn. They can use this feature even if they are dazed."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Green Phantom",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "A phantom second bredbeddle phases into view, appearing in an unoccupied space anywhere on the encounter map, then vanishing at the end of the round. The phantom bredbeddle shares the original bredbeddle's statistics but has 24 Stamina, corruption immunity 10, and can fly. The phantom bredbeddle can take one turn and use any of the bredbeddle's abilities except for villain actions. Only one phantom bredbeddle can be active at a time."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Bredbeddle",
+      "level": 3,
+      "roles": [
+        "Solo"
+      ],
+      "ancestry": [
+        "Bredbeddle",
+        "Giant"
+      ],
+      "ev": 60,
+      "stamina": 300,
+      "speed": 5,
+      "size": "2",
+      "stability": 4,
+      "free_strike": 6,
+      "might": 3,
+      "agility": 0,
+      "reason": -3,
+      "intuition": 2,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Solo Monster",
+          "icon": "☠️",
+          "effects": [
+            {
+              "name": "End Effect",
+              "effect": "At the end of each of their turns, the bredbeddle can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            },
+            {
+              "name": "Solo Turns",
+              "effect": "The bredbeddle can take two turns each round. They can't take turns consecutively."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Heady or Not",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While headless, the bredbeddle can move into a space containing a severed head and attach it to their neck as a main action. Doing so physically transforms the bredbeddle, who takes on the appearance, size, weight, and stability of the head's original owner. If the bredbeddle takes the form of a creature of size 1L or smaller, the distance of their melee and burst area abilities decreases by 1. These effects last until the bredbeddle is killed or beheaded, or until the head falls off after 24 hours. A head that falls off this way can no longer be attached to this bredbeddle.\n\nA creature must succeed on a **hard Might test** made as a maneuver to rip a head off the bredbeddle. If they fail, the bredbeddle can make a free strike against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Resilient Form",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The bredbeddle can't be physically transformed in any way except by their Heady or Not trait."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Executioner's Swing",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "2 damage; A < 1 bleeding (save ends)",
+              "tier2": "4 damage; A < 2 bleeding (save ends)",
+              "tier3": "5 damage; A < 3 bleeding (save ends); M < 2 dazed (save ends)"
+            },
+            {
+              "effect": "The bredbeddle shifts up to 2 squares, and can target additional enemies who come within distance of this ability during the shift.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lop",
+          "icon": "🗡",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage; bleeding (save ends); or if the target has M < 1 they are beheaded",
+              "tier2": "13 damage; bleeding (save ends); or if the target has M < 2 they are beheaded",
+              "tier3": "16 damage; bleeding (save ends); or if the target has M < 3 they are beheaded"
+            },
+            {
+              "name": "Effect",
+              "effect": "A beheaded target has their head fall into an unoccupied square adjacent to the bredbeddle, but they remain alive. While beheaded this way, the target is bleeding and has line of effect only to adjacent squares. The beheaded target can survive without their head for 24 hours, and can reattach their head as a maneuver by entering its square. A target who remains beheaded for 24 hours dies."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Scramble",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "While the bredbeddle is headless, they shift up to their speed. Each time a creature comes adjacent to the bredbeddle during the shift, the bredbeddle can push that creature 1 square. Each square the bredbeddle exits during the shift is difficult terrain."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Headway",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 20",
+          "target": "One creature or object",
+          "cost": "5",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The bredbeddle must have a head in their possession (attached to them or not), which they throw at the target. If the head was attached, the bredbeddle is left headless."
+            },
+            {
+              "roll": 3,
+              "tier1": "9 damage; M < 1 dazed (save ends)",
+              "tier2": "13 damage; prone; M < 2 dazed (save ends)",
+              "tier3": "16 damage; prone; M < 3 dazed (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Envious Imitation",
+          "icon": "❗️",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "A creature targets the bredbeddle with a ranged strike.",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The bredbeddle uses the same ability against the triggering creature after the triggering strike is resolved, using that creature's bonus to any power rolls they make."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Turn Green",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "P < 1 the target turns green (save ends)",
+              "tier2": "P < 2 the target turns green (save ends)",
+              "tier3": "P < 3 the target turns green until the end of the encounter"
+            },
+            {
+              "name": "Effect",
+              "effect": "Green shadows crawl out from under the bredbeddle's feet and turn each target green. The bredbeddle has a double edge on power rolls against any target turned green this way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Challenge",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 5",
+          "target": "One enemy",
+          "effects": [
+            {
+              "tier1": "The target is beheaded (see Lop).",
+              "tier2": "The target makes the test again.",
+              "tier3": "The target can choose to deal 40 damage to the bredbeddle or remove the bredbeddle's head.",
+              "name": "Effect",
+              "effect": "The bredbeddle points at the target and issues them a challenge. If the target refuses, they turn green until the end of the encounter (see Turn Green). If the target accepts the challenge, the bredbeddle shifts adjacent to the target, who makes a **Might test** with no additional modifiers."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Headlam Rampage",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "-",
+          "distance": "Melee 2",
+          "target": "Four creatures",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 damage; bleeding (save ends); or if the target has A < 1 they are beheaded (see Lop).",
+              "tier2": "7 damage; bleeding (save ends); or if the target has A < 2 they are beheaded",
+              "tier3": "8 damage; bleeding (save ends); or if the target has A < 3 they are beheaded"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

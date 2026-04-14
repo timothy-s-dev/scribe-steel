@@ -5,7 +5,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { useAllGroups } from '@/hooks/useAllGroups';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import type { Monster } from '@/data/types';
+import type { Monster, Feature } from '@/data/types';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
 
 const TEMPLATE_FILE: VirtualFile = {
@@ -158,6 +158,7 @@ export function EncounterSheetPage() {
     (gid: number, cid: number, monsterName: string) => {
       const m = allMonsters.find((mon) => mon.name === monsterName);
       if (!m) return;
+      const firstAbility = m.features.find((f: Feature) => f.feature_type === 'ability');
       setGroups((prev) =>
         prev.map((g) =>
           g.id === gid
@@ -171,8 +172,8 @@ export function EncounterSheetPage() {
                         stamina: String(m.stamina),
                         stability: m.stability,
                         speed: m.speed,
-                        freeStrike: String(m.freeStrike),
-                        distance: m.abilities[0]?.distance ?? 'Melee 1',
+                        freeStrike: String(m.free_strike),
+                        distance: firstAbility?.distance ?? 'Melee 1',
                         notes: c.notes,
                         count: c.count,
                       }
@@ -500,7 +501,7 @@ function CreatureRow({
             <optgroup key={group.name} label={`${group.name}${group.custom ? ' (Custom)' : ''}`}>
               {group.monsters.map((m) => (
                 <option key={m.name} value={m.name}>
-                  {m.name} — L{m.level} {m.role} (EV {m.ev})
+                  {m.name} — L{m.level} {m.roles.join(', ')} (EV {m.ev ?? '-'})
                 </option>
               ))}
             </optgroup>

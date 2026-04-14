@@ -1,0 +1,3353 @@
+{
+  "name": "Demons",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Soulburn",
+      "icon": "⭐️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "Each demon acting this turn has a double edge on abilities."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Abyssal Evolution",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "A demon minion of your choice transforms into a non-minion horde demon of the same level."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Abyssal Rift",
+      "icon": "🔳",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "The rift remains open and regains 5 Stamina.",
+          "tier2": "The rift remains open.",
+          "tier3": "The rift closes.",
+          "effect": "Two size 2 rifts to the Abyssal Wasteland appear at locations of your choice. Any demon can use an abyssal rift as a portal to another abyssal rift in the encounter, moving into any space in one rift and appearing immediately in any unoccupied space in the other rift. A non-demon who enters a rift for the first time in a round or starts their turn there takes corruption damage equal to the level of the highest-level demon on the encounter map. An abyssal rift is an immovable object that has 25 Stamina, damage immunity 2, and holy weakness 5. The rift closes when there are no demons remaining on the encounter map. Additionally, a creature who has the Magic or Psionics skill can make a Reason test or Intuition test as a maneuver while adjacent to a rift to destabilize and close it."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Prior Malice Features",
+      "icon": "⭐️",
+      "cost": "3-7",
+      "effects": [
+        {
+          "effect": "The demon activates a Malice feature available to demons of level 9 or lower."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Soul Flense",
+      "icon": "❇️",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "10 corruption damage; the target is soul flensed",
+          "tier2": "The target is soul flensed",
+          "tier3": "No effect.",
+          "effect": "One demon acting this turn unleashes their pent-up agony and pain on every non-demon in a 5 burst. Each target makes a **Presence test**."
+        },
+        {
+          "name": "Effect",
+          "effect": "The demon removes all conditions and effects on themself that can be ended by a saving throw, and transfers all those effects to each creature soul flensed this way."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Prior Malice Features",
+      "icon": "⭐️",
+      "cost": "3-7",
+      "effects": [
+        {
+          "effect": "The demon activates a Malice feature available to demons of level or lower."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Abyssal Jaunt",
+      "icon": "👤",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "One demon acting this turn folds space around them, temporarily slipping in and out of the Abyssal Wasteland. Until the start of the demon's next turn, they ignore difficult terrain, can move through solid matter, and don't provoke opportunity attacks by moving. If the demon ends their turn inside solid matter, they are shunted out into the space from which they entered it."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Prior Malice Features",
+      "icon": "⭐️",
+      "cost": "3-7",
+      "effects": [
+        {
+          "effect": "The demon activates a Malice feature available to demons of level 6 or lower."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Seeping Blight",
+      "icon": "❇️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "One demon acting this turn expels blight—digested soul juice—onto the ground around them in a 3 burst that lingers until the start of their next turn. Any enemy who enters the area or starts their turn there takes 6 corruption damage, and has a double bane on power rolls until the start of their next turn."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Aurumvas",
+      "level": 10,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 48,
+      "stamina": 260,
+      "speed": 8,
+      "movement": "Fly",
+      "size": "3",
+      "stability": 2,
+      "free_strike": 10,
+      "might": 5,
+      "agility": 2,
+      "reason": 5,
+      "intuition": 3,
+      "presence": 5,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Absorb Soul",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever any demon is reduced to 0 Stamina within 10 squares of Aurumvas, the Director gains 1 Malice. Aurumvas loses this trait while he is dazed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Greedy Hands",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "15 corruption damage; R < 4 weakened (save ends)",
+              "tier2": "20 corruption damage; R < 5 weakened (save ends)",
+              "tier3": "24 corruption damage; R < 6 weakened (save ends)"
+            },
+            {
+              "effect": "Aurumvas regains Stamina equal to the damage dealt.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Covetous Bolts",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 20",
+          "target": "Two creatures",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "15 psychic damage; P < 4 dazed (save ends)",
+              "tier2": "20 psychic damage; P < 5 dazed (save ends)",
+              "tier3": "24 psychic damage; P < 6 dazed (save ends)"
+            },
+            {
+              "effect": "While dazed this way, a target can't gain Heroic Resources.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Greed Is Good",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Special",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Aurumvas chooses a supernatural treasure or an item made of gold and teleports to an unoccupied space adjacent to that object, then ends one effect on him that can be ended by a saving throw."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "More... More...",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While Aurumvas is winded, he has a double edge on strikes."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 5 squares of Aurumvas can't be hidden from him."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Time Is Money",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "20 burst",
+          "target": "Self and each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Aurumvas warps time with his abyssal avarice. Each target can teleport up to their speed and make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Hostile Acquisition",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Aurumvas chooses up to three treasures within distance that he has line of effect to and that aren't artifacts. Until the end of the encounter, ethereal golden snakes swirl around the target treasures. While an affected treasure is worn or held by a hero, each time that hero gains any amount of their Heroic Resource, the Director gains 1 Malice."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "No Matter the Cost",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Four 3 cubes within 10",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Aurumvas summons treasures from his vaults into the area, then causes them to explode."
+            },
+            {
+              "roll": 5,
+              "tier1": "10 fire damage; push 1",
+              "tier2": "15 fire damage; push 2",
+              "tier3": "19 fire damage; push 3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bale Eye",
+      "level": 5,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 7,
+      "stamina": 30,
+      "speed": 6,
+      "movement": "Fly",
+      "size": "4",
+      "stability": 2,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 0,
+      "reason": 3,
+      "intuition": 3,
+      "presence": 3,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wilting Visions",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 psychic damage",
+              "tier2": "8 psychic damage",
+              "tier3": "9 psychic damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target has corruption weakness 5 (EoT)."
+            },
+            {
+              "effect": "If the target has I < 2, they have corruption weakness 5 (save ends).",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Demonwarp Tears",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "4 cube within 5",
+          "target": "Each enemy in the area",
+          "cost": "5",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "The bale eye must create the cube beneath themself."
+            },
+            {
+              "roll": 3,
+              "tier1": "3 psychic damage; A < 1 the target is warped (save ends)",
+              "tier2": "5 psychic damage; A < 2 the target is warped (save ends)",
+              "tier3": "6 psychic damage; A < 3 the target is warped (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "While warped, a creature has a double bane on power rolls using any characteristic higher than 0, and has a double edge on power rolls using any characteristic lower than 0."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the bale eye is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 5 squares of the bale eye can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bendrak",
+      "level": 2,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 4,
+      "stamina": 15,
+      "speed": 5,
+      "size": "1L",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Warp Perceptions",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 psychic damage",
+              "tier2": "5 psychic damage; P < 1 weakened (save ends)",
+              "tier3": "7 psychic damage; P < 2 weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the target makes a strike while weakened this way, the bendrak can choose a second target within distance for the strike. The first target takes half of any damage from the strike and the second target takes any remaining damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Vanish",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Self or one ally",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target is invisible until the start of their next turn. They can then move up to 3 squares and attempt to hide."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the bendrak is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the bendrak can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Blight Phage",
+      "level": 7,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 9,
+      "stamina": 40,
+      "speed": 6,
+      "size": "3",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 0,
+      "reason": 4,
+      "intuition": 2,
+      "presence": 4,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blight Pus",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 corruption damage",
+              "tier2": "10 corruption damage",
+              "tier3": "11 corruption damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "A puddle of blight—digested soul juice—covers the ground in the target's square, which is affected as if by Seeping Blight (see the Level 7+ Demon Malice feature)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blight Rain",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 cube within 1",
+          "target": "Each enemy in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "The blight phage must create the cube beneath themself."
+            },
+            {
+              "name": "Effect",
+              "effect": "The blight phage spins and sheds corruptive blight to fill the area, which is treated as if affected by Seeping Blight."
+            },
+            {
+              "effect": "The blight phage chooses three 2 cube areas within 10 squares of the phage. Each area is covered with blight and treated as if affected by Seeping Blight.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the blight phage is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the blight phage can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chimeron",
+      "level": 9,
+      "roles": [
+        "Horde Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 9,
+      "stamina": 90,
+      "speed": 6,
+      "size": "3",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 4,
+      "agility": 0,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Flux Gnash",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "9 cold, fire, or sonic damage",
+              "tier2": "11 cold, fire, or sonic damage",
+              "tier3": "13 cold, fire, or sonic damage; M < 4 bleeding, dazed, or slowed (save ends)"
+            },
+            {
+              "name": "Special",
+              "effect": "After making the power roll, the chimeron decides what damage type the ability deals and which condition it imposes."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Pain Absorption",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The chimeron is targeted by a damage-dealing strike.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The chimeron halves the damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the chimeron is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the chimeron can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chorogaunt",
+      "level": 3,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 20,
+      "stamina": 120,
+      "speed": 5,
+      "size": "1L",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 3,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Agonizing Harmony",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "5 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "4 psychic damage; I < 1 slowed (save ends)",
+              "tier2": "7 psychic damage; I < 2 slowed (save ends)",
+              "tier3": "10 psychic damage; I < 3 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally within 10 squares of the chorogaunt shifts up to their speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Chaotic Entrancing Harmony",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "10 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The chorogaunt slides each target up to 3 squares, ignoring stability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "I Thrive on Pain",
+          "icon": "❗️",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The chorogaunt is targeted by a strike.",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Any damage from the strike is halved, and the chorogaunt's abilities deal an extra 3 damage until the end of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the chorogaunt can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the chorogaunt is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the chorogaunt can't be hidden from them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Frightening Tones",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "Three enemies",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target must choose between taking 5 psychic damage, or being frightened (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bully the Weak",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "One ally",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The chorogaunt kills the target, and each other ally in the encounter deals an extra 3 damage with strikes until the end of the round. The Director gains Malice equal to the number of heroes in the encounter."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Running Cacophony",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The chorogaunt shifts up to their speed, uses Agonizing Harmony, shifts up to their speed, and then uses Agonizing Harmony again."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ensnarer",
+      "level": 1,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 3,
+      "stamina": 5,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+2 bonus to melee distance",
+      "might": 2,
+      "agility": 0,
+      "reason": -1,
+      "intuition": -1,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Barbed Tongues",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 3",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage; pull 1",
+              "tier2": "4 damage; pull 2",
+              "tier3": "5 damage; pull 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the target is pulled adjacent to the ensnarer, the ensnarer can make a free strike against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the ensnarer can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fangling",
+      "level": 4,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 8,
+      "size": "1L",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 3,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tooth! Tusk! Claw!",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "5 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each enemy adjacent to the fangling takes 2 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tumbling Gore",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "8 x 3 line within 1",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage; pull 1; A < 1 bleeding (save ends)",
+              "tier2": "3 damage; pull 1; A < 2 bleeding (save ends)",
+              "tier3": "4 damage; pull 1; A < 3 bleeding (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Made of Teeth",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever an adjacent enemy grabs the fangling or uses a melee ability against the fangling, they take 2 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the fangling is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the fangling can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fiktin",
+      "level": 5,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 7,
+      "stamina": 35,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 3,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Violent Transformation",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 corruption damage",
+              "tier2": "6 corruption damage",
+              "tier3": "7 corruption damage; I < 3 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The fiktin violently changes shape, dealing an extra 6 damage to any target they were hidden from with their Aggressive Mimicry ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Aggressive Mimicry",
+          "icon": "👤",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The fiktin transforms into a mundane object of their size or smaller and is automatically hidden. They can revert to their true form as a free maneuver."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the fiktin is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the fiktin can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Frenzied",
+      "level": 1,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "+2 bonus to speed",
+      "might": 0,
+      "agility": 2,
+      "reason": -1,
+      "intuition": -1,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rip and Tear",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the frenzied can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Grulqin",
+      "level": 4,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 6,
+      "stamina": 9,
+      "speed": 8,
+      "size": "1L",
+      "stability": 1,
+      "free_strike": 3,
+      "with_captain": "+2 damage bonus to strikes",
+      "might": 3,
+      "agility": 2,
+      "reason": -1,
+      "intuition": -1,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spinning Bone Blade",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage",
+              "tier2": "5 damage",
+              "tier3": "7 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The grulqin gains an edge on this ability if they previously moved 3 or more squares in a straight line on their turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the grulqin can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gunge",
+      "level": 4,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 6,
+      "stamina": 25,
+      "speed": 6,
+      "size": "3",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 3,
+      "agility": 2,
+      "reason": 1,
+      "intuition": 2,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bilious Expulsion",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "1 burst, or 3 cube within 5",
+          "target": "One creature or object in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "5 acid damage; M < 1 slowed (save ends)",
+              "tier2": "7 acid damage; M < 2 slowed (save ends)",
+              "tier3": "9 acid damage; M < 3 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The ground and any surfaces in the area pool with slime. The slime is difficult terrain for enemies, and any enemy is bleeding while in the area."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spew Slide",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The gunge takes damage from a melee strike.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The gunge vomits with great force, letting them shift up to their speed and ignore any additional effects from the strike. The space the gunge occupied before the shift is covered in slime that is difficult terrain for enemies. Additionally, any enemy is bleeding while in the slime."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the gunge is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the gunge can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Izyak",
+      "level": 10,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 12,
+      "stamina": 55,
+      "speed": 6,
+      "movement": "Teleport",
+      "size": "2",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 0,
+      "agility": 0,
+      "reason": 5,
+      "intuition": 2,
+      "presence": 4,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Nostalgic Wanderlust",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "9 psychic damage; R < 3 restrained (save ends)",
+              "tier2": "12 psychic damage; R < 4 restrained (save ends)",
+              "tier3": "14 psychic damage; R < 5 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The izyak can slide any target restrained this way up to 3 squares."
+            },
+            {
+              "effect": "The izyak can vertical slide any target restrained this way up to 6 squares instead. A target left in midair doesn't fall until the restrained condition ends.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ruinous Temptation",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "4 cube within 10",
+          "target": "Each enemy in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "4 psychic damage; I < 3 dazed (save ends)",
+              "tier2": "7 psychic damage; I < 4 dazed (save ends)",
+              "tier3": "9 psychic damage; I < 5 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target dazed this way must use a move action to move their speed toward the izyak on their next turn."
+            },
+            {
+              "effect": "The area increases to a 6 cube.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the izyak is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the izyak can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lumbering Egress",
+      "level": 6,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 32,
+      "stamina": 180,
+      "speed": 6,
+      "size": "3",
+      "stability": 3,
+      "free_strike": 7,
+      "might": 4,
+      "agility": -1,
+      "reason": 1,
+      "intuition": 2,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ensnarer Cannon",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "11 corruption damage; A < 2 restrained (save ends)",
+              "tier2": "16 corruption damage; A < 3 restrained (save ends)",
+              "tier3": "19 corruption damage; A < 4 restrained (save ends)"
+            },
+            {
+              "effect": "Two ensnarers appear in unoccupied spaces adjacent to each target. On a tier 3 outcome, four ensnarers appear.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Demonic Egress",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 burst",
+          "target": "Special",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Four level 1 demon minions (most commonly ensnarers, frenzieds, and pitlings) burst forth from the egress and appear in unoccupied spaces in the area."
+            },
+            {
+              "effect": "Four level 4 demon minions (most commonly orliq, grulqins, and wobalas) appear instead.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Abyssal Protectors",
+          "icon": "❗️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "5 burst",
+          "target": "Special",
+          "trigger": "The last ally minion on the encounter map dies, or the egress is reduced below 25 Stamina.",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Eight ensnarers appear anywhere in the area."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the egress can take 10 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Frenzied Deluge",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "Three enemies",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 corruption damage",
+              "tier2": "12 corruption damage",
+              "tier3": "15 corruption damage; two frenzieds appear in unoccupied spaces adjacent to each target"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fold Space",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 20",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The egress folds into their own portal and teleports to an unoccupied space within distance. Four level 4 demon minions (most commonly orliq, grulqins, and wobalas) appear in squares in the egress's former space."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blood of the Abyss",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "10 x 3 line within 1",
+          "target": "Each enemy and object in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "6 corruption damage; R < 2 weakened (save ends)",
+              "tier2": "11 corruption damage; R < 3 weakened (save ends)",
+              "tier3": "14 corruption damage; R < 4 weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The egress recalls and instantly destroys any minion allies on the encounter map. A torrent of churned-up minion bodies, blood, and ichor erupts from the egress, dealing an extra 1 damage for each minion destroyed this way."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Muceron",
+      "level": 3,
+      "roles": [
+        "Horde Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 5,
+      "stamina": 30,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Barbed Tongues",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage; pull 2",
+              "tier2": "7 damage; pull 3",
+              "tier3": "8 damage; pull 4"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the target is pulled adjacent to the muceron, the muceron can either make a free strike or use the Grab maneuver against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tongue Pull",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Three creatures or objects",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The muceron pulls each target up to 5 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the muceron is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the muceron can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Optacus",
+      "level": 10,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 12,
+      "stamina": 14,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 5,
+      "with_captain": "+4 bonus to speed",
+      "might": 1,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 5,
+      "presence": 1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Optical Flare",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 20",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "5 fire damage",
+              "tier2": "8 fire damage",
+              "tier3": "10 fire damage; this damage ignores immunity"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability ignores concealment. A winded target takes an extra 5 damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Orliq",
+      "level": 4,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 6,
+      "stamina": 8,
+      "speed": 6,
+      "movement": "Fly",
+      "size": "1T",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+2 bonus to speed",
+      "might": -1,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 0,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Soul Prism",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "2 corruption damage; slide 2",
+              "tier2": "4 corruption damage; vertical slide 2",
+              "tier3": "6 corruption damage; vertical slide 2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Imposing Energy",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any enemy who starts their turn with two or more orliq adjacent to them is slowed (EoT)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the orliq can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pitling",
+      "level": 1,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 5,
+      "movement": "Fly",
+      "size": "1T",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+2 bonus to speed",
+      "might": -2,
+      "agility": 2,
+      "reason": -2,
+      "intuition": -2,
+      "presence": -2,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spit",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 poison damage",
+              "tier2": "4 poison damage",
+              "tier3": "5 poison damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Horrid Stench",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any enemy who has three or more pitlings within 2 squares of them can't regain Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the pitling can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Remasch",
+      "level": 2,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 4,
+      "stamina": 20,
+      "speed": 5,
+      "movement": "Teleport",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Abyssal Strike",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage; the remasch can teleport up to 2 squares",
+              "tier2": "6 damage; the remasch can teleport up to 3 squares",
+              "tier3": "8 damage; the remasch can teleport up to 5 squares"
+            },
+            {
+              "effect": "The remasch takes an adjacent creature with them when they teleport. The creature appears in an unoccupied space adjacent to the remasch's destination.",
+              "cost": "5"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grasping Shadow",
+          "icon": "👤",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The remasch can teleport up to 2 squares and uses Abyssal Strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the remasch is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the remasch can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ruinant",
+      "level": 1,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bloodletting Claws",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage; M < 2 bleeding (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Salt Wounds",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Three creatures",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "Each target must be at less than full Stamina."
+            },
+            {
+              "roll": 2,
+              "tier1": "1 corruption damage",
+              "tier2": "2 corruption damage",
+              "tier3": "3 corruption damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the ruinant is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the ruinant can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulraker Handmaiden",
+      "level": 8,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon",
+        "Soulraker"
+      ],
+      "ev": 10,
+      "stamina": 50,
+      "speed": 0,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 3,
+      "agility": 0,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 4,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Implanted Parasite",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "A host creature implanted by a soulraker hivequeen's Stinging Ovipositor has no physical or mental signs of the handmaiden gestating inside the host's body.\n\nAfter 1d3 + 1 weeks of gestation, the handmaiden fully forms inside the host. The handmaiden always moves with and occupies the same space as the host and can't be separated from them. While totally within the creature, the handmaiden doesn't have line of effect to the host or targets outside the host and vice versa. As a maneuver, the handmaiden can emerge from the host as a horrifying tower of flesh and bone that remains attached to the host's insides. While emerged, the handmaiden can use a move action to make the host move up to their speed and has access to the host's signature abilities, using the host's modifiers for any power rolls. The handmaiden has the same Stability as the host. If the handmaiden or host is force moved, the other moves with them. While emerged, the handmaiden can be targeted independently of the host. The handmaiden can retreat totally within the host's body as a maneuver. If the handmaiden dies, their remains separate from the host.\nThe Find a Cure downtime project in Draw Steel: Heroes can be used to find a cure that removes a handmaiden from a host. The cure kills the handmaiden when consumed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Emergent Horrors",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "8 corruption damage",
+              "tier2": "11 corruption damage",
+              "tier3": "13 corruption damage; M < 4 frightened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the handmaiden was totally within their host's body at the start of this turn, the ability deals an extra 8 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the handmaiden is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulraker Hivequeen",
+      "level": 9,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon",
+        "Soulraker"
+      ],
+      "ev": 44,
+      "stamina": 240,
+      "speed": 6,
+      "movement": "Fly",
+      "size": "5",
+      "stability": 2,
+      "free_strike": 9,
+      "might": 5,
+      "agility": -1,
+      "reason": 3,
+      "intuition": 3,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Stinging Ovipositor",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "Two creatures",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "14 poison damage; M < 3 bleeding (save ends)",
+              "tier2": "19 poison damage; M < 4 bleeding (save ends)",
+              "tier3": "23 poison damage; M < 5 the target is implanted"
+            },
+            {
+              "name": "Effect",
+              "effect": "An implanted target has a soulraker handmaiden parasite gestating in them (see the handmaiden's Implanted Parasite trait)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Forced Gestation",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "10 burst",
+          "target": "Each implanted handmaiden parasite in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The hivequeen lets loose a subsonic call to each target, forcing them to immediately emerge from their host's body as a mature soulraker handmaiden and make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "For the Queen!",
+          "icon": "❗️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Triggered action",
+          "distance": "5 burst",
+          "target": "Special",
+          "trigger": "The hivequeen is targeted by a strike for the second time on an attacker's turn, whether by the attacker or another creature acting on the attacker's turn.",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Two soulraker minions appear within distance."
+            },
+            {
+              "effect": "A soulraker praetorian also appears within distance.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Cannibal Queen",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of their turn, the hivequeen can consume an adjacent soulraker demon to end one effect on them that can be ended by a saving throw (no action required)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Hive Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of a soulraker demon within 100 miles of the hivequeen can't be hidden from the hivequeen. The hivequeen has line of effect to such creatures."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Kicking the Nest",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each soulraker minion in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can move their speed and make a free strike. If no minions are present, four soulraker minions are summoned into unoccupied spaces within distance before the hivequeen uses this villain action."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Buzz Off!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "Push 3; I < 3 dazed (save ends)",
+              "tier2": "Push 3; I < 4 dazed (save ends)",
+              "tier3": "11 sonic damage; push 3; I < 5 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The hivequeen shifts up to her speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bomber Wasp Warfare",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Four 2 cubes within 10",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 poison damage; M < 3 bleeding (save ends)",
+              "tier2": "11 poison damage; M < 4 bleeding (save ends)",
+              "tier3": "14 poison damage; M < 5 bleeding (save ends)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulraker Praetorian",
+      "level": 7,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon",
+        "Soulraker"
+      ],
+      "ev": 9,
+      "stamina": 45,
+      "speed": 8,
+      "size": "1L",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 4,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 0,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Barbed Stinger",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 poison damage; push 2",
+              "tier2": "10 poison damage; push 2",
+              "tier3": "11 poison damage; push 4; A < 4 grabbed"
+            },
+            {
+              "name": "Effect",
+              "effect": "The praetorian can shift into each square the target leaves."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Stinging Departure",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "The triggering creature",
+          "trigger": "A creature ends the praetorian's grab.",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The praetorian makes a free strike against the target, breaks off part of their stinger in the target, and shifts up to half their speed. The target is bleeding until they remove the stinger fragment as a free maneuver, taking 6 damage in the process."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the praetorian is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Praetorian Buzzing",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature who starts their turn with two or more praetorians adjacent to them takes 6 sonic damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulraker Scout",
+      "level": 7,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon",
+        "Soulraker"
+      ],
+      "ev": 9,
+      "stamina": 12,
+      "speed": 7,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "Gain an edge on strikes",
+      "might": 2,
+      "agility": 4,
+      "reason": 1,
+      "intuition": 0,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Soul Stinger",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "3 poison damage",
+              "tier2": "6 poison damage; the scout can shift 1 square",
+              "tier3": "7 poison damage; the scout shifts up to 3 squares"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Abyssal Buzzing",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any enemy who starts their turn with two or more soulraker minions adjacent to them takes 3 sonic damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulraker Soldier",
+      "level": 7,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon",
+        "Soulraker"
+      ],
+      "ev": 9,
+      "stamina": 13,
+      "speed": 6,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 4,
+      "with_captain": "Gain an edge on strikes",
+      "might": 4,
+      "agility": 2,
+      "reason": -1,
+      "intuition": -1,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Chitin Bash",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 damage; push 2",
+              "tier2": "7 damage; push 2",
+              "tier3": "8 damage; push 4"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Abyssal Buzzing",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any enemy who starts their turn with two or more soulraker minions adjacent to them takes 3 sonic damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulraker Stinger",
+      "level": 7,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon",
+        "Soulraker"
+      ],
+      "ev": 9,
+      "stamina": 10,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": -1,
+      "reason": 4,
+      "intuition": 4,
+      "presence": 0,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Barb Launch",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 20",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 poison damage",
+              "tier2": "7 poison damage",
+              "tier3": "8 poison damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "All soulraker demons have concealment from the target until the start of the stinger's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Abyssal Buzzing",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any enemy who starts their turn with two or more soulraker minions adjacent to them takes 3 sonic damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Styrich",
+      "level": 8,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 10,
+      "stamina": 45,
+      "speed": 6,
+      "size": "1L",
+      "stability": 1,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 4,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 0,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Hair Whip",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 4",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 damage; pull 1",
+              "tier2": "10 damage; pull 2, grabbed",
+              "tier3": "12 damage; pull 3, grabbed"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target restrained by the styrich's Tangled Nest ability can be pulled the distance determined by the power roll."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tangled Nest",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "4 burst",
+          "target": "Each enemy in the area",
+          "cost": "5",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "A < 2 slowed (save ends)",
+              "tier2": "Slowed (EoT) or A < 3 3 damage and restrained (EoT)",
+              "tier3": "Restrained (EoT) or A < 4 3 damage and restrained (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the styrich is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the styrich can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Torlas",
+      "level": 1,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 3,
+      "stamina": 10,
+      "speed": 5,
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Floor to Flesh",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 10",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "Slide 3",
+              "tier2": "Slide 4",
+              "tier3": "Slide 5"
+            },
+            {
+              "name": "Effect",
+              "effect": "The ground in the area turns into a morass of spongy flesh before the targets are force moved. Until the start of the torlas's next turn, the area is difficult terrain, and each creature who moves in the area takes 1 damage for each square moved."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grasping Tendons",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Three creatures",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The torlas pulls each target up to 3 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the torlas is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the torlas can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tormenauk",
+      "level": 6,
+      "roles": [
+        "Horde Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 8,
+      "stamina": 45,
+      "speed": 6,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 4,
+      "might": 3,
+      "agility": 0,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 2,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Many Maws",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "7 damage",
+              "tier2": "9 damage",
+              "tier3": "11 damage; grabbed, and the target takes a bane on the Escape Grab maneuver"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target grabbed this way takes 4 psychic damage at the start of each of the tormenauk's turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Agony Wail",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "cost": "5",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "4 psychic damage; I < 1 dazed (save ends)",
+              "tier2": "6 psychic damage; I < 2 dazed (save ends)",
+              "tier3": "8 psychic damage; I < 3 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The potency increases by 1 if the target is grabbed by the tormenauk."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the tormenauk is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the tormenauk can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tyburaki",
+      "level": 10,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 12,
+      "stamina": 15,
+      "speed": 8,
+      "movement": "Swim",
+      "size": "2",
+      "stability": 0,
+      "free_strike": 4,
+      "with_captain": "+4 damage bonus to strikes",
+      "might": 2,
+      "agility": 5,
+      "reason": 0,
+      "intuition": 3,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tail Bite",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 3",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "4 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The tyburaki can make a free strike against each enemy adjacent to the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Breacher",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While swimming, the tyburaki can jump 5 squares as part of their movement."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the tyburaki can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Unguloid",
+      "level": 10,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 12,
+      "stamina": 17,
+      "speed": 8,
+      "size": "2",
+      "stability": 3,
+      "free_strike": 5,
+      "with_captain": "Have a double edge on strikes",
+      "might": 5,
+      "agility": 5,
+      "reason": -1,
+      "intuition": -1,
+      "presence": -1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gore Horn",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "5 damage; push 2",
+              "tier2": "8 damage; push 4",
+              "tier3": "10 damage; push 6"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this ability is used as part of a charge for which the unguloid moves 2 squares or more, it deals an extra 10 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the unguloid can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vicisitator",
+      "level": 10,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 12,
+      "stamina": 60,
+      "speed": 9,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 4,
+      "agility": 5,
+      "reason": -1,
+      "intuition": -2,
+      "presence": -3,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Warp Touch",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "9 damage",
+              "tier2": "12 damage",
+              "tier3": "14 damage; I < 5 the target is slowed and weakened (save ends)"
+            },
+            {
+              "name": "Special",
+              "effect": "The effects of being slowed and weakened this way can't be ignored."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Soul Flay",
+          "icon": "🔳",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "6 x 3 line within 1",
+          "target": "Each enemy in the area",
+          "cost": "5",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "4 psychic damage; P < 3 bleeding (save ends)",
+              "tier2": "7 psychic damage; P < 4 bleeding (save ends)",
+              "tier3": "9 psychic damage; P < 5 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any creature who is bleeding from this ability loses 2d6 Stamina instead of 1d6."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lethe",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While the vicisitator is winded, they gain an edge on strikes, and any strike made against them gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Soulsight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 2 squares of the vicisitator can't be hidden from them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wobalas",
+      "level": 4,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Abyssal",
+        "Demon"
+      ],
+      "ev": 6,
+      "stamina": 7,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+2 damage bonus to strikes",
+      "might": 1,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 2,
+      "presence": 1,
+      "weaknesses": [
+        "Holy 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Despair Bolt",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 20",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 psychic damage",
+              "tier2": "5 psychic damage",
+              "tier3": "7 psychic damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target takes a bane on their next strike. If the target is winded, they have a double bane on their next strike instead."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

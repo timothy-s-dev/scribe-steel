@@ -58,7 +58,7 @@ export function MonsterGroupsPage() {
 
     const preset = copyFrom ? presetGroups.find((g) => g.name === copyFrom) : null;
     const doc: SavedMonsterGroup = {
-      version: 1,
+      version: 2,
       name,
       malice: preset ? structuredClone(preset.malice) : [],
       monsters: [],

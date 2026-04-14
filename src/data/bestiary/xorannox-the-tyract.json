@@ -1,0 +1,714 @@
+{
+  "name": "Xorannox the Tyract",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Gas Belch",
+      "icon": "❇️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "Xorannox lets out a noxious belch. Each enemy within 2 squares of him who has M < 3 is weakened (save ends)."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Slime Trail",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Until the end of Xorannox's next turn, whenever he or any of his eyes leave their space, they secrete a viscous slime onto the ground in that area. Any enemy who enters an affected square has lightning weakness 5 and fire weakness 5 until the end of the encounter."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Solo Action",
+      "icon": "☠️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Xorannox takes an additional main action on his turn. He can use this feature even if he is dazed."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Mind Over Matter",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "Xorannox fills the encounter map with a powerful telekinetic field. The Director chooses a cardinal direction (north, south, east, or west). Whenever a creature in the encounter willingly moves or is force moved, they are pulled 2 squares in the chosen direction, ignoring stability. Each time this feature is used, its previous effect ends."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Compulsion Eye",
+      "level": 6,
+      "roles": [
+        "Controller"
+      ],
+      "ancestry": [
+        "Eyestalk",
+        "Horror",
+        "Overmind"
+      ],
+      "ev": null,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 1,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Compulsion Beam",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 6",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "I < 2 the target is charmed",
+              "tier2": "I < 3 the target is charmed",
+              "tier3": "I < 4 the target is charmed"
+            },
+            {
+              "name": "Effect",
+              "effect": "As a free triggered action, a charmed target immediately moves up to their speed and can make a free strike against an enemy of Xorannox's choice. The target is then no longer charmed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Psionic Barrier",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The compulsion eye has damage immunity 15. When they use a main action, they lose this immunity until the end of the round."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Demolition",
+      "level": 6,
+      "roles": [
+        "Artillery"
+      ],
+      "ancestry": [
+        "Eyestalk",
+        "Horror",
+        "Overmind"
+      ],
+      "ev": null,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 1,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Explosion",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "4 cube within 10",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "6 fire damage",
+              "tier2": "10 fire damage; M < 3 prone",
+              "tier3": "13 fire damage; M < 4 prone"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Psionic Barrier",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The demolition eye has damage immunity 15. When they use a main action, they lose this immunity until the end of the round."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mover Eye",
+      "level": 6,
+      "roles": [
+        "Controller"
+      ],
+      "ancestry": [
+        "Eyestalk",
+        "Horror",
+        "Overmind"
+      ],
+      "ev": null,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 1,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Telekinetic Beam",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 6",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "11 damage; slide 4",
+              "tier2": "17 damage; slide 5",
+              "tier3": "20 damage; slide 6"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Psionic Barrier",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The mover eye has damage immunity 15. When they use a main action, they lose this immunity until the end of the round."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Necrotic Eye",
+      "level": 6,
+      "roles": [
+        "Hexer"
+      ],
+      "ancestry": [
+        "Eyestalk",
+        "Horror",
+        "Overmind"
+      ],
+      "ev": null,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 1,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Necro Beam",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "11 corruption damage",
+              "tier2": "17 corruption damage; M < 3 bleeding (save ends)",
+              "tier3": "20 corruption damage; M < 4 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this damage or the Stamina loss from bleeding this way reduces a target creature's Stamina to 0, that creature dies."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Psionic Barrier",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The necrotic eye has damage immunity 15. When they use a main action, they lose this immunity until the end of the round."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Toxic Eye",
+      "level": 6,
+      "roles": [
+        "Hexer"
+      ],
+      "ancestry": [
+        "Eyestalk",
+        "Horror",
+        "Overmind"
+      ],
+      "ev": null,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 1,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Toxic Vapors",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "4 cube within 10",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "6 poison damage",
+              "tier2": "10 poison damage; M < 3 weakened (save ends)",
+              "tier3": "13 poison damage; M < 4 weakened (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Psionic Barrier",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The toxic eye has damage immunity 15. When they use a main action, they lose this immunity until the end of the round."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Xorannox the Tyract",
+      "level": 6,
+      "roles": [
+        "Solo"
+      ],
+      "ancestry": [
+        "Horror",
+        "Overmind"
+      ],
+      "ev": 96,
+      "stamina": 450,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "3",
+      "stability": 2,
+      "free_strike": 7,
+      "might": 4,
+      "agility": 2,
+      "reason": 4,
+      "intuition": 3,
+      "presence": 3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Solo Monster",
+          "icon": "☠️",
+          "effects": [
+            {
+              "name": "End Effect",
+              "effect": "At the end of each of his turns, Xorannox can take 10 damage to end one effect on him that can be ended by a saving throw. This damage can't be reduced in any way."
+            },
+            {
+              "name": "Solo Turns",
+              "effect": "Xorannox can take two turns each round. He can't take turns consecutively."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Eyes of the Tyract",
+          "icon": "🌀",
+          "effects": [
+            {
+              "effect": "Six unique eyestalks float around Xorannox, acting on his turn at his command until they are reduced to 0 Stamina. On each of Xorannox's turns, he directs one eyestalk to move and use a signature ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Toothful Thrashing",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "12 damage; slide 2; M < 2 bleeding (EoT)",
+              "tier2": "20 damage; slide 3; M < 3 bleeding (EoT)",
+              "tier3": "23 damage; vertical slide 3; M < 4 bleeding (EoT)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grav Spike",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "Vertical push 3",
+              "tier2": "Vertical push 5",
+              "tier3": "Vertical push 7"
+            },
+            {
+              "name": "Effect",
+              "effect": "Xorannox shifts up to his speed before or after using this ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Optical Collusion",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Xorannox commands all his eyestalks to move up to their speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shutout",
+          "icon": "🔳",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 x 2 line within 1",
+          "target": "Special",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Xorannox ends all ongoing supernatural effects and suppresses supernatural effects from treasures in the area. New supernatural effects can't be activated in the area until the end of Xorannox's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Cower!",
+          "icon": "❗️",
+          "keywords": [
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance deals damage to Xorannox.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has I < 3 they are frightened (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Above It All",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Xorannox can't be made frightened or knocked prone, and he can't be flanked."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Natural Enemies",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If Xorannox perceives another overmind or a voiceless talker on the encounter map, he targets that threat one or more times on each of his turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Disruption Beam",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "Three creatures",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "11 psychic damage; R < 2 dazed (save ends)",
+              "tier2": "17 psychic damage; R < 3 dazed (save ends)",
+              "tier3": "20 psychic damage; R < 4 dazed (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "All Eyes, All Rise",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "-"
+          ],
+          "usage": "-",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Xorannox recreates any destroyed eyestalks, which return in unoccupied spaces on the encounter map with full Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Panoptibeam",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Xorannox directs each of his eyestalks to use a signature ability against any target."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Zapper Eye",
+      "level": 6,
+      "roles": [
+        "Artillery"
+      ],
+      "ancestry": [
+        "Eyestalk",
+        "Horror",
+        "Overmind"
+      ],
+      "ev": null,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 1,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lightning Beam",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Main action",
+          "distance": "10 x 1 line within 1",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "6 lightning damage",
+              "tier2": "10 lightning damage",
+              "tier3": "13 lightning damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each target loses all their surges."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Psionic Barrier",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The zapper eye has damage immunity 15. When they use a main action, they lose this immunity until the end of the round."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Gas Belch",
+          "icon": "❇️",
+          "cost": "3",
+          "effects": [
+            {
+              "effect": "Xorannox lets out a noxious belch. Each enemy within 2 squares of him who has M < 3 is weakened (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Slime Trail",
+          "icon": "⭐️",
+          "cost": "5",
+          "effects": [
+            {
+              "effect": "Until the end of Xorannox's next turn, whenever he or any of his eyes leave their space, they secrete a viscous slime onto the ground in that area. Any enemy who enters an affected square has lightning weakness 5 and fire weakness 5 until the end of the encounter."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Solo Action",
+          "icon": "☠️",
+          "cost": "5",
+          "effects": [
+            {
+              "effect": "Xorannox takes an additional main action on his turn. He can use this feature even if he is dazed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Mind Over Matter",
+          "icon": "🌀",
+          "cost": "7",
+          "effects": [
+            {
+              "effect": "Xorannox fills the encounter map with a powerful telekinetic field. The Director chooses a cardinal direction (north, south, east, or west). Whenever a creature in the encounter willingly moves or is force moved, they are pulled 2 squares in the chosen direction, ignoring stability. Each time this feature is used, its previous effect ends."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

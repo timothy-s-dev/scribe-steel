@@ -1,0 +1,4609 @@
+{
+  "name": "War Dogs",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Reconstitute",
+      "icon": "👤",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "One war dog acting this turn tears apart a nearby corpse of a humanoid and incorporates its body parts into their own. The war dog regains Stamina equal to 5 times their level."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Fire for Effect",
+      "icon": "🔳",
+      "keywords": [
+        "Area",
+        "Magic",
+        "Ranged"
+      ],
+      "usage": "Maneuver",
+      "distance": "4 cube within 10",
+      "target": "Each creature in the area",
+      "cost": "5",
+      "effects": [
+        {
+          "tier1": "5 fire damage; slowed or weakened (save ends)",
+          "tier2": "5 fire damage; slowed or weakened (EoT)",
+          "tier3": "5 fire damage",
+          "name": "Effect",
+          "effect": "Each target makes an **Agility test**. The same condition is imposed on each affected target."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Fodder Run",
+      "icon": "⭐️",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "Each war dog minion in the encounter shifts up to their speed and can make a free strike. A minion who does so is then reduced to 0 Stamina."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Prior Malice Features",
+      "icon": "⭐️",
+      "cost": "3-7",
+      "effects": [
+        {
+          "effect": "The war dog activates a Malice feature available to war dogs of level 9 or lower."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Cry Havoc",
+      "icon": "❇️",
+      "keywords": [
+        "Area",
+        "Magic"
+      ],
+      "usage": "Maneuver",
+      "distance": "3 burst",
+      "target": "Each enemy in the area",
+      "cost": "7",
+      "effects": [
+        {
+          "roll": 5,
+          "tier1": "7 psychic damage",
+          "tier2": "11 psychic damage; P < 4 frightened (save ends)",
+          "tier3": "14 psychic damage; P < 5 frightened (save ends)"
+        },
+        {
+          "name": "Effect",
+          "effect": "Each war dog within distance deals an extra 15 damage with strikes until the end of their next turn. Additionally, they end any effect on them that can be ended by a saving throw or that ends at the end of their turn, then shift up to their speed and can make a free strike."
+        },
+        {
+          "name": "Special",
+          "effect": "This ability can't be used by a minion."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Prior Malice Features",
+      "icon": "⭐️",
+      "cost": "3-7",
+      "effects": [
+        {
+          "effect": "The war dog activates a Malice feature available to war dogs of level 3 or lower."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Loyalty Unto Death",
+      "icon": "🏹",
+      "keywords": [
+        "Magic",
+        "Ranged"
+      ],
+      "usage": "Maneuver",
+      "distance": "Ranged 10",
+      "target": "Two war dogs",
+      "cost": "5",
+      "effects": [
+        {
+          "tier1": "Push 4; the enemy is frightened of the nearest non-minion war dog (save ends)",
+          "tier2": "Push 2; the enemy is frightened of the nearest non-minion war dog (EoT)",
+          "tier3": "Push 2",
+          "name": "Effect",
+          "effect": "Each target who has a loyalty collar shifts up to their speed, then is reduced to 0 Stamina. After each target's Loyalty Collar trait is resolved, each enemy adjacent to either target makes a Presence test."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Prior Malice Features",
+      "icon": "⭐️",
+      "cost": "3-7",
+      "effects": [
+        {
+          "effect": "The war dog activates a Malice feature available to war dogs of level 6 or lower."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Alchemical Cloud",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "8 poison damage; dazed (EoT)",
+          "tier2": "7 poison damage; weakened (EoT)",
+          "tier3": "4 poison damage",
+          "effect": "A bank of choking chemicals sweeps across the area of the encounter map. Each enemy in the encounter makes a Might test."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Castellan Hoplon",
+      "level": 10,
+      "roles": [
+        "Elite Defender"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 48,
+      "stamina": 260,
+      "speed": 5,
+      "size": "1M",
+      "stability": 3,
+      "free_strike": 10,
+      "might": 5,
+      "agility": 2,
+      "reason": 4,
+      "intuition": 3,
+      "presence": 4,
+      "immunities": [
+        "Damage 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Inspiring Strike",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "15 damage",
+              "tier2": "20 damage; push 3",
+              "tier3": "24 damage; push 5"
+            },
+            {
+              "name": "Effect",
+              "effect": "Two allies within 10 squares of Hoplon each shift up to their speed, then can take the Defend main action or make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Summon the Onyx Tower",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 15",
+          "target": "Special",
+          "cost": "5",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "A 10-square-tall tower made of black stone shimmers into being in an unoccupied space that is 5 squares on a side. The tower has three floors, an entrance in the middle of each side on the ground floor, and a crenelated rooftop. Any war dog inside or adjacent to the tower has damage immunity 2 and regains 5 Stamina at the start of each of their turns, and war dogs inside the tower can observe through and have line of effect through its walls. This ability can be used only once per encounter."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shield Warden",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "R < 3 taunted (EoT)",
+              "tier2": "R < 4 taunted (EoT)",
+              "tier3": "R < 5 taunted (EoT)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Until the start of Hoplon's next turn, any enemy ability that includes him as a target takes a bane."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Timely Intervention",
+          "icon": "❗️",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "An enemy within 10 squares targets an ally with an ability.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Hoplon teleports to an unoccupied space adjacent to the enemy and becomes the new target of the ability. He can then make a free strike against the enemy, and if that enemy has R < 4 they are taunted until the end of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Hold the Line",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Each ally within 3 squares of Hoplon has cover and damage immunity 2."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Last Stand",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The first time in an encounter that Hoplon is reduced to 0 Stamina, he instead has 1 Stamina and gains damage immunity 10 until the end of his next turn. When Hoplon is reduced to 0 Stamina again, each ally within 5 squares of him gains damage immunity 3 and deals an extra 5 damage on strikes, all until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Iron Champion Doru",
+      "level": 10,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 48,
+      "stamina": 260,
+      "speed": 5,
+      "size": "1L",
+      "stability": 2,
+      "free_strike": 10,
+      "might": 5,
+      "agility": 4,
+      "reason": 1,
+      "intuition": 4,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Houndaxe",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "15 damage",
+              "tier2": "21 damage; Doru gains an edge on his next power roll; M < 4 slide 3",
+              "tier3": "25 damage; Doru has a double edge on his next power roll; M < 5 slide 5"
+            },
+            {
+              "name": "Effect",
+              "effect": "The damage from this ability can't be reduced in any way."
+            },
+            {
+              "effect": "This ability targets one additional target.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bloody Whirlwind",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "3 burst",
+          "target": "Each creature and object in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "5 damage; A < 3 bleeding (save ends)",
+              "tier2": "11 damage; A < 4 bleeding (save ends)",
+              "tier3": "15 damage; A < 5 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability deals an extra 5 damage for each winded target in the area."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Hunting Leap",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Doru jumps to an unoccupied space adjacent to the target, then can make a free strike against them. If the target is bleeding or winded, the distance of the ability becomes Ranged 10 and the free strike deals an extra 5 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Laugh It Off",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "An enemy makes a strike against Doru.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The triggering strike takes a bane and Doru gains an edge on his next power roll."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Iron Juggernaut",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Doru can't be made slowed or restrained. Additionally, he can move while grabbed, and a creature grabbing him moves along with him unless they let go."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "The Scarless",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Doru regains 10 Stamina at the start of each of his turns unless he took acid or fire damage since the start of his previous turn. Whenever he regains Stamina this way, the Director can spend 2 Malice to end one effect on Doru that can be ended by a saving throw."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Champion's Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When Doru is reduced to 0 Stamina, his loyalty collar explodes, dealing 20 damage to each enemy and object within 3 squares of him."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Logostician Vesper",
+      "level": 10,
+      "roles": [
+        "Elite Controller"
+      ],
+      "ancestry": [
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 48,
+      "stamina": 253,
+      "speed": 10,
+      "size": "2",
+      "stability": 3,
+      "free_strike": 10,
+      "might": 2,
+      "agility": 1,
+      "reason": 5,
+      "intuition": 4,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Portal to the Firing Line",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "5 x 3 line within 15",
+          "target": "Each creature and object in the area",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "This ability targets only non-prone creatures."
+            },
+            {
+              "roll": 5,
+              "tier1": "8 damage",
+              "tier2": "12 damage; I < 4 slowed (save ends)",
+              "tier3": "15 damage; I < 5 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target creature can choose to drop prone, in which case the ability takes a bane against them."
+            },
+            {
+              "effect": "The area remains active until Vesper is reduced to 0 Stamina or until the end of the encounter. Any non-prone enemy who enters the area for the first time in a round or starts their turn there takes 15 damage, or 7 damage if they choose to fall prone.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Portal to the Mantle",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 15",
+          "target": "Each creature and object in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "8 fire damage",
+              "tier2": "12 fire damage",
+              "tier3": "15 fire damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is difficult terrain. Any creature who enters the area for the first time in a round or starts their turn there takes 10 fir damage. Until the end of the encounter, the size of the area increases by 1 at the start of each round."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Portal to the Void",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 cube within 15",
+          "target": "Each creature and object in the area",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "A < 4 pull 3 toward the center of the area",
+              "tier2": "A < 5 pull 3 toward the center of the area",
+              "tier3": "Pull 3 toward the center of the area"
+            },
+            {
+              "name": "Effect",
+              "effect": "A portal appears at the center of the area. Any creature at the center of the area when this ability is used or who is pulled into the center for the first time in a round takes 10 sonic damage."
+            },
+            {
+              "effect": "The area remains active and deals its damage until Vesper is reduced to 0 Stamina or until the end of the encounter. Any creature who enters the area and has A < 4 is pulled 3 squares toward the center of the area. Any creature who starts their turn in the area and has M < 4 is slowed until the end of their turn.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Portal to the Sky",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 3",
+          "target": "One enemy",
+          "trigger": "The target moves within distance of Vesper.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target is dropped through a portal, which teleports them up to 7 squares above a space within 15 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Living Logistics Network",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Each ally who starts their turn within 10 squares of Vesper can teleport whenever they willingly move until the end of their turn. Whenever an affected ally teleports, they deal an extra 5 damage on their next strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crash and Burn",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When Vesper is reduced to 0 Stamina, they move up to their speed and then explode, dealing 4d6 damage to each adjacent enemy and object. Any enemy who takes more than 14 damage this way vertically slides 5 squares."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Soulbinder Psyche",
+      "level": 10,
+      "roles": [
+        "Elite Hexer"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 48,
+      "stamina": 220,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "1M",
+      "stability": 1,
+      "free_strike": 10,
+      "might": 1,
+      "agility": 3,
+      "reason": 3,
+      "intuition": 4,
+      "presence": 5,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Soulbind",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "15 holy damage; R < 3 the target is soulbound (save ends)",
+              "tier2": "20 holy damage; R < 4 the target is soulbound (save ends)",
+              "tier3": "24 holy damage; R < 5 the target is soulbound (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A soulbound creature can't benefit from edges or double edges, and can't gain or use surges."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Soulstorm",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 10",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "8 corruption damage; P < 3 weakened (EoT)",
+              "tier2": "12 corruption damage; P < 4 weakened (EoT)",
+              "tier3": "15 corruption damage; P < 5 weakened (EoT)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is difficult terrain until the start of Psyche's next turn At the start of each of her turns, Psyche can use a maneuver to maintain this effect, move the area up to 5 squares, and make the power roll against each creature in the area's new location."
+            },
+            {
+              "effect": "Until the start of Psyche's next turn, if this ability makes a creature weakened, that creature is also soulbound (save ends; see Soulbind above).",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Command the Awakened",
+          "icon": "❇️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 burst",
+          "target": "Each soulbound enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target takes 5 damage from a self-inflicted wound, and if they have M < 4 Psyche slides them up to 5 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spirit Form",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "An enemy moves within 2 squares of Psyche.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Psyche moves up to 5 squares, and has damage immunity 5 and ignores difficult terrain during this movement. The first time she moves through any creature during this movement, that creature takes 5 corruption damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Vengeance for the Slain",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Ranged 10",
+          "target": "One enemy",
+          "trigger": "A war dog within distance is made winded or reduced to 0 Stamina.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target loses all their surges and takes 5 corruption damage."
+            },
+            {
+              "effect": "The target also takes a bane on their next strike.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Immortal Soul",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When Psyche is reduced to 0 Stamina, her spirit surrounds the nearest war dog, who has damage immunity 2, deals an extra 5 damage on strikes, and can use the following Immortal Flare maneuver until the end of the encounter. That war dog also gains the Immortal Soul trait, and transfers this effect to the nearest war dog when they die."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Immortal Flare",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target takes 10 psychic damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Strategos Alkestis",
+      "level": 10,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 48,
+      "stamina": 260,
+      "speed": 5,
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 10,
+      "might": 4,
+      "agility": 4,
+      "reason": 5,
+      "intuition": 5,
+      "presence": 5,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Houndgun and Houndblade",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "15 damage; M < 4 bleeding (save ends)",
+              "tier2": "21 damage; M < 5 bleeding (save ends)",
+              "tier3": "25 damage; M < 6 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each target loses 1d3 Recoveries."
+            },
+            {
+              "effect": "When a target is made bleeding this way, each ally adjacent to them can make a free strike against the target.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Focus Fire",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 15",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of Alkestis's next turn, any effect that reduces the damage taken by the target has no effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Artillery Enfilade",
+          "icon": "❗️",
+          "keywords": [
+            "Area",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "7 x 3 line within 10",
+          "target": "Each creature and object in the area",
+          "trigger": "An ally is reduced to 0 Stamina within 10 squares of Alkestis.",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "8 damage; A < 4 slowed (save ends)",
+              "tier2": "13 damage; A < 5 slowed (save ends)",
+              "tier3": "16 damage; A < 6 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is difficult terrain until the start of the next round."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of her turns, Alkestis can take 20 damage to end one effect on her that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Tactical Brilliance",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the start of each of Alkestis's turns, the Director gains 2 Malice. While Alkestis is alive and in the encounter, the Director also gains 1 Malice whenever a war dog in the encounter obtains a tier 3 outcome on a power roll."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fog of War",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "-"
+          ],
+          "usage": "-",
+          "distance": "Special",
+          "target": "Each ally in the encounter",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can disappear, then reappear anywhere on the encounter map 3 or more squares away from any enemy. Additionally, each target has a double edge on their next power roll."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Send in the Second Wave",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 15",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "For each war dog reduced to 0 Stamina in the encounter, a war dog shriketrooper appears in an unoccupied space within distance."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Silver Wolf's Final Stratagem",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the next round, each target enemy who has I < 4 is dazed, each target enemy who has M < 4 is restrained, and each target enemy who has A < 4 can't use triggered actions. Additionally, until the end of the encounter, Alkestis and each target ally have damage immunity 3 and deal an extra 5 damage with strikes."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Aerocite",
+      "level": 8,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 10,
+      "stamina": 50,
+      "speed": 8,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 4,
+      "reason": 1,
+      "intuition": 3,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dive Bomb",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 damage",
+              "tier2": "10 damage; vertical slide 2",
+              "tier3": "12 damage; vertical slide 3"
+            },
+            {
+              "effect": "An enemy force moved by this ability is grabbed instead.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Caustic Paste Bomb",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 cube within 5",
+          "target": "Each creature or object in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "2 acid damage; M < 2 slowed (save ends)",
+              "tier2": "4 acid damage; M < 3 slowed (save ends)",
+              "tier3": "6 acid damage; M < 4 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is difficult terrain."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Jetwing Agility",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If the aerocite moves 5 or more squares on their turn, strikes made against them take a bane until the start of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the aerocite is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Amalgamite",
+      "level": 2,
+      "roles": [
+        "Horde Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 4,
+      "stamina": 25,
+      "speed": 5,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Several Arms",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 damage",
+              "tier2": "5 damage; A < 1 grabbed",
+              "tier3": "6 damage; A < 2 grabbed"
+            },
+            {
+              "name": "Effect",
+              "effect": "The amalgamite can have up to four targets grabbed at once."
+            },
+            {
+              "effect": "The amalgamite deals 3 damage to each creature grabbed this way or who they already have grabbed, and regains Stamina equal to the damage dealt.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the amalgamite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Arachnite",
+      "level": 6,
+      "roles": [
+        "Horde Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 8,
+      "stamina": 35,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1L",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 0,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 1,
+      "immunities": [
+        "Psychic 6"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Longarm Shrikegun",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "7 damage",
+              "tier2": "9 damage",
+              "tier3": "11 damage; A < 3 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability ignores cover and concealment. The arachnite chooses one of the following damage types when making the strike: acid, cold, fire, lightning, poison, psychic, or sonic."
+            },
+            {
+              "effect": "The arachnite can use this ability as if they were in the space of any ally within distance.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Web Vial",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "2 cube within 10",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The area is difficult terrain until the end of the encounter."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Eight-Eyed Sight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the start of each of their turns, the arachnite automatically knows the location of each hidden creature within 10 squares of them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the arachnite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Ballistite",
+      "level": 8,
+      "roles": [
+        "Horde Artillery"
+      ],
+      "ancestry": [
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 10,
+      "stamina": 72,
+      "speed": 0,
+      "size": "1L",
+      "stability": 5,
+      "free_strike": 4,
+      "might": 4,
+      "agility": -2,
+      "reason": 2,
+      "intuition": 3,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Biokinetic Ballista",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 damage; push 1",
+              "tier2": "10 damage; push 3",
+              "tier3": "11 damage; push 5"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target pushed into an obstacle is knocked prone, and if they have M < 3 they are restrained (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Kill Zone",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 cube within 12",
+          "target": "Special",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the ballistite's next turn, the area is difficult terrain, and any ranged ability targeting an enemy in the area deals an extra 8 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Set Up and Tear Down",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the start of each of the ballistite's turns, they can gain a +4 bonus to speed until the end of their turn. While their speed is greater than 0 by any means, they can't use main actions or maneuvers."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the ballistite is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Blackcap",
+      "level": 7,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 9,
+      "stamina": 45,
+      "speed": 6,
+      "movement": "Teleport",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 1,
+      "agility": 4,
+      "reason": 4,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Flesh-Eater Knife",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "8 damage",
+              "tier2": "11 damage",
+              "tier3": "12 damage; M < 4 bleeding and weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The blackcap can teleport up to their speed before using this ability, creating an ash clone (see below) in their original square."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ashes to Ashes",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 20",
+          "target": "Up to three ash clones",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target makes a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Ash Clones",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "An ash clone created by the blackcap has the blackcap's statistics but has 1 Stamina. Ash clones don't take turns in combat, but they can act when the blackcap allows them to and can move when the blackcap willingly moves."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Duplicating Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the blackcap or any of their ash clones is reduced to 0 Stamina, that creature's loyalty collar explodes, dealing 3d6 poison damage to each adjacent enemy and object. If any adjacent enemy has A < 3 they are also weakened (save ends)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Blood Jumper",
+      "level": 10,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 12,
+      "stamina": 15,
+      "speed": 7,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 4,
+      "with_captain": "+3 bonus to speed",
+      "might": 5,
+      "agility": 4,
+      "reason": 2,
+      "intuition": 3,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Jumplance",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "4 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage; A < 4 bleeding (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Drop Troop",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If the jumper doesn't end their turn on the ground, they fall prone."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the jumper is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Breaker",
+      "level": 7,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 36,
+      "stamina": 200,
+      "speed": 5,
+      "size": "2",
+      "stability": 4,
+      "free_strike": 7,
+      "might": 4,
+      "agility": 2,
+      "reason": 1,
+      "intuition": 1,
+      "presence": 3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Pile Bunker Gauntlet",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "12 damage; push 4; prone",
+              "tier2": "17 damage; slide 4; prone or M < 3 dazed (save ends)",
+              "tier3": "21 damage; slide 4; prone; M < 4 dazed (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Surging Power",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of their next turn, the breaker has a double edge on abilities and is automatically affected by all potency effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Breaking Point",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the breaker would be reduced to 0 Stamina, they delay that effect as they end any conditions affecting them and immediately take a turn, regardless of whether they have already taken a turn this round. The breaker's abilities deal an extra 5 damage during this turn, at the end of which they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the breaker is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Commando",
+      "level": 1,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Daggers",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "After using this ability, the commando can attempt to hide even if observed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the commando is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d3 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Conscript",
+      "level": 1,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blade",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If used with the Charge main action, this ability gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the conscript is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d3 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Crucibite",
+      "level": 1,
+      "roles": [
+        "Horde Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 10,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Fire 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Flamebelcher",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "5 x 1 line within 1",
+          "target": "Each creature and object in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 fire damage",
+              "tier2": "4 fire damage",
+              "tier3": "5 fire damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is covered in sticky fire until the start of the crucibite's next turn. Any creature who enters the area for the first time in a round or starts their turn there takes 2 fire damage."
+            },
+            {
+              "effect": "The area becomes a 10 x 1 line, and if any ally of the crucibite is in the area when it is created, the ability deals an extra 2 damage to each target.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the crucibite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Doomthief",
+      "level": 5,
+      "roles": [
+        "Horde Defender"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 7,
+      "stamina": 40,
+      "speed": 5,
+      "size": "1L",
+      "stability": 2,
+      "free_strike": 3,
+      "might": 3,
+      "agility": -1,
+      "reason": 0,
+      "intuition": 3,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ripper Shrikegun",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "10 x 3 line within 1",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage; push 1",
+              "tier2": "5 damage; push 3",
+              "tier3": "6 damage; push 5; A < 3 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The doomthief can't willingly move on the same turn they use this ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Doom Magnet",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The doomthief emits a 3 aura of warped fate that blocks line of effect for any enemy ability that doesn't include them as a target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Expanding Doom",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "4",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The doomthief has damage immunity 4 and the size of the aura from their Doom Magnet trait increases by 3, both until the start of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the doomthief is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Draconite",
+      "level": 7,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 9,
+      "stamina": 13,
+      "speed": 5,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 4,
+      "with_captain": "+3 damage bonus to strikes",
+      "might": 4,
+      "agility": 1,
+      "reason": -2,
+      "intuition": -1,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Greatsword and Roar",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 damage",
+              "tier2": "4 damage, 3 psychic damage",
+              "tier3": "4 damage, 4 psychic damage; the target must move their speed in a straight line away from the draconite"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this damage leaves the target winded, they are frightened of the draconite until the end of the target's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the draconite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Equivite",
+      "level": 4,
+      "roles": [
+        "Horde Brute"
+      ],
+      "ancestry": [
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 6,
+      "stamina": 53,
+      "speed": 8,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 3,
+      "might": 3,
+      "agility": 3,
+      "reason": -1,
+      "intuition": -2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fuse-Iron Lance",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 damage",
+              "tier2": "8 damage",
+              "tier3": "10 damage; I < 3 frightened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability gains an edge while charging."
+            },
+            {
+              "effect": "The ability deals an extra 3 fire damage to the target and each enemy adjacent to the target.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blazing Charge",
+          "icon": "🗡",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "Special; see below",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The equivite moves up to their speed and ignores difficult terrain. Any mundane size 1 object whose space they move through is destroyed. The equivite makes one power roll against each enemy whose space they move through for the first time."
+            },
+            {
+              "roll": 3,
+              "tier1": "2 damage; push 1",
+              "tier2": "4 damage; push 2",
+              "tier3": "5 damage; push 3; M < 3 prone"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the equivite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Eviscerite",
+      "level": 1,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "might": 1,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Chainsaw Whip",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 3",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage",
+              "tier2": "4 damage; pull 1",
+              "tier3": "5 damage; pull 2"
+            },
+            {
+              "name": "Effect",
+              "effect": "The eviscerite can automatically grab a target pulled adjacent to them this way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the eviscerite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Firestarter",
+      "level": 8,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 10,
+      "stamina": 45,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 2,
+      "reason": 3,
+      "intuition": 4,
+      "presence": 1,
+      "immunities": [
+        "Fire 8"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Twin Flamebelchers",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "10 x 1 line within 1",
+          "target": "Each creature and object in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "3 fire damage; A < 2 the target is seared (save ends)",
+              "tier2": "6 fire damage; A < 3 the target is seared (save ends)",
+              "tier3": "8 fire damage; A < 4 the target is seared (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A seared creature takes a bane on strikes and has damage weakness 5. If this ability obtains a tier 3 outcome against one or more creatures who are already seared, the firestarter can use Enflame as a free triggered action."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Enflame",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "This ability targets each enemy within 2 squares of any seared creature within distance."
+            },
+            {
+              "roll": 4,
+              "tier1": "2 fire damage",
+              "tier2": "4 fire damage; A < 3 the target is seared (save ends)",
+              "tier3": "6 fire damage; A < 4 the target is seared (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the firestarter is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Geomancer",
+      "level": 8,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 10,
+      "stamina": 45,
+      "speed": 5,
+      "movement": "Burrow",
+      "size": "1M",
+      "stability": 3,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 1,
+      "reason": 4,
+      "intuition": 4,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Earthwave",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "7 x 2 line within 10",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "3 damage; M < 2 push (see effect)",
+              "tier2": "6 damage; M < 3 push",
+              "tier3": "8 damage; M < 4 push, prone"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability ignores stability. The geomancer declares a direction for the area, and any creature pushed by this ability is pushed to the last space in the area in the chosen direction."
+            },
+            {
+              "effect": "The ground beneath the area becomes a 2-square-deep trench after the power roll is resolved.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Siegeworks",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 wall within 10",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The geomancer raises a wall of stone set with viewing gaps. Creatures have line of effect through the wall while adjacent to it."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Dust Cloud",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The geomancer is always surrounded by a 2 aura of swirling dust and earthen debris. The geomancer and any ally in the area have concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the geomancer is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Ground Commander",
+      "level": 3,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 20,
+      "stamina": 120,
+      "speed": 5,
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 3,
+      "agility": 2,
+      "reason": 3,
+      "intuition": 2,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Conditioning Spear",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 damage; pull 1",
+              "tier2": "12 damage; pull 2",
+              "tier3": "15 damage; pull 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally within 10 squares of the ground commander can make a free strike."
+            },
+            {
+              "effect": "A target who has I < 2 and who is adjacent to the ground commander after this ability is resolved is grabbed (save ends). This grab can't be escaped using the Escape Grab maneuver. The ground commander can grab up to two creatures at a time.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Highest Posthumous Promotion",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "10 burst",
+          "target": "Each war dog in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Any target who has a loyalty collar is reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Final Orders",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "One ally",
+          "trigger": "The target takes damage, is force moved, or is reduced to 0 Stamina.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Even if reduced to 0 Stamina, the target moves up to their speed and can make a free strike after the triggering effect is resolved. The target then immediately dies."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the ground commander can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the ground commander is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Combined Arms",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can make a ranged free strike, then immediately use the Charge main action."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Make an Example of Them",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "One enemy",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each ally within 5 squares of the target moves up to their speed and can make a free strike against the target. If the target has I < 2, they are frightened of the ground commander (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Claim Them for the Body Banks",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target ally shifts up to 2 squares and can use the Grab maneuver. Until the end of the encounter, each target enemy takes a bane on the Escape Grab maneuver."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Hunter-Killer",
+      "level": 10,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 12,
+      "stamina": 14,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "with_captain": "+4 damage bonus to strikes",
+      "might": 1,
+      "agility": 5,
+      "reason": 3,
+      "intuition": 5,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fuse-Iron Rocket",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "5 damage; push 2",
+              "tier2": "8 damage; push 3",
+              "tier3": "10 damage; push 4"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each enemy adjacent to the target before the forced movement takes 5 fire damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the hunter-killer is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Hypokrite",
+      "level": 4,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 8,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Needle-Knife",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 damage",
+              "tier2": "8 damage; A < 2 bleeding (save ends)",
+              "tier3": "10 damage; A < 3 bleeding and weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability deals an extra 6 damage if the hypokrite is hidden or disguised."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Feign Death",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 20",
+          "target": "Special",
+          "trigger": "The hypokrite takes damage.",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The hypokrite detonates their loyalty collar to deal 2d6 damage to each adjacent enemy, but teleports to an unoccupied space adjacent to an ally within distance and remains alive."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Face in the Crowd",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The hypokrite is invisible while adjacent to any ally who isn't hidden, and they can attempt to hide even while observed. Whenever they use the Hide maneuver, the hypokrite can disguise themself as another creature within line of effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the hypokrite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Iron Priest",
+      "level": 8,
+      "roles": [
+        "Horde Support"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 10,
+      "stamina": 50,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 1,
+      "reason": 1,
+      "intuition": 4,
+      "presence": 4,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Houndcannon",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "7 x 1 line within 1",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "3 damage",
+              "tier2": "6 damage; P < 3 bleeding (save ends)",
+              "tier3": "8 damage; P < 4 the target loses 1 Recovery and is bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any ally within 2 squares of the iron priest gains an edge on their next strike. If any target lost a Recovery, any affected ally has a double edge instead."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Iron Banner",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "4 aura",
+          "target": "Each war dog in the area",
+          "cost": "2+",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "For every 2 Malice spent, each target gains one of the following effects until the start of the iron priest's next turn.\n- The target has damage immunity 2.\n- The target's strikes deal an extra 3 holy damage.\n- The target has a +3 bonus to speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Chosen of the Iron Saint",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The Director gains 1 Malice whenever an ally within 3 squares of the iron priest obtains a tier 3 outcome on a power roll."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Mischievite",
+      "level": 5,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 7,
+      "stamina": 35,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fuse-Iron Knives",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "Two creatures",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "5 damage",
+              "tier2": "7 damage",
+              "tier3": "8 damage; R < 3 the target is dazzled (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A dazzled target takes a bane on strikes and has line of effect only within 1 square."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Misdirection",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 3",
+          "target": "One ally or dazzled creature",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The mischievite swaps positions with the target. An ally targeted by this ability can make a free strike before or after being swapped."
+            },
+            {
+              "effect": "The mischievite can use this ability as a triggered action when they are targeted by an ability. If they do, the swapped target becomes the new target of the triggering ability.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The mischievite doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the mischievite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Neuronite",
+      "level": 1,
+      "roles": [
+        "Horde Defender"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 20,
+      "speed": 5,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Psychic 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Synlirii Grafts",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Main action",
+          "distance": "1 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 psychic damage; vertical slide 1",
+              "tier2": "2 psychic damage; vertical slide 2",
+              "tier3": "3 psychic damage; vertical slide 3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Voice",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Psionic"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 burst",
+          "target": "Each enemy in the area",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The neuronite chooses one ally within 10 squares. Each target is either taunted by the ally, or the ally has damage immunity 3 whenever any target makes a strike against them (the neuronite's choice). Either effect lasts until the start of the neuronite's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the neuronite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Pestilite",
+      "level": 3,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 5,
+      "stamina": 20,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Poison 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Plaguecaster",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 10",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 poison damage; I < 0 frightened (save ends)",
+              "tier2": "4 poison damage; I < 1 frightened (save ends)",
+              "tier3": "5 poison damage; I < 2 frightened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is filled with a cloud of pestilence that lasts until the start of the pestilite's next turn. Any creature who enters the area for the first time in a round or starts their turn there takes 2 poison damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the pestilite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Phosphorite",
+      "level": 2,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 4,
+      "stamina": 15,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Acid 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Caustic Detonator",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "A detonator attaches to the target. At the end of each round, roll a die. On an odd result, the detonator explodes, triggering the following power roll."
+            },
+            {
+              "roll": 2,
+              "tier1": "4 acid damage; M < 0 bleeding (save ends)",
+              "tier2": "6 acid damage; M < 1 bleeding (save ends)",
+              "tier3": "10 acid damage; M < 2 bleeding (save ends)"
+            },
+            {
+              "tier1": "No effect.",
+              "tier2": "The detonator is disarmed and destroyed.",
+              "tier3": "The creature can attach the detonator to another creature or object within 5 squares of them.",
+              "name": "Special",
+              "effect": "A creature adjacent to the target can attempt an **Agility test** as a maneuver to remove the detonator."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the phosphorite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Prismite",
+      "level": 8,
+      "roles": [
+        "Horde Defender"
+      ],
+      "ancestry": [
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 10,
+      "stamina": 82,
+      "speed": 5,
+      "movement": "Fly, hover",
+      "size": "2",
+      "stability": 2,
+      "free_strike": 3,
+      "might": 4,
+      "agility": 0,
+      "reason": 4,
+      "intuition": 2,
+      "presence": 3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grasping Tonguetacles",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "3 psychic damage",
+              "tier2": "6 psychic damage; R < 3 grabbed, pull 2",
+              "tier3": "8 psychic damage; R < 4 grabbed and the target takes a bane on the Escape Grab maneuver, pull 2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Hard Light Field",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "4 cube within 10",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the prismite's next turn, each target has cover and gains a +2 bonus to stability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tractor Beam",
+          "icon": "❗️",
+          "keywords": [
+            "Psionic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "The triggering enemy",
+          "trigger": "An enemy within distance uses a melee ability against an ally.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target is pulled up to 5 squares toward the prismite and any damage from the triggering ability is halved."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Prismacore Detonation",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the prismite is reduced to 0 Stamina, they explode, dealing 3d6 psychic damage to each enemy within 2 squares of them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Saboteur",
+      "level": 7,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 9,
+      "stamina": 12,
+      "speed": 6,
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 4,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": -1,
+      "agility": 2,
+      "reason": 4,
+      "intuition": 3,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fuse-Iron Bomb",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 fire damage",
+              "tier2": "7 fire damage; push 1",
+              "tier3": "8 fire damage; push 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "The space the target occupies fills with dark smoke and blocks line of effect until the start of the saboteur's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the saboteur is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Sharpshooter",
+      "level": 1,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bolt Launcher",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability ignores cover and concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the sharpshooter is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d3 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Shriketroop",
+      "level": 7,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 9,
+      "stamina": 10,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "with_captain": "Gain an edge on strikes",
+      "might": 1,
+      "agility": 4,
+      "reason": 3,
+      "intuition": 1,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Canis Shrikegun",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 damage",
+              "tier2": "7 damage",
+              "tier3": "8 damage; I < 3 the target is frightened of all shriketroops (EoT)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target must move their speed in a straight line away from the shriketroop."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the shriketroop is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Socialite",
+      "level": 10,
+      "roles": [
+        "Minion Hexer"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 12,
+      "stamina": 14,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "with_captain": "Gain an edge on strikes",
+      "might": 2,
+      "agility": 2,
+      "reason": 4,
+      "intuition": 3,
+      "presence": 5,
+      "immunities": [
+        "Psychic 10"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Call to Self-Sabotage",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Psionic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "The target makes a free strike (tier 1 result) against themself",
+              "tier2": "The target makes a free strike (tier 2 result) against themself",
+              "tier3": "The target makes a free strike (tier 3 result) against themself"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target takes an extra 5 damage for each surge they have."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the socialite is reduced to 0 Stamina, their loyalty collar explodes, dealing 3d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Sparkslinger",
+      "level": 4,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 6,
+      "stamina": 7,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "Lightning spread increases by 1 square",
+      "might": 0,
+      "agility": 0,
+      "reason": 3,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Lightning 4"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Galvanic Arc",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 7",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 lightning damage",
+              "tier2": "5 lightning damage; the lightning spreads 1 square",
+              "tier3": "7 lightning damage; the lightning spreads 2 squares"
+            },
+            {
+              "name": "Effect",
+              "effect": "The lightning's spread is the distance it arcs from a target to nearby enemies. Each enemy within that distance takes 2 lightning damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the sparkslinger is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Subcommander",
+      "level": 2,
+      "roles": [
+        "Horde Support"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 4,
+      "stamina": 20,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Command Saber",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 damage",
+              "tier2": "5 damage",
+              "tier3": "7 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally within 5 squares of the subcommander can make a free strike against the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "The Iron Saint Does Not Recognize Retreat",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Each ally within 5 squares of the subcommander gains a +3 bonus to stability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the subcommander is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Sweeper",
+      "level": 4,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 6,
+      "stamina": 8,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shrikegun Shot",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 3",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "2 damage",
+              "tier2": "4 damage; push 1",
+              "tier3": "6 damage; push 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target within 2 squares of the sweeper takes an extra 3 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Shrapnel-Laced Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the sweeper is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each enemy and object within 2 squares of them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Taxiarch",
+      "level": 9,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 44,
+      "stamina": 240,
+      "speed": 7,
+      "movement": "Teleport",
+      "size": "1M",
+      "stability": 1,
+      "free_strike": 9,
+      "might": 1,
+      "agility": 3,
+      "reason": 5,
+      "intuition": 4,
+      "presence": 3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Stunning Surge",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "14 lightning damage; the lightning spreads 1 square; I < 3 dazed (save ends)",
+              "tier2": "19 lightning damage; the lightning spreads 2 squares; I < 4 dazed (save ends)",
+              "tier3": "23 lightning damage; the lightning spreads 3 squares; I < 5 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The spread is the distance the charge arcs from a target to nearby enemies. Each enemy within spread takes 5 lightning damage."
+            },
+            {
+              "effect": "The lighting spread increases by 2 squares. Additionally, any creature who takes lightning damage from this ability and who has M < 4 is slowed until the end of their next turn.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Overcharge",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "4 cube within 10",
+          "target": "Each war dog in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target shifts up to their speed and can make a free strike that deals an extra 5 lightning damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Thunderstruck",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "The triggering enemy",
+          "trigger": "An enemy within distance deals damage to the taxiarch.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "After the ability is resolved, the target is teleported up to 5 squares and is thunderstruck (save ends). A thunderstruck creature has lightning weakness 5, and the taxiarch gains an edge on power rolls against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the taxiarch can take 15 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Magnetic Trickery",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Slide 5, and if the the target has M < 4, they fall prone."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Conductor of Combat",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Each war dog in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target shifts up to their speed, then can make a free strike or use a maneuver."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Unlimited Power!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "3 burst",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "tier1": "18 lightning damage; the target is thunderstruck (save ends)",
+              "tier2": "14 lightning damage; the target is thunderstruck (EoT)",
+              "tier3": "9 lightning damage",
+              "name": "Effect",
+              "effect": "Each target makes an Agility test."
+            },
+            {
+              "effect": "See Thunderstruck. Additionally, until the end of the encounter, any enemy who moves within 3 squares of the taxiarch for the first time in a round or starts their turn there takes 3 lightning damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Teletalite",
+      "level": 1,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 5,
+      "movement": "Teleport",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Corrupted Ash Daggers",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 damage; slide 1",
+              "tier2": "6 damage; slide 2",
+              "tier3": "7 damage; slide 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "The teletalite gains an edge on this ability if any ally is adjacent to the target."
+            },
+            {
+              "effect": "The teletalite teleports the target 3 squares before sliding them.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Corrupted Ash Teleport",
+          "icon": "👤",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The teletalite can teleport up to 5 squares and gains an edge on strikes until the end of their turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the teletalite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Tetherite",
+      "level": 1,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 3,
+      "stamina": 5,
+      "speed": 5,
+      "size": "1M",
+      "stability": 1,
+      "free_strike": 2,
+      "with_captain": "Gain an edge on strikes",
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Banded Dagger",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Tethered",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "A captain attached to a tetherite squad has their stability increased by the number of tetherites within 2 squares of them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the tetherite is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d3 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Tetrarch",
+      "level": 6,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 32,
+      "stamina": 180,
+      "speed": 7,
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 7,
+      "might": 4,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 3,
+      "presence": 4,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Houndblade",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 3",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "11 damage",
+              "tier2": "16 damage; taunted (EoT)",
+              "tier3": "19 damage; taunted (EoT)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A creature taunted this way takes a bane on strikes."
+            },
+            {
+              "effect": "Each target loses 1d3 Recoveries.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Get Them, You Dolts!",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Three creatures",
+          "cost": "1 per target",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target shifts up to their speed and can make a free strike. If the free strike targets an enemy taunted by the tetrarch, it deals an extra 4 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sneering Disregard",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance who is not taunted by the tetrarch targets the tetrarch with a power roll.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The power roll has a double bane. If the target obtains a tier 1 outcome, the tetrarch ignores any of the power roll's effects other than damage and the target is frightened of the tetrarch (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the tetrarch can take 10 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Enter the Fray",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The tetrarch can jump up to 7 squares before using this ability."
+            },
+            {
+              "roll": 4,
+              "tier1": "Push 2; I < 2 frightened (save ends)",
+              "tier2": "Push 4; I < 3 frightened (save ends)",
+              "tier3": "Push 5; I < 4 frightened (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lay Waste",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "-",
+          "distance": "Five 2 cubes within 20",
+          "target": "Each creature and object in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 fire damage; A < 2 slowed (EoT)",
+              "tier2": "13 fire damage; A < 3 slowed (save ends)",
+              "tier3": "16 fire damage; A < 4 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is set ablaze until the end of the encounter. While ablaze, the area is difficult terrain, and any creature takes 2 fire damage for each square in the area they enter for the first time in a round."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "You Would Dare?!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "-"
+          ],
+          "usage": "-",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the end of the encounter, the tetrarch has damage immunity 2, and their Houndblade ability targets three creatures or objects."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Thanatite",
+      "level": 6,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 8,
+      "stamina": 35,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 1,
+      "agility": 1,
+      "reason": 2,
+      "intuition": 3,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Snaking Entrails",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One ally",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target dies and the thanatite makes one power roll against each enemy within 2 squares of the target."
+            },
+            {
+              "roll": 3,
+              "tier1": "3 corruption damage; A < 1 slowed (save ends)",
+              "tier2": "5 corruption damage; A < 2 slowed (save ends)",
+              "tier3": "7 corruption damage; A < 3 restrained (save ends)"
+            },
+            {
+              "effect": "If an affected enemy is adjacent to any corpse, they are frightened of the thanatite (save ends).",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wall of Flesh",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "10 wall within 10",
+          "target": "One corpse",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target spawns a wall of bloody muscle and pulsing viscera that must share one or more squares with the target. Each enemy in the area when the wall is created vertically slides up to 2 squares and is knocked prone. Each square of the wall has 3 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the thanatite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog Tormentite",
+      "level": 5,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 7,
+      "stamina": 30,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 0,
+      "reason": 2,
+      "intuition": 3,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Mark of Agony",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 corruption damage",
+              "tier2": "8 corruption damage; the target is marked (save ends)",
+              "tier3": "9 corruption damage; the target is marked (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Strikes made against a target marked this way gain an edge. Additionally, whenever the tormentite takes damage, each target marked by them takes 3 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Vortex of Pain",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "4 cube within 10",
+          "target": "Each enemy in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "2 corruption damage",
+              "tier2": "4 corruption damage",
+              "tier3": "5 corruption damage; one ally in the area can end one effect on them that can be ended by a saving throw, and can give that effect to one target"
+            },
+            {
+              "name": "Effect",
+              "effect": "The tormentite regains 2 Stamina for each creature targeted by this ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Persistent Pain",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "From the start of the encounter, the tormentite takes 1 damage at the start of each of their turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the tormentite is reduced to 0 Stamina, their loyalty collar explodes, dealing 2d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog War Doc",
+      "level": 5,
+      "roles": [
+        "Horde Support"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 7,
+      "stamina": 35,
+      "speed": 5,
+      "size": "1L",
+      "stability": 1,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 1,
+      "reason": 3,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Syringe Crossbow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 poison damage",
+              "tier2": "8 poison damage",
+              "tier3": "9 poison damage; M < 3 weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target enemy is subject to this ability's power roll. A target ally instead gains 5 temporary Stamina and can make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Posthumous Promotion",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One war dog",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target has a loyalty collar, they are reduced to 0 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sanguine Stimulants",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 15",
+          "target": "Special",
+          "trigger": "One ally within distance dies.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each ally adjacent to the dead ally deals an extra 6 damage on their next strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Body Bank Branch Manager",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If the war doc uses the Reconstitute war dog Malice feature, it costs 1 Malice less. Additionally, allies can treat the living war doc as a corpse when using the Reconstitute feature (see Reconstitute)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Dog War Frog",
+      "level": 4,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Soulless",
+        "War Dog"
+      ],
+      "ev": 6,
+      "stamina": 8,
+      "speed": 5,
+      "movement": "Climb, swim",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+2 bonus to speed",
+      "might": -1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 0,
+      "immunities": [
+        "Poison 4"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Poisoned Dagger",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 4",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 poison damage",
+              "tier2": "5 poison damage",
+              "tier3": "7 poison damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The war frog can jump 3 squares before or after making the strike. If they end this jump in cover or concealment, they can attempt to hide."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Loyalty Collar",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "When the war frog is reduced to 0 Stamina, their loyalty collar explodes, dealing 1d6 damage to each adjacent enemy and object."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

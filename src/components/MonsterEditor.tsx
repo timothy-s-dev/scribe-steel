@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Monster, Ability, Trait, PowerRollTier, Characteristics } from '@/data/types';
+import type { Monster, Feature, Effect } from '@/data/types';
 
 // ── Shared styles ────────────────────────────────────────────────────────────
 
@@ -19,64 +19,60 @@ export function emptyMonster(): Monster {
   return {
     name: '',
     level: 1,
-    role: '',
-    keywords: [],
+    roles: [],
+    ancestry: [],
     ev: 1,
     size: '1M',
     speed: 5,
     stamina: 10,
     stability: 0,
-    freeStrike: 1,
-    immunity: null,
-    weakness: null,
-    movement: null,
-    characteristics: { might: 0, agility: 0, reason: 0, intuition: 0, presence: 0 },
-    abilities: [],
-    traits: [],
+    free_strike: 1,
+    might: 0,
+    agility: 0,
+    reason: 0,
+    intuition: 0,
+    presence: 0,
+    features: [],
   };
 }
 
-function emptyAbility(): Ability & { _id: number } {
+function emptyAbilityFeature(): Feature & { _id: number } {
   return {
     _id: uid(),
+    type: 'feature',
+    feature_type: 'ability',
     name: '',
-    type: '',
-    action: '',
+    ability_type: '',
+    usage: '',
     keywords: [],
     distance: '',
     target: '',
-    powerRoll: [
-      { tier: '\u226411', result: '' },
-      { tier: '12-16', result: '' },
-      { tier: '17+', result: '' },
+    effects: [
+      { roll: 0, tier1: '', tier2: '', tier3: '' },
     ],
-    effect: '',
   };
 }
 
-function emptyTrait(): Trait & { _id: number } {
-  return { _id: uid(), name: '', description: '' };
+function emptyTraitFeature(): Feature & { _id: number } {
+  return {
+    _id: uid(),
+    type: 'feature',
+    feature_type: 'trait',
+    name: '',
+    effects: [{ effect: '' }],
+  };
 }
 
 // ── Keyed wrappers for stable list rendering ────────────────────────────────
 
-type KeyedAbility = Ability & { _id: number };
-type KeyedTrait = Trait & { _id: number };
+type KeyedFeature = Feature & { _id: number };
 
-function keyAbilities(abilities: Ability[]): KeyedAbility[] {
-  return abilities.map((a) => ({ ...a, _id: uid() }));
+function keyFeatures(features: Feature[]): KeyedFeature[] {
+  return features.map((f) => ({ ...f, _id: uid() }));
 }
 
-function keyTraits(traits: Trait[]): KeyedTrait[] {
-  return traits.map((t) => ({ ...t, _id: uid() }));
-}
-
-function stripKeys(abilities: KeyedAbility[]): Ability[] {
-  return abilities.map(({ _id, ...rest }) => rest);
-}
-
-function stripTraitKeys(traits: KeyedTrait[]): Trait[] {
-  return traits.map(({ _id, ...rest }) => rest);
+function stripKeys(features: KeyedFeature[]): Feature[] {
+  return features.map(({ _id, ...rest }) => rest);
 }
 
 // ── Main component ───────────────────────────────────────────────────────────
@@ -89,8 +85,7 @@ interface MonsterEditorProps {
 
 export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProps) {
   const [expanded, setExpanded] = useState(!monster.name);
-  const [abilities, setAbilities] = useState<KeyedAbility[]>(() => keyAbilities(monster.abilities));
-  const [traits, setTraits] = useState<KeyedTrait[]>(() => keyTraits(monster.traits));
+  const [features, setFeatures] = useState<KeyedFeature[]>(() => keyFeatures(monster.features));
 
   const update = useCallback(
     (field: string, value: unknown) => {
@@ -99,18 +94,11 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
     [monster, onChange],
   );
 
-  const updateChar = useCallback(
-    (key: keyof Characteristics, value: number) => {
-      onChange({ ...monster, characteristics: { ...monster.characteristics, [key]: value } });
-    },
-    [monster, onChange],
-  );
-
-  const updateAbility = useCallback(
-    (id: number, field: string, value: unknown) => {
-      setAbilities((prev) => {
-        const next = prev.map((a) => (a._id === id ? { ...a, [field]: value } : a));
-        onChange({ ...monster, abilities: stripKeys(next) });
+  const updateFeature = useCallback(
+    (id: number, updater: (f: KeyedFeature) => KeyedFeature) => {
+      setFeatures((prev) => {
+        const next = prev.map((f) => (f._id === id ? updater(f) : f));
+        onChange({ ...monster, features: stripKeys(next) });
         return next;
       });
     },
@@ -118,48 +106,26 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
   );
 
   const addAbility = useCallback(() => {
-    setAbilities((prev) => {
-      const next = [...prev, emptyAbility()];
-      onChange({ ...monster, abilities: stripKeys(next) });
+    setFeatures((prev) => {
+      const next = [...prev, emptyAbilityFeature()];
+      onChange({ ...monster, features: stripKeys(next) });
       return next;
     });
   }, [monster, onChange]);
-
-  const removeAbility = useCallback(
-    (id: number) => {
-      setAbilities((prev) => {
-        const next = prev.filter((a) => a._id !== id);
-        onChange({ ...monster, abilities: stripKeys(next) });
-        return next;
-      });
-    },
-    [monster, onChange],
-  );
-
-  const updateTrait = useCallback(
-    (id: number, field: string, value: string) => {
-      setTraits((prev) => {
-        const next = prev.map((t) => (t._id === id ? { ...t, [field]: value } : t));
-        onChange({ ...monster, traits: stripTraitKeys(next) });
-        return next;
-      });
-    },
-    [monster, onChange],
-  );
 
   const addTrait = useCallback(() => {
-    setTraits((prev) => {
-      const next = [...prev, emptyTrait()];
-      onChange({ ...monster, traits: stripTraitKeys(next) });
+    setFeatures((prev) => {
+      const next = [...prev, emptyTraitFeature()];
+      onChange({ ...monster, features: stripKeys(next) });
       return next;
     });
   }, [monster, onChange]);
 
-  const removeTrait = useCallback(
+  const removeFeature = useCallback(
     (id: number) => {
-      setTraits((prev) => {
-        const next = prev.filter((t) => t._id !== id);
-        onChange({ ...monster, traits: stripTraitKeys(next) });
+      setFeatures((prev) => {
+        const next = prev.filter((f) => f._id !== id);
+        onChange({ ...monster, features: stripKeys(next) });
         return next;
       });
     },
@@ -180,7 +146,7 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
             {monster.name || 'Unnamed Monster'}
           </span>
           <span className="text-xs font-label text-on-surface-variant">
-            L{monster.level} {monster.role} · EV {monster.ev}
+            L{monster.level} {monster.roles.join(', ')} · EV {monster.ev ?? '-'}
           </span>
         </button>
         <button
@@ -223,10 +189,10 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
         <div className="grid grid-cols-[1fr_60px_1fr_60px] gap-2">
           <LabeledInput label="Name" value={monster.name} onChange={(v) => update('name', v)} />
           <LabeledInput label="Level" type="number" value={monster.level} onChange={(v) => update('level', parseInt(v) || 1)} />
-          <LabeledInput label="Role" value={monster.role} onChange={(v) => update('role', v)} />
-          <LabeledInput label="EV" type="number" value={monster.ev} onChange={(v) => update('ev', parseInt(v) || 1)} />
+          <LabeledInput label="Roles (comma-sep)" value={monster.roles.join(', ')} onChange={(v) => update('roles', v.split(',').map((s) => s.trim()).filter(Boolean))} />
+          <LabeledInput label="EV" type="number" value={monster.ev ?? ''} onChange={(v) => update('ev', v ? parseInt(v) || 0 : null)} />
         </div>
-        <LabeledInput label="Keywords (comma-separated)" value={monster.keywords.join(', ')} onChange={(v) => update('keywords', v.split(',').map((s) => s.trim()).filter(Boolean))} />
+        <LabeledInput label="Ancestry (comma-separated)" value={monster.ancestry.join(', ')} onChange={(v) => update('ancestry', v.split(',').map((s) => s.trim()).filter(Boolean))} />
       </Section>
 
       {/* Combat Stats */}
@@ -236,12 +202,12 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
           <LabeledInput label="Speed" type="number" value={monster.speed} onChange={(v) => update('speed', parseInt(v) || 0)} />
           <LabeledInput label="Stamina" type="number" value={monster.stamina} onChange={(v) => update('stamina', parseInt(v) || 0)} />
           <LabeledInput label="Stability" type="number" value={monster.stability} onChange={(v) => update('stability', parseInt(v) || 0)} />
-          <LabeledInput label="Free Strike" type="number" value={monster.freeStrike} onChange={(v) => update('freeStrike', parseInt(v) || 0)} />
+          <LabeledInput label="Free Strike" type="number" value={monster.free_strike} onChange={(v) => update('free_strike', parseInt(v) || 0)} />
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <LabeledInput label="Immunity" value={monster.immunity ?? ''} onChange={(v) => update('immunity', v || null)} placeholder="e.g., Corruption 1" />
-          <LabeledInput label="Weakness" value={monster.weakness ?? ''} onChange={(v) => update('weakness', v || null)} placeholder="e.g., Holy 3" />
-          <LabeledInput label="Movement" value={monster.movement ?? ''} onChange={(v) => update('movement', v || null)} placeholder="e.g., Fly, Teleport" />
+          <LabeledInput label="Immunities (comma-sep)" value={(monster.immunities ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('immunities', arr.length ? arr : undefined); }} placeholder="e.g., Fire 5" />
+          <LabeledInput label="Weaknesses (comma-sep)" value={(monster.weaknesses ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('weaknesses', arr.length ? arr : undefined); }} placeholder="e.g., Holy 3" />
+          <LabeledInput label="Movement" value={monster.movement ?? ''} onChange={(v) => update('movement', v || undefined)} placeholder="e.g., Fly, Teleport" />
         </div>
       </Section>
 
@@ -253,74 +219,81 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
               key={key}
               label={key.charAt(0).toUpperCase() + key.slice(1)}
               type="number"
-              value={monster.characteristics[key]}
-              onChange={(v) => updateChar(key, parseInt(v) || 0)}
+              value={monster[key]}
+              onChange={(v) => update(key, parseInt(v) || 0)}
             />
           ))}
         </div>
       </Section>
 
-      {/* Abilities */}
-      <Section label="Abilities">
-        {abilities.map((ab) => (
-          <AbilityEditor
-            key={ab._id}
-            ability={ab}
-            onChange={(field, value) => updateAbility(ab._id, field, value)}
-            onRemove={() => removeAbility(ab._id)}
-          />
+      {/* Features (Abilities + Traits) */}
+      <Section label="Features">
+        {features.map((feat) => (
+          feat.feature_type === 'ability' ? (
+            <AbilityFeatureEditor
+              key={feat._id}
+              feature={feat}
+              onChange={(updater) => updateFeature(feat._id, updater)}
+              onRemove={() => removeFeature(feat._id)}
+            />
+          ) : (
+            <TraitFeatureEditor
+              key={feat._id}
+              feature={feat}
+              onChange={(updater) => updateFeature(feat._id, updater)}
+              onRemove={() => removeFeature(feat._id)}
+            />
+          )
         ))}
-        <AddButton onClick={addAbility}>Add Ability</AddButton>
-      </Section>
-
-      {/* Traits */}
-      <Section label="Traits">
-        {traits.map((tr) => (
-          <div key={tr._id} className="flex gap-2 items-start">
-            <div className="flex-1 grid grid-cols-[1fr_2fr] gap-2">
-              <input className={inputClass} value={tr.name} onChange={(e) => updateTrait(tr._id, 'name', e.target.value)} placeholder="Name" />
-              <input className={inputClass} value={tr.description} onChange={(e) => updateTrait(tr._id, 'description', e.target.value)} placeholder="Description" />
-            </div>
-            <button onClick={() => removeTrait(tr._id)} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer">
-              <span className="material-symbols-outlined text-base">close</span>
-            </button>
-          </div>
-        ))}
-        <AddButton onClick={addTrait}>Add Trait</AddButton>
+        <div className="flex gap-3">
+          <AddButton onClick={addAbility}>Add Ability</AddButton>
+          <AddButton onClick={addTrait}>Add Trait</AddButton>
+        </div>
       </Section>
     </div>
   );
 }
 
-// ── Ability editor ───────────────────────────────────────────────────────────
+// ── Ability Feature editor ──────────────────────────────────────────────────
 
-function AbilityEditor({
-  ability,
+function AbilityFeatureEditor({
+  feature,
   onChange,
   onRemove,
 }: {
-  ability: KeyedAbility;
-  onChange: (field: string, value: unknown) => void;
+  feature: KeyedFeature;
+  onChange: (updater: (f: KeyedFeature) => KeyedFeature) => void;
   onRemove: () => void;
 }) {
+  const powerRollEffect = feature.effects.find((e) => e.roll != null);
   const [showPowerRoll, setShowPowerRoll] = useState(
-    (ability.powerRoll?.length ?? 0) > 0 && ability.powerRoll!.some((t) => t.result !== ''),
+    powerRollEffect != null && (powerRollEffect.tier1 !== '' || powerRollEffect.tier2 !== '' || powerRollEffect.tier3 !== ''),
   );
 
-  const updatePowerRollTier = (index: number, field: keyof PowerRollTier, value: string) => {
-    const pr = [...(ability.powerRoll ?? [])];
-    pr[index] = { ...pr[index], [field]: value };
-    onChange('powerRoll', pr);
+  const set = (field: string, value: unknown) =>
+    onChange((f) => ({ ...f, [field]: value }));
+
+  const updateEffect = (index: number, patch: Partial<Effect>) => {
+    onChange((f) => ({
+      ...f,
+      effects: f.effects.map((e, i) => (i === index ? { ...e, ...patch } : e)),
+    }));
   };
+
+  // Find indices for power roll and named effects
+  const prIndex = feature.effects.findIndex((e) => e.roll != null);
+  const namedEffects = feature.effects
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => e.roll == null && e.effect != null);
 
   return (
     <div className="p-3 rounded-sm bg-surface-container-low/50 space-y-2">
-      {/* Row 1: name, type, action, remove */}
+      {/* Row 1: name, ability_type, usage, remove */}
       <div className="flex gap-2 items-start">
         <div className="flex-1 grid grid-cols-[1fr_auto_auto] gap-2">
-          <input className={inputClass} value={ability.name} onChange={(e) => onChange('name', e.target.value)} placeholder="Ability name" />
-          <input className={`${inputClass} w-36`} value={ability.type ?? ''} onChange={(e) => onChange('type', e.target.value || undefined)} placeholder="Type (optional)" />
-          <input className={`${inputClass} w-28`} value={ability.action ?? ''} onChange={(e) => onChange('action', e.target.value || undefined)} placeholder="Action" />
+          <input className={inputClass} value={feature.name} onChange={(e) => set('name', e.target.value)} placeholder="Ability name" />
+          <input className={`${inputClass} w-36`} value={feature.ability_type ?? ''} onChange={(e) => set('ability_type', e.target.value || undefined)} placeholder="Type (optional)" />
+          <input className={`${inputClass} w-28`} value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)} placeholder="Usage" />
         </div>
         <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer">
           <span className="material-symbols-outlined text-base">close</span>
@@ -329,13 +302,10 @@ function AbilityEditor({
 
       {/* Row 2: keywords, distance, target */}
       <div className="grid grid-cols-[1fr_auto_auto] gap-2">
-        <input className={inputClass} value={(ability.keywords ?? []).join(', ')} onChange={(e) => onChange('keywords', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} placeholder="Keywords (comma-separated)" />
-        <input className={`${inputClass} w-28`} value={ability.distance ?? ''} onChange={(e) => onChange('distance', e.target.value || undefined)} placeholder="Distance" />
-        <input className={`${inputClass} w-36`} value={ability.target ?? ''} onChange={(e) => onChange('target', e.target.value || undefined)} placeholder="Target" />
+        <input className={inputClass} value={(feature.keywords ?? []).join(', ')} onChange={(e) => set('keywords', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} placeholder="Keywords (comma-separated)" />
+        <input className={`${inputClass} w-28`} value={feature.distance ?? ''} onChange={(e) => set('distance', e.target.value || undefined)} placeholder="Distance" />
+        <input className={`${inputClass} w-36`} value={feature.target ?? ''} onChange={(e) => set('target', e.target.value || undefined)} placeholder="Target" />
       </div>
-
-      {/* Damage */}
-      <input className={`${inputClass} w-full`} value={ability.damage ?? ''} onChange={(e) => onChange('damage', e.target.value || undefined)} placeholder="Damage (optional)" />
 
       {/* Power Roll toggle + tiers */}
       <div>
@@ -348,26 +318,82 @@ function AbilityEditor({
           </span>
           Power Roll
         </button>
-        {showPowerRoll && (
+        {showPowerRoll && prIndex >= 0 && (
           <div className="mt-2 space-y-1">
-            {(ability.powerRoll ?? []).map((tier, i) => (
-              <div key={i} className="grid grid-cols-[60px_1fr] gap-2">
-                <input className={`${inputClass} text-center text-xs`} value={tier.tier} onChange={(e) => updatePowerRollTier(i, 'tier', e.target.value)} />
-                <input className={inputClass} value={tier.result} onChange={(e) => updatePowerRollTier(i, 'result', e.target.value)} placeholder="Result" />
+            <div className="grid grid-cols-[80px_1fr] gap-2">
+              <div>
+                <div className={labelClass}>Bonus</div>
+                <input type="number" className={`${inputClass} w-full text-center`} value={feature.effects[prIndex].roll ?? 0} onChange={(e) => updateEffect(prIndex, { roll: parseInt(e.target.value) || 0 })} />
+              </div>
+              <div />
+            </div>
+            {(['tier1', 'tier2', 'tier3'] as const).map((tier, i) => (
+              <div key={tier} className="grid grid-cols-[80px_1fr] gap-2">
+                <span className={`${inputClass} text-center text-xs flex items-center justify-center`}>
+                  {i === 0 ? '\u226411' : i === 1 ? '12-16' : '17+'}
+                </span>
+                <input className={inputClass} value={feature.effects[prIndex][tier] ?? ''} onChange={(e) => updateEffect(prIndex, { [tier]: e.target.value })} placeholder="Result" />
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Effect */}
-      <textarea
-        className={`${inputClass} w-full`}
-        rows={2}
-        value={ability.effect ?? ''}
-        onChange={(e) => onChange('effect', e.target.value || undefined)}
-        placeholder="Effect (optional)"
-      />
+      {/* Named effects */}
+      {namedEffects.map(({ e, i }) => (
+        <div key={i} className="space-y-1">
+          <div className="flex gap-2 items-center">
+            <span className="text-xs font-label text-on-surface-variant">{e.name || 'Effect'}:</span>
+            {e.cost && <span className="text-xs font-label text-primary">{e.cost}</span>}
+          </div>
+          <textarea
+            className={`${inputClass} w-full`}
+            rows={2}
+            value={e.effect ?? ''}
+            onChange={(ev) => updateEffect(i, { effect: ev.target.value })}
+            placeholder="Effect text"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Trait Feature editor ────────────────────────────────────────────────────
+
+function TraitFeatureEditor({
+  feature,
+  onChange,
+  onRemove,
+}: {
+  feature: KeyedFeature;
+  onChange: (updater: (f: KeyedFeature) => KeyedFeature) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex gap-2 items-start">
+      <div className="flex-1 grid grid-cols-[1fr_2fr] gap-2">
+        <input
+          className={inputClass}
+          value={feature.name}
+          onChange={(e) => onChange((f) => ({ ...f, name: e.target.value }))}
+          placeholder="Trait name"
+        />
+        <input
+          className={inputClass}
+          value={feature.effects[0]?.effect ?? ''}
+          onChange={(e) =>
+            onChange((f) => ({
+              ...f,
+              effects: [{ ...f.effects[0], effect: e.target.value }],
+            }))
+          }
+          placeholder="Description"
+        />
+      </div>
+      <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer">
+        <span className="material-symbols-outlined text-base">close</span>
+      </button>
     </div>
   );
 }

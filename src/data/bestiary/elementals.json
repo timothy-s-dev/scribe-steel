@@ -1,0 +1,632 @@
+{
+  "name": "Elementals",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Elemental Swap",
+      "icon": "⭐️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "Two elementals on the encounter map teleport to swap places, and each has damage immunity 2 until the end of the round."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Split",
+      "icon": "👤",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "An elemental acting this turn cleaves themself into two separate elementals. Each elemental has the same statistics as the original, except that each has half the original's current Stamina and is one size smaller. Both elementals can then shift up to their speed."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Convocation of Chaos",
+      "icon": "🏹",
+      "keywords": [
+        "Magic",
+        "Ranged"
+      ],
+      "usage": "Maneuver",
+      "distance": "Ranged 8",
+      "target": "Self or one elemental",
+      "cost": "7",
+      "effects": [
+        {
+          "name": "Effect",
+          "effect": "Until the end of the encounter, the target has a +5 bonus to speed and a +5 damage bonus to strikes. Additionally, whenever an elemental within the target's line of effect uses an ability with \"Convocation\" in the name, the target also gains the effects of that ability."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Crux of Fire",
+      "level": 3,
+      "roles": [
+        "Elite Artillery"
+      ],
+      "ancestry": [
+        "Elemental"
+      ],
+      "ev": 20,
+      "stamina": 80,
+      "speed": 6,
+      "size": "1T",
+      "stability": 0,
+      "free_strike": 6,
+      "might": -1,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spitfire",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 12",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "8 fire damage",
+              "tier2": "12 fire damage; A < 1 the target is burning (save ends)",
+              "tier3": "15 fire damage; A < 2 the target is burning (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A burning creature takes 1d6 fire damage at the start of each of their turns. A burning object takes 1d6 fire damage at the end of each round."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Convocation of Flames",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self or one elemental",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the crux's next turn, the target has fire immunity 5."
+            },
+            {
+              "effect": "Until the end of the encounter, the ground within 3 squares of the target is wreathed in fire. Any enemy who enters that area for the first time in a round or starts their turn there takes 3 fire damage.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Flame Jet",
+          "icon": "❗️",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The crux takes damage.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The crux ignores any effects associated with the damage and can fly up to their speed. If the crux doesn't end this movement on solid ground, they fall."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Fickle and Free",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The crux can't be restrained, slowed, or knocked prone, and they ignore difficult terrain."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Essence of Storms",
+      "level": 3,
+      "roles": [
+        "Elite Harrier"
+      ],
+      "ancestry": [
+        "Elemental"
+      ],
+      "ev": 20,
+      "stamina": 100,
+      "speed": 8,
+      "movement": "Fly",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 1,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Lightning 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bluster",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "1 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "5 damage, 4 lightning damage; push 1",
+              "tier3": "5 damage, 7 lightning damage; push 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "The essence shifts up to 3 squares before or after using this ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Convocation of Squalls",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self or one elemental",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the essence's next turn, the target has lightning immunity 5."
+            },
+            {
+              "effect": "Until the end of the encounter, a vortex surrounds the target in a 3 aura. The area is difficult terrain for enemies. Additionally, at the end of each of the target's turns, they can push one creature in the area up to 5 squares.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Thunderclap",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance deals damage to the essence.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target takes 5 lightning damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Fickle and Free",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The essence can't be restrained, slowed, or knocked prone, and they ignore difficult terrain."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Essence of Tides",
+      "level": 3,
+      "roles": [
+        "Elite Controller"
+      ],
+      "ancestry": [
+        "Elemental"
+      ],
+      "ev": 20,
+      "stamina": 80,
+      "speed": 7,
+      "movement": "Swim",
+      "size": "1M",
+      "stability": 1,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 0,
+      "reason": 1,
+      "intuition": -1,
+      "presence": 2,
+      "immunities": [
+        "Cold 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Water Wing",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage; slide 1",
+              "tier2": "11 damage; slide 2",
+              "tier3": "14 damage; slide 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "If a target has P < 2, their stability is reduced to 0 and they move 2 additional squares whenever they are force moved (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Convocation of Waves",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self or one elemental",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the essence's next turn, the target has cold immunity 5."
+            },
+            {
+              "effect": "Until the end of the encounter, the ground within 1 square of the target is a pool of water that is difficult terrain. This water extends out behind the target as they move, creating a stream that lasts until the end of the encounter. Any enemy who ends their turn in the stream and has M < 2 is slowed (save ends).",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sea-Salted Wounds",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One enemy",
+          "trigger": "An ally deals rolled damage to the target.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The essence makes a free strike against the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Fickle and Free",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The essence can't be restrained, slowed, or knocked prone, and they ignore difficult terrain."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Water Glide",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever the essence starts their turn in a space containing water, they can fly until the end of their turn. While flying, the essence doesn't provoke opportunity attacks."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Field of Growth",
+      "level": 3,
+      "roles": [
+        "Elite Controller"
+      ],
+      "ancestry": [
+        "Elemental"
+      ],
+      "ev": 28,
+      "stamina": 120,
+      "speed": 8,
+      "movement": "Climb",
+      "size": "3",
+      "stability": 2,
+      "free_strike": 6,
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 2,
+      "immunities": [
+        "Poison 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Hampering Roots",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 8",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "8 damage",
+              "tier2": "13 damage; R < 1 prone and can't stand (save ends)",
+              "tier3": "16 damage; R < 2 prone and can't stand (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If a target made prone this way is already prone, they are instead restrained (save ends). If the target was also unable to stand, that effect ends when they are no longer restrained this way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Convocation of Verdure",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self or one elemental",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target gains 15 temporary Stamina that lasts until the start of the field's next turn."
+            },
+            {
+              "effect": "Until the end of the encounter, the ground within 1 square of the target is overgrown with underbrush and vines. Whenever any enemy makes a strike against the target while within line of effect of that area, the enemy is pulled 5 squares toward the area after the strike is resolved. Any enemy who enters the area for the first time in a round or starts their turn there is knocked prone.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rose Thorn Lash",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 3",
+          "target": "The triggering creature or object",
+          "trigger": "A creature or object within distance deals damage to the field.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target takes 6 damage, and if they have A < 2, they are bleeding (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Fickle and Free",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The field can't be restrained, slowed, or knocked prone, and they ignore difficult terrain."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Roots Run Deep",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The field can target any creature touching the ground with their abilities, even if they don't have line of effect to that creature."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Force of Earth",
+      "level": 3,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Elemental"
+      ],
+      "ev": 20,
+      "stamina": 132,
+      "speed": 5,
+      "movement": "Burrow",
+      "size": "2",
+      "stability": 2,
+      "free_strike": 6,
+      "might": 2,
+      "agility": -1,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Slam Into Dirt",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "8 damage",
+              "tier2": "12 damage; M < 1 restrained (save ends)",
+              "tier3": "15 damage; M < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target's space is difficult terrain."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Convocation of Quartz",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self or one elemental",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the force's next turn, any melee strike made against the target takes a bane if it doesn't already have a bane or double bane."
+            },
+            {
+              "effect": "Until the end of the encounter, the target grows a carapace of stone. They have a +3 bonus to stability and gain 15 temporary Stamina.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Break Armor",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The force takes damage.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The force halves the damage, and has damage weakness 3 and a +3 bonus to speed until the end of the encounter. This damage weakness increases by 3 each time the force uses this ability in the same encounter."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Fickle and Free",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The force can't be restrained, slowed, or knocked prone, and they ignore difficult terrain."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Primordial Strength",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The force's strikes gain a +6 damage bonus against objects."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Stone Swim",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The force can burrow through stone, but can't drag other creatures underground when they do so."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

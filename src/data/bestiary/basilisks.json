@@ -1,0 +1,338 @@
+{
+  "name": "Basilisks",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Stone Swim",
+      "icon": "⭐️",
+      "cost": "3+",
+      "effects": [
+        {
+          "effect": "A basilisk acting this turn can burrow until the start of their next turn, and moves up to their speed. They have damage immunity 2 while underground. The basilisk can burrow through stone, but can't drag other creatures underground when they do so. At the start of each of the basilisk's turns, the Director can spend 1 Malice to let the basilisk continue burrowing."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Upchuck",
+      "icon": "🔳",
+      "keywords": [
+        "Area",
+        "Weapon"
+      ],
+      "usage": "Main action",
+      "distance": "3 cube within 10",
+      "target": "Each enemy in the area",
+      "cost": "5",
+      "effects": [
+        {
+          "name": "Effect",
+          "effect": "The basilisk spits up a chunk of partly digested stone."
+        },
+        {
+          "roll": 2,
+          "tier1": "4 damage",
+          "tier2": "4 damage; A < 1 2 damage, prone",
+          "tier3": "4 damage; A < 2 5 damage, prone and can't stand (save ends)"
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Walleye",
+      "icon": "🔳",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "A basilisk spews reflective spittle across an adjacent vertical surface in a 3-square-by-3-square area. The basilisk can use their Petrifying Eye Beams ability to target a square in the area, causing the area and distance of that ability to become a 20 x 3 line within 1 square of the wall."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Basilisk Tonguesnapper",
+      "level": 1,
+      "roles": [
+        "Elite Hexer"
+      ],
+      "ancestry": [
+        "Basilisk",
+        "Beast"
+      ],
+      "ev": 12,
+      "stamina": 40,
+      "speed": 8,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 4,
+      "might": 1,
+      "agility": 2,
+      "reason": -3,
+      "intuition": -1,
+      "presence": -1,
+      "immunities": [
+        "Acid 2",
+        "Poison 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Prehensile Tongue",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 3",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "8 acid damage; pull 1",
+              "tier2": "10 acid damage; pull 2",
+              "tier3": "14 acid damage; pull 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability can pull targets restrained by Petrifying Eye Beams, and ignores stability if it does so."
+            },
+            {
+              "effect": "The tonguesnapper targets two additional creatures or objects.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Petrifying Eye Beams",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 x 2 line within 1",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "The area extends from both the tonguesnapper's eyes, and this ability targets the first creature without cover on either side of the area."
+            },
+            {
+              "roll": 2,
+              "tier1": "A < 0 restrained (save ends)",
+              "tier2": "A < 1 restrained (save ends)",
+              "tier3": "Slowed (save ends); or if A < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If a target is already slowed, the potency increases by 1 for that target. A target restrained this way magically begins to turn to stone, and a target who ends two consecutive turns restrained this way is petrified. A target restrained this way or a creature adjacent to them can use a main action to cut encroaching stone from the target's body, dealing 8 damage to the target that can't be reduced in any way and ending this effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wink",
+          "icon": "⚔️",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "One creature",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "8 corruption damage; R < 0 dazed (save ends)",
+              "tier2": "10 corruption damage; R < 1 dazed (save ends)",
+              "tier3": "14 corruption damage; R < 2 dazed and slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A creature dazed this way can't benefit from edges or double edges and can't gain or use surges."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Neurotoxin Splash",
+          "icon": "❗️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Triggered action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "trigger": "The tonguesnapper takes damage from a melee ability.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target takes 4 acid damage. Any target who has M < 2 is also slowed (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Petrifying Fumes",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature who starts their turn adjacent to the tonguesnapper and has M < 1 is slowed (save ends)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Basilisk",
+      "level": 1,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Basilisk",
+        "Beast"
+      ],
+      "ev": 12,
+      "stamina": 80,
+      "speed": 8,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 0,
+      "reason": -3,
+      "intuition": -1,
+      "presence": -1,
+      "immunities": [
+        "Poison 4"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Noxious Bite",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main Action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 poison damage",
+              "tier2": "10 poison damage",
+              "tier3": "13 poison damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability gains an edge against targets the basilisk has previously dealt poison damage to."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Petrifying Eye Beams",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 x 2 line within 1",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "The area extends from both the basilisk's eyes, and this ability targets the first creature without cover on either side of the area."
+            },
+            {
+              "roll": 2,
+              "tier1": "M < 0 restrained (save ends)",
+              "tier2": "M < 1 restrained (save ends)",
+              "tier3": "Slowed (save ends); or if M < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If a target is already slowed, the potency increases by 1 for that target. A target restrained this way magically begins to turn to stone, and a target who ends two consecutive turns restrained this way is petrified. A target restrained this way or a creature adjacent to them can use a main action to cut encroaching stone from the target's body, dealing 8 damage to the target that can't be reduced in any way and ending this effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Poison Fumes",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 1",
+          "target": "Each enemy in the area",
+          "cost": "5",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 poison damage; M < 0 weakened (save ends)",
+              "tier2": "6 poison damage; M < 1 weakened and slowed (save ends)",
+              "tier3": "9 poison damage; M < 2 weakened and slowed (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lash Out",
+          "icon": "❗️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Triggered action",
+          "distance": "1 burst",
+          "target": "Each enemy in the area",
+          "trigger": "The basilisk takes damage from a melee ability.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target takes 5 damage. Any target who has A < 2 is also bleeding (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Calcifying Presence",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The area within 3 squares of the basilisk is difficult terrain for enemies."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

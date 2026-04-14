@@ -1,0 +1,332 @@
+{
+  "name": "Wyverns",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Simmering Anger",
+      "icon": "🗡",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "One wyvern in the encounter can make a free strike against each enemy adjacent to them."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Boiling Fury",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Until the end of the round, each wyvern in the encounter has a double edge on strikes and can use their signature ability instead of a free strike when making opportunity attacks."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Overflowing Rage",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "The target is taunted by the nearest creature or object (save ends). While the target is taunted this way, power rolls against them have a double edge.",
+          "tier2": "The target is taunted by the nearest creature or object (save ends).",
+          "tier3": "No effect.",
+          "effect": "Every wyvern's anger fills the encounter map with a thick miasma of hatred. Each enemy in the encounter makes an **Intuition test**."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Wyvern Lurker",
+      "level": 4,
+      "roles": [
+        "Elite Ambusher"
+      ],
+      "ancestry": [
+        "Beast",
+        "Wyvern"
+      ],
+      "ev": 24,
+      "stamina": 120,
+      "speed": 9,
+      "movement": "Fly",
+      "size": "2",
+      "stability": 2,
+      "free_strike": 6,
+      "might": 2,
+      "agility": 3,
+      "reason": -1,
+      "intuition": 1,
+      "presence": 0,
+      "immunities": [
+        "Acid 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Agonizing Stinger",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "14 damage; M < 2 bleeding (save ends)",
+              "tier3": "17 damage; M < 3 bleeding (save ends)"
+            },
+            {
+              "effect": "One target hidden from the lurker takes an extra 6 acid damage.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Acidic Anguish",
+          "icon": "🗡",
+          "keywords": [
+            "Magic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 acid damage; M < 1 weakened (save ends)",
+              "tier2": "16 acid damage; M < 2 weakened (save ends)",
+              "tier3": "20 acid damage; M < 3 weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target weakened this way takes 1d4 acid damage at the start of each of their turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Swooping Torment",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The lurker flies up to their speed, then can attempt to hide. Each enemy the lurker moves adjacent to during this movement can choose to take 3 sonic damage or fall prone."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Retaliatory Dive",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance deals damage to the lurker with a ranged ability.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The lurker flies adjacent to the target and can make a free strike against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Ruthless Rage",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While within 10 squares of another wyvern, the lurker deals an extra 3 damage with strikes."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Tenacious Hunter",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature affected by a condition imposed by a wyvern can't be hidden from the lurker."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wyvern Predator",
+      "level": 4,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Beast",
+        "Wyvern"
+      ],
+      "ev": 24,
+      "stamina": 140,
+      "speed": 7,
+      "movement": "Fly",
+      "size": "3",
+      "stability": 3,
+      "free_strike": 6,
+      "might": 3,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 1,
+      "presence": 0,
+      "immunities": [
+        "Acid 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sedating Stinger",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 3",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "14 damage; M < 2 slowed (save ends)",
+              "tier3": "17 damage; M < 3 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If a target slowed this way is already slowed, they are instead restrained (save ends)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tail Sweep",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "6 x 3 line within 1",
+          "target": "Each enemy and object in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 damage; A < 1 3 acid damage",
+              "tier2": "11 damage; A < 2 3 acid damage",
+              "tier3": "14 damage; A < 3 3 acid damage"
+            },
+            {
+              "effect": "The predator uses this ability a second time, either recreating the same line or creating a new line.",
+              "cost": "5"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grasping Jaws",
+          "icon": "🗡",
+          "keywords": [
+            "Magic",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "Melee 2",
+          "target": "One creature or object",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage; A < 1 grabbed",
+              "tier2": "14 damage; A < 2 grabbed",
+              "tier3": "17 damage; A < 3 grabbed and the target takes a bane on the Escape Grab maneuver"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Deterring Sting",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 3",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance deals damage to the predator with a melee ability.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The predator uses Sedating Stinger against the target, then shifts up to 3 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Stubborn Rage",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While winded or within 10 squares of another wyvern, the predator can't be made dazed or frightened."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Tenacious Hunter",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature affected by a condition imposed by a wyvern can't be hidden from the predator."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,524 @@
+{
+  "name": "Ogres",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Shockwave",
+      "icon": "❇️",
+      "cost": "3",
+      "effects": [
+        {
+          "tier1": "5 damage; vertical push 3",
+          "tier2": "4 damage; vertical push 2",
+          "tier3": "Push 1",
+          "effect": "One ogre acting this turn jumps and lands on their rear, causing a 3 burst shockwave. Each size 1 creature in the area makes a **Might test** or **Agility test**."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Bully",
+      "icon": "🌀",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Each ogre in the encounter shifts up to their speed and can make a free strike. If they can, they gang up on the same target rather than picking different targets."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Rampage",
+      "icon": "⭐️",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "Until the end of the round, each ogre has damage immunity 5 and deals an extra 5 damage with abilities, and heroic abilities that target any ogre have their Heroic Resource cost reduced by 1 (to a minimum of 1)."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Cyclops",
+      "level": 10,
+      "roles": [
+        "Minion Controller"
+      ],
+      "ancestry": [
+        "Giant",
+        "Ogre"
+      ],
+      "ev": 12,
+      "stamina": 14,
+      "speed": 6,
+      "size": "3",
+      "stability": 5,
+      "free_strike": 4,
+      "with_captain": "+4 bonus to speed",
+      "might": 5,
+      "agility": -1,
+      "reason": -1,
+      "intuition": 3,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wild Slam",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "1 burst",
+          "target": "Each enemy and object in the area",
+          "effects": [
+            {
+              "roll": 5,
+              "tier1": "3 damage; A < 3 3 damage",
+              "tier2": "6 damage; push 3; A < 4 4 damage",
+              "tier3": "7 damage; prone; A < 5 5 damage and restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The cyclops automatically treats their initial power roll as a 17. They can still roll to determine if they score a critical hit."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Limited Vision",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The cyclops has line of effect only within 3 squares. Whenever the cyclops takes damage from a ranged ability, they can move up to 3 squares toward the source of the damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ogre Blue Blood",
+      "level": 7,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Giant",
+        "Ogre"
+      ],
+      "ev": 9,
+      "stamina": 13,
+      "speed": 5,
+      "size": "2",
+      "stability": 4,
+      "free_strike": 4,
+      "with_captain": "Gain an edge on strikes",
+      "might": 4,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Crush Underfoot",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 damage",
+              "tier2": "7 damage; M < 3 prone",
+              "tier3": "8 damage; prone"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target who is already prone takes an extra 4 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "In My Stead",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever the blue blood would make a free strike, an ally within 5 squares can make a free strike instead."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Royal Anger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The blue blood has damage immunity 2 while their squad has three or fewer minions in it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ogre Goon",
+      "level": 2,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Giant",
+        "Ogre"
+      ],
+      "ev": 16,
+      "stamina": 100,
+      "speed": 5,
+      "size": "2",
+      "stability": 4,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 0,
+      "reason": -1,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Club Swing",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage; push 2",
+              "tier2": "11 damage; push 4",
+              "tier3": "14 damage; push 6, prone"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target who takes damage from this forced movement takes an extra 4 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grabby Hand",
+          "icon": "🗡",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "cost": "1",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage",
+              "tier2": "11 damage; grabbed",
+              "tier3": "14 damage; grabbed"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target grabbed this way takes a bane on the Escape Grab maneuver."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "People Bowling",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "6 x 1 line within 1",
+          "target": "Each creature and object in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The goon must have a size 1 creature or object grabbed, which they hurl across the area, ending the grab. The hurled creature or object is targeted by the ability, and lands in the last square of the line or the nearest unoccupied square of the goon's choice."
+            },
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage; prone"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Swat the Fly",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "The triggering creature or object",
+          "trigger": "A creature or object within distance moves or shifts away from the goon.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The goon slides the target up to 5 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Defiant Anger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While winded, the goon has damage immunity 2."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ogre Juggernaut",
+      "level": 2,
+      "roles": [
+        "Elite Harrier"
+      ],
+      "ancestry": [
+        "Giant",
+        "Ogre"
+      ],
+      "ev": 16,
+      "stamina": 80,
+      "speed": 6,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Pitchfork Catapult",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage",
+              "tier2": "10 damage; A < 1 vertical push 2",
+              "tier3": "13 damage; A < 2 vertical slide 3"
+            },
+            {
+              "effect": "Each target who has M < 1 is bleeding (save ends).",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Earth-Breaking Jump",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "3 burst",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The juggernaut jumps up to 6 squares before using this ability."
+            },
+            {
+              "roll": 2,
+              "tier1": "4 damage",
+              "tier2": "6 damage; push 2; M < 1 prone",
+              "tier3": "9 damage; push 4; M < 2 prone"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Horrible Bellow",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "I < 0 frightened (save ends)",
+              "tier2": "I < 1 frightened (save ends)",
+              "tier3": "I < 2 frightened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "While a target is frightened this way, any ogre gains an edge on strikes against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Hrraaaaaagh!",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The juggernaut takes damage.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The juggernaut moves up to their speed and can make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Destructive Path",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The juggernaut automatically destroys any mundane size 1 objects in their path when they move or are force moved. They can break through any mundane wall made of wood, stone, or a similarly sturdy material this way as long as the wall is 2 squares thick or less."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Defiant Anger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While winded, the juggernaut has damage immunity 2."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ogre Tantrum",
+      "level": 7,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Giant",
+        "Ogre"
+      ],
+      "ev": 9,
+      "stamina": 10,
+      "speed": 5,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 4,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": 4,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Throw Fit",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 8",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The tantrum unearths a rock or a hunk of terrain and tosses it. If a size 1L, 1M, or 1S creature or object adjacent to the tantrum has A < 3 the tantrum can grab them to use as the projectile for this ability."
+            },
+            {
+              "roll": 4,
+              "tier1": "4 damage",
+              "tier2": "7 damage; push 2",
+              "tier3": "8 damage; push 4",
+              "effect": "A creature or object used as a projectile is vertically pushed 8 (or 13 with a captain), ignoring stability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Excessive Anger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The tantrum has damage immunity 3 and speed 8 while their squad has two or fewer minions in it."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

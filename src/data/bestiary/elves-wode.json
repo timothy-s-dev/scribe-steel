@@ -1,0 +1,1267 @@
+{
+  "name": "Elves Wode",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Forest Network",
+      "icon": "⭐️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "Each wode elf who ends this turn hidden can shift up to their speed while remaining hidden."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Punishing Regrowth",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Until the end of the round, each wode elf gains an edge on abilities, and their strikes can slide a target up to 2 squares in addition to their usual effects. If a strike already imposes forced movement, this slide happens after that forced movement. A creature force moved by a wode elf's strike who ends this forced movement in difficult terrain is restrained until the end of their next turn."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Vines Everywhere",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "8 damage; restrained (save ends)",
+          "tier2": "Restrained (EoT)",
+          "tier3": "No effect.",
+          "effect": "Vines rapidly grow across the entire encounter map. Each enemy in the encounter makes an **Agility test**."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Wode Elf Chirurgeon",
+      "level": 2,
+      "roles": [
+        "Platoon Harrier"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 8,
+      "stamina": 40,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 1,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wild Ax",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage; push 1",
+              "tier2": "9 damage; push 3",
+              "tier3": "12 damage; push 5"
+            },
+            {
+              "name": "Effect",
+              "effect": "The chirurgeon can make a ranged free strike before using this ability."
+            },
+            {
+              "effect": "The chirurgeon uses this ability again.",
+              "cost": "5"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Wode Protects Us",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self and three allies",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can teleport up to 10 squares to a space that has cover or concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the chirurgeon that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Druid",
+      "level": 2,
+      "roles": [
+        "Platoon Controller"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 8,
+      "stamina": 30,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Entangling Vines",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 10",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage; pull 1",
+              "tier2": "8 damage; pull 3; M < 1 slowed (save ends)",
+              "tier3": "10 damage; pull 5; M < 2 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "While slowed this way, a target can't search for hidden creatures."
+            },
+            {
+              "effect": "The size of the cube and the potency both increase by 1.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Wode Protects Us",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Self and three allies",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can teleport up to 10 squares to a space that has cover or concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the druid that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Green Seer",
+      "level": 1,
+      "roles": [
+        "Platoon Hexer"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 6,
+      "stamina": 20,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Forest's Embrace",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "7 damage; I < 1 restrained (save ends)",
+              "tier3": "9 damage; I < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "While restrained this way, a target can't search for hidden creatures."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Natural Cycle",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Two creatures",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage; P < 1 weakened (save ends)",
+              "tier3": "6 damage; P < 1 bleeding (save ends); the target has a double bane on strikes (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "While bleeding or weakened this way, a target is covered in lichen."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Foreseen Punishment",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature uses a triggered action targeting the green seer or an ally within distance.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The green seer makes a free strike against the target after the target's triggered action is resolved."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the green seer that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Greenskeeper",
+      "level": 1,
+      "roles": [
+        "Platoon Defender"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 6,
+      "stamina": 40,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Growing Longsword",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target is taunted until the end of their next turn, and the greenskeeper shifts up to 3 squares."
+            },
+            {
+              "effect": "The distance increases to Melee 5.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Overgrowth",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 cube within 10",
+          "target": "Special",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The area is overgrown with heavy brush and brambles until the end of the encounter, providing cover and concealment for the greenskeeper and their allies. The area is difficult terrain for enemies and any enemy who starts their turn in the area takes 3 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the greenskeeper that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Guerrilla",
+      "level": 3,
+      "roles": [
+        "Platoon Ambusher"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 10,
+      "stamina": 50,
+      "speed": 7,
+      "movement": "Teleport",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Splinter Dagger",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage",
+              "tier2": "11 damage",
+              "tier3": "14 damage; M < 2 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The guerrilla can teleport up to 3 squares."
+            },
+            {
+              "effect": "This ability targets one additional target, and deals an additional 3 damage if both targets are adjacent to each other.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Do Not Hesitate in the Wode",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Ranged 20",
+          "target": "Self and each ally",
+          "trigger": "An ally ends their turn while the guerrilla hasn't acted this round.",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Special",
+              "effect": "The guerrilla must be acting as a captain."
+            },
+            {
+              "name": "Effect",
+              "effect": "The targets take their turn immediately. Each target gains an edge on abilities until the end of their turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Into the Green",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The guerrilla can attempt to hide at the end of each of their turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the guerrilla that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Gweiadur",
+      "level": 3,
+      "roles": [
+        "Platoon Artillery"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 10,
+      "stamina": 40,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Snare Bow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 damage",
+              "tier2": "11 damage",
+              "tier3": "14 damage; A < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The gweiadur shifts up to 3 squares."
+            },
+            {
+              "effect": "If this ability restrains the target, one enemy adjacent to the target is also restrained (save ends).",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "You Activated My Trap!",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 cube within 10",
+          "target": "Each enemy in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 damage; R < 0 the target is marked (save ends)",
+              "tier2": "6 damage; R < 1 slowed and the target is marked (save ends)",
+              "tier3": "9 damage; R < 2 slowed and the target is marked (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Allies gain an edge on abilities against a target marked by any wode elf."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the gweiadur that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Lookout",
+      "level": 1,
+      "roles": [
+        "Minion Support"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "+2 bonus to speed",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Longbow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 8",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "There!",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any wode elf within 5 squares of the lookout can make ranged strikes as if occupying the lookout's space."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the lookout that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Runner",
+      "level": 1,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spear",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this ability is used as part of the Charge main action, the runner shifts up to 2 squares first."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the runner that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Scout",
+      "level": 1,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 10,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Daggers",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Into the Green",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The scout can attempt to hide at the end of each of their turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the scout that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Sentry",
+      "level": 1,
+      "roles": [
+        "Platoon Support"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tracer Longbow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage; the target is marked (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Allies gain an edge on abilities against a target marked by any wode elf."
+            },
+            {
+              "effect": "The sentry targets two additional creatures or objects.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Death Blossom",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 burst",
+          "target": "Each marked enemy",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target takes 3 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the sentry that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Warleader",
+      "level": 3,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 20,
+      "stamina": 120,
+      "speed": 7,
+      "movement": "Teleport",
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 2,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wodeblade",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 damage; M < 1 restrained (save ends)",
+              "tier2": "12 damage; M < 2 restrained (save ends)",
+              "tier3": "15 damage; M < 3 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The warleader can teleport up to 3 squares between each strike."
+            },
+            {
+              "effect": "A target restrained by this ability takes an extra 3 damage.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fairness Is a Human Concept",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "10 burst",
+          "target": "Each ally in the area",
+          "cost": "5",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each non-minion target can make a free strike, then each target shifts up to 3 squares. A target who has cover or concealment at the end of this shift can attempt to hide at the end of the warleader's turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Wode Sickness",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "One enemy",
+          "trigger": "An ally ends their turn.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target must not have taken their turn this round. The target takes their turn immediately, and if they have P < 2 they are bleeding and take a bane on strikes until the end of their turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the warleader can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Into the Green",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The warleader can attempt to hide at the end of each of their turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the warleader that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "You Will All Witness my Blade",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The warleader uses Wodeblade against each target and gains an edge on the power roll."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Suppressing Volley",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The warleader can use Wodeblade. Each target can then make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Is It Now or Is It Then?",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Self and each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target is invisible until the start of the next round. The warleader then uses Wodeblade."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wode Elf Yeoman",
+      "level": 1,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Wode Elf"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Heavy Longbow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 12",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage; push 1",
+              "tier2": "4 damage; push 2",
+              "tier3": "5 damage; push 3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Masking Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Abilities targeting the yeoman that would take a bane from cover or concealment have a double bane instead."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Wodenelg",
+      "level": 1,
+      "roles": [
+        "Platoon Mount"
+      ],
+      "ancestry": [
+        "Plant",
+        "Wode Elf"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 10,
+      "size": "2",
+      "stability": 1,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gore",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The wodenelg's rider can make a free strike at any point during the charge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Sure-Footed",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The wodenelg ignores difficult terrain and doesn't provoke oppotunity attacks by moving."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Where I End the Woods Begin",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The wodenelg and their rider become invisible until the start of the wodenelg's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Mounted Stability",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The wodenelg's rider has damage immunity 2."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Shared Glamor",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If the wodenelg's rider has the Masking Glamor trait, the wodenelg also has that trait."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

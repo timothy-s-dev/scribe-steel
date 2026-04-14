@@ -4,8 +4,9 @@ import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { getAllMonsters } from '@/data/bestiary';
+import { migrateMonsterGroup } from '@/data/migrate';
 import { MonsterEditor, emptyMonster } from '@/components/MonsterEditor';
-import type { SavedMonsterGroup, Monster, MaliceFeature } from '@/data/types';
+import type { SavedMonsterGroup, Monster, Feature } from '@/data/types';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,26 @@ const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-
 let _nextId = 1;
 function uid() {
   return _nextId++;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function maliceCostDisplay(f: Feature): string {
+  return f.cost ?? '';
+}
+
+function maliceDescriptionDisplay(f: Feature): string {
+  return f.effects.map((e) => e.effect).filter(Boolean).join(' ');
+}
+
+function emptyMaliceFeature(): Feature {
+  return {
+    type: 'feature',
+    feature_type: 'trait',
+    name: '',
+    cost: '3',
+    effects: [{ effect: '' }],
+  };
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -57,8 +78,9 @@ export function MonsterGroupsEditorPage() {
       return;
     }
     setLoading(true);
-    load<SavedMonsterGroup>(fileId).then((data) => {
-      if (data) {
+    load<SavedMonsterGroup>(fileId).then((raw) => {
+      if (raw) {
+        const data = migrateMonsterGroup(raw);
         setDoc(data);
         setDocName(data.name);
         setMaliceKeys(data.malice.map(() => uid()));
@@ -94,15 +116,21 @@ export function MonsterGroupsEditorPage() {
 
   const addMalice = useCallback(() => {
     if (!doc) return;
-    const updated = { ...doc, malice: [...doc.malice, { cost: 3, name: '', description: '' }] };
+    const updated = { ...doc, malice: [...doc.malice, emptyMaliceFeature()] };
     setMaliceKeys((prev) => [...prev, uid()]);
     save(updated);
   }, [doc, save]);
 
   const updateMalice = useCallback(
-    (index: number, field: keyof MaliceFeature, value: string | number) => {
+    (index: number, field: string, value: string) => {
       if (!doc) return;
-      const malice = doc.malice.map((m, i) => (i === index ? { ...m, [field]: value } : m));
+      const malice = doc.malice.map((m, i) => {
+        if (i !== index) return m;
+        if (field === 'cost') return { ...m, cost: value };
+        if (field === 'name') return { ...m, name: value };
+        if (field === 'description') return { ...m, effects: [{ effect: value }] };
+        return m;
+      });
       save({ ...doc, malice });
     },
     [doc, save],
@@ -224,11 +252,11 @@ export function MonsterGroupsEditorPage() {
           {doc.malice.map((m, i) => (
             <div key={maliceKeys[i]} className="flex gap-1.5 items-start">
               <input
-                type="number"
-                className={`${smallInputClass} w-12 text-center`}
-                value={m.cost}
-                onChange={(e) => updateMalice(i, 'cost', parseInt(e.target.value) || 0)}
+                className={`${smallInputClass} w-16 text-center`}
+                value={maliceCostDisplay(m)}
+                onChange={(e) => updateMalice(i, 'cost', e.target.value)}
                 title="Cost"
+                placeholder="3"
               />
               <input
                 className={`${smallInputClass} w-28`}
@@ -238,7 +266,7 @@ export function MonsterGroupsEditorPage() {
               />
               <input
                 className={`${smallInputClass} flex-1`}
-                value={m.description}
+                value={maliceDescriptionDisplay(m)}
                 onChange={(e) => updateMalice(i, 'description', e.target.value)}
                 placeholder="Description"
               />
@@ -308,7 +336,7 @@ export function MonsterGroupsEditorPage() {
                   {m.name}
                 </span>
                 <span className="text-xs font-label text-on-surface-variant">
-                  L{m.level} {m.role} · EV {m.ev}
+                  L{m.level} {m.roles.join(', ')} · EV {m.ev ?? '-'}
                 </span>
               </button>
             ))}

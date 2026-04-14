@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
@@ -78,6 +78,11 @@ export function MonsterCardsPage() {
 
   const hasSelection = selectedMonsters.length > 0;
 
+  // Reset sheet count when selection is cleared
+  useEffect(() => {
+    if (!hasSelection) setSheetCount(null);
+  }, [hasSelection]);
+
   const files = useMemo<VirtualFile[]>(
     () => [
       TEMPLATE_FILE,
@@ -100,7 +105,11 @@ export function MonsterCardsPage() {
     [printMode],
   );
 
-  const sheetCount = Math.ceil(selectedMonsters.length / 3);
+  const [sheetCount, setSheetCount] = useState<number | null>(null);
+  const handlePageCount = useCallback((count: number) => {
+    // Each sheet = 2 pages (front + back)
+    setSheetCount(Math.ceil(count / 2));
+  }, []);
 
   const [exporting, setExporting] = useState(false);
   async function handleExportPdf() {
@@ -151,7 +160,7 @@ export function MonsterCardsPage() {
           <div className="text-xs font-label text-on-surface-variant">
             {selectedMonsters.length} monster
             {selectedMonsters.length !== 1 ? 's' : ''} selected
-            {hasSelection && (
+            {sheetCount != null && (
               <>
                 {' '}
                 · {sheetCount} sheet{sheetCount !== 1 ? 's' : ''}
@@ -238,6 +247,7 @@ export function MonsterCardsPage() {
               files={files}
               zoom={zoom}
               inputs={inputs}
+              onPageCount={handlePageCount}
             />
           ) : (
             <div className="flex items-center justify-center h-full bg-surface-container-low">
@@ -322,7 +332,7 @@ function GroupPicker({
                   {monster.name}
                 </div>
                 <div className="text-xs font-label text-on-surface-variant">
-                  L{monster.level} {monster.role} · EV {monster.ev}
+                  L{monster.level} {monster.roles.join(', ')} · EV {monster.ev ?? '-'}
                 </div>
               </div>
             </label>

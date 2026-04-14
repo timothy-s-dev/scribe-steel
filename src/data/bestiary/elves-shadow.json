@@ -1,0 +1,1272 @@
+{
+  "name": "Elves Shadow",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Watch Me Disappear",
+      "icon": "⭐️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "Each shadow elf acting this turn can attempt to hide as a free maneuver if they have concealment."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Extra Dimension",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "When any shadow elf acting this turn makes a strike against a target who has I < 2 in addition to the strike's regular effects, the target is bleeding (save ends) or slowed (save ends)."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Home Is Where the Hurt Is",
+      "icon": "🌀",
+      "cost": "10",
+      "effects": [
+        {
+          "effect": "The shadow elves synthesize a concentrated pocket manifold reminiscent of Equinox and graft it onto the encounter map. Until the end of the encounter, all creatures can see shadow elves in full color, and shadow elves no longer benefit from their Of the Umbra trait. Additionally, the potency of all shadow elf abilities increases by 2, and any enemy making a saving throw against an effect imposed by a shadow elf ability must roll an 8 or higher as they feel the effect across two worlds."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Brush Stalker",
+      "level": 4,
+      "roles": [
+        "Platoon Mount"
+      ],
+      "ancestry": [
+        "Animal",
+        "Fey",
+        "Shadow Elf"
+      ],
+      "ev": 12,
+      "stamina": 60,
+      "speed": 8,
+      "size": "2",
+      "stability": 3,
+      "free_strike": 5,
+      "might": 3,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 1,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gore",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "7 damage",
+              "tier2": "10 damage",
+              "tier3": "13 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Reclamation",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "4 corruption damage; M < 1 weakened (save ends)",
+              "tier2": "7 corruption damage; M < 2 weakened (save ends)",
+              "tier3": "10 corruption damage; M < 3 weakened (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Suneater",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The area within 2 squares of the brush stalker is devoid of light and provides concealment."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Wyrd Dyr",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While they have line of effect to the brush stalker, any animal except another brush stalker is frightened."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Assassin",
+      "level": 6,
+      "roles": [
+        "Platoon Artillery"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 16,
+      "stamina": 70,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 7,
+      "might": 0,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lumina Assault",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 damage",
+              "tier2": "15 damage",
+              "tier3": "18 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The next ability used against the target has a double edge."
+            },
+            {
+              "effect": "Each non-minion ally within 3 squares of the target can make a free strike against them.",
+              "cost": "5"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Splitbow",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "4 x 1 line within 10",
+          "target": "Each enemy in the area",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "5 damage; I < 1 bleeding (save ends)",
+              "tier2": "10 damage; I < 2 bleeding (save ends)",
+              "tier3": "12 damage; I < 3 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each target is pushed up to 4 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The assassin ignores concealment created by darkness. While the assassin is in direct sunlight, they have damage weakness 3. While the assassin has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Cloak",
+      "level": 4,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 6,
+      "stamina": 8,
+      "speed": 8,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+2 bonus to speed",
+      "might": 3,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Stick and Poke",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "6 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The cloak shifts up to 2 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The cloak ignores concealment created by darkness. While the cloak is in direct sunlight, they have damage weakness 3. While the cloak has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Dusk Mage",
+      "level": 4,
+      "roles": [
+        "Minion Hexer"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 6,
+      "stamina": 7,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gloom Bolt",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "2 damage",
+              "tier2": "4 damage; A < 2 slowed (save ends)",
+              "tier3": "6 damage; A < 3 slowed (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The dusk mage ignores concealment created by darkness. While the dusk mage is in direct sunlight, they have damage weakness 3. While the dusk mage has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Duskcaller",
+      "level": 5,
+      "roles": [
+        "Platoon Controller"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 14,
+      "stamina": 60,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 6,
+      "might": 0,
+      "agility": 3,
+      "reason": 3,
+      "intuition": 2,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Night Knife",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "13 damage",
+              "tier3": "16 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the duskcaller has concealment, they can target one additional creature or object."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "The Lay of Cor'thoroth",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "2 cube within 3",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the duskcaller's next turn, the area is filled with darkness."
+            },
+            {
+              "effect": "The size of the cube increases by 3.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The duskcaller ignores concealment created by darkness. While the duskcaller is in direct sunlight, they have damage weakness 3. While the duskcaller has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Eclipse",
+      "level": 6,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 32,
+      "stamina": 180,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 1,
+      "free_strike": 7,
+      "might": 4,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Manifold Blade",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "11 damage; I < 2 bleeding (save ends)",
+              "tier2": "16 damage; I < 3 bleeding (save ends)",
+              "tier3": "19 damage; I < 4 bleeding (save ends)"
+            },
+            {
+              "effect": "The potency increases by 1.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Grasping Shadow",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 5",
+          "target": "Three creatures or objects casting a shadow",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "Pull 5; I < 2 slowed (save ends)",
+              "tier2": "Pull 7; I < 3 slowed (save ends)",
+              "tier3": "Pull 10; I < 4 slowed (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Put It Out!",
+          "icon": "❗️",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 10",
+          "target": "The triggering enemy",
+          "trigger": "An enemy within distance uses an ability that emits light, including abilities that deal fire or lightning damage.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target has a double bane on the ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the eclipse can take 10 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The eclipse ignores concealment created by darkness. While the eclipse is in direct sunlight, they have damage weakness 3. While the eclipse has concealment, they have damage immunity 3."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "From the Shadows",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 5",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The eclipse calls forth one brush stalker into an unoccupied space within distance. Each ally within distance can then shift up to their speed and make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Cast Away All Hope",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target loses all their surges. Additionally, until the end of the round, allies ignore edges and double edges on any targets' abilities, and ignore any nondamaging effects of any target's damage-dealing abilities."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Umbral Hunger",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "3 cube within 5",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "7 corruption damage; R < 2 the target has speed 0 (save ends)",
+              "tier2": "12 corruption damage; R < 3 the target has speed 0 (save ends)",
+              "tier3": "15 corruption damage; R < 4 the target has speed 0 (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is shrouded in darkness that creates concealment until the end of the encounter. Any enemy who starts their turn in the area takes 5 corruption damage."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Knightfell",
+      "level": 4,
+      "roles": [
+        "Platoon Defender"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 12,
+      "stamina": 70,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 3,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Suffusing Strike",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 3",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 corruption damage",
+              "tier2": "12 corruption damage; R < 2 taunted (EoT)",
+              "tier3": "15 corruption damage; R < 3 taunted (EoT)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Trick of the Eye",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 2",
+          "target": "One ally",
+          "trigger": "An enemy within distance makes a strike against the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target takes half the damage and the knightfell takes the other half."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The knightfell ignores concealment created by darkness. While the knightfell is in direct sunlight, they have damage weakness 3. While the knightfell has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Luminator",
+      "level": 4,
+      "roles": [
+        "Platoon Support"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 12,
+      "stamina": 60,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 1,
+      "reason": 1,
+      "intuition": 3,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lumina Mark",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 3",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 lightning damage",
+              "tier2": "12 lightning damage",
+              "tier3": "15 lightning damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The next strike made against the target deals an extra 5 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Mourning Till Dusk",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each ally in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "The target regains 6 Stamina.",
+              "tier2": "The target regains 9 Stamina.",
+              "tier3": "The target regains 12 Stamina and the Director gains 3 Malice."
+            },
+            {
+              "name": "Effect",
+              "effect": "Each target gains an edge on their next strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The luminator ignores concealment created by darkness. While the luminator is in direct sunlight, they have damage weakness 3. While the luminator has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Moondancer",
+      "level": 5,
+      "roles": [
+        "Platoon Harrier"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 14,
+      "stamina": 70,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 6,
+      "might": 1,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Crescent Sweep",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "13 damage",
+              "tier3": "16 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "Until the end of the current turn, the moondancer ignores opportunity attacks from the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dissolve",
+          "icon": "❗️",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The moondancer takes damage from a strike.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The moondancer can teleport up to 10 squares to a space with concealment created by darkness."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The moondancer ignores concealment created by darkness. While the moondancer is in direct sunlight, they have damage weakness 3. While the moondancer has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Mournblade",
+      "level": 6,
+      "roles": [
+        "Platoon Ambusher"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 16,
+      "stamina": 80,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 7,
+      "might": 2,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Knife in the Dark",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 damage",
+              "tier2": "15 damage",
+              "tier3": "18 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The mournblade is invisible to the target until the start of the mournblade's next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shadow Step",
+          "icon": "👤",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the mournblade has concealment, they can teleport up to 10 squares to a space with concealment created by darkness."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The mournblade ignores concealment created by darkness. While the mournblade is in direct sunlight, they have damage weakness 3. While the mournblade has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Nightstrike",
+      "level": 4,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 6,
+      "stamina": 8,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "Gain an edge on strikes",
+      "might": 1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Vault",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage",
+              "tier2": "5 damage",
+              "tier3": "7 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The nightstrike shifts to leap over the target and into an unoccupied space adjacent to the target, opposite from the nightstrike's original space."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The nightstrike ignores concealment created by darkness. While the nightstrike is in direct sunlight, they have damage weakness 3. While the nightstrike has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Noctis Mage",
+      "level": 6,
+      "roles": [
+        "Platoon Hexer"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 16,
+      "stamina": 70,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 6,
+      "might": 0,
+      "agility": 2,
+      "reason": 3,
+      "intuition": 1,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Blotting Bolt",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "14 damage",
+              "tier3": "17 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target takes a bane on their next strike."
+            },
+            {
+              "effect": "The target instead has a double bane on the next ability they use.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Enemies in the Dark",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "Two enemies",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 damage; R < 1 the target makes a free strike against one enemy of the noctis mage's choice.",
+              "tier2": "10 damage; R < 2 the target makes a free strike against one enemy of the noctis mage's choice.",
+              "tier3": "13 damage; R < 3 the target uses a signature ability against one enemy of the noctis mage's choice."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The noctis mage ignores concealment created by darkness. While the noctis mage is in direct sunlight, they have damage weakness 3. While the noctis mage has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Panther",
+      "level": 4,
+      "roles": [
+        "Platoon Brute"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 12,
+      "stamina": 70,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 6,
+      "might": 3,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 1,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dusk Cleave",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "13 damage",
+              "tier3": "16 damage; I < 3 bleeding (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The panther can make a free strike against a creature or object adjacent to the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bladestorm",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "5 corruption damage",
+              "tier2": "8 corruption damage; I < 2 dazed (save ends)",
+              "tier3": "10 corruption damage; I < 3 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The panther has a double edge on strikes against targets dazed this way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The panther ignores concealment created by darkness. While the panther is in direct sunlight, they have damage weakness 3. While the panther has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shadow Elf Sniper",
+      "level": 4,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Fey",
+        "Humanoid",
+        "Shadow Elf"
+      ],
+      "ev": 6,
+      "stamina": 7,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+2 damage bonus to strikes",
+      "might": 1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lumina Arrow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 7",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage",
+              "tier2": "5 damage",
+              "tier3": "7 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The next strike made against the target gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Of the Umbra",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The sniper ignores concealment created by darkness. While the sniper is in direct sunlight, they have damage weakness 3. While the sniper has concealment, they have damage immunity 3."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

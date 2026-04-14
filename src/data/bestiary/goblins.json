@@ -1,0 +1,1132 @@
+{
+  "name": "Goblins",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Goblin Mode",
+      "icon": "⭐️",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "Each goblin in the encounter gains a +2 bonus to speed until the end of the round."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Tiny Stabs",
+      "icon": "❇️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Each enemy in the encounter takes 1 damage for each goblin adjacent to them."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Swamp Stink",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "5 poison damage; the creature is weakened until the mist disappears.",
+          "tier2": "The creature is weakened until the mist disappears.",
+          "tier3": "No effect.",
+          "effect": "The encounter map is covered in a green mist that lasts until the end of the round, and which can't be dispersed by wind. All areas of the map are difficult terrain for non-goblins, and each non-goblin on the map makes a **Might test**."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Goblin Assassin",
+      "level": 1,
+      "roles": [
+        "Horde Ambusher"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 2,
+      "might": -2,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": -2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sword Stab",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 damage",
+              "tier2": "6 damage",
+              "tier3": "7 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this ability gains an edge or has a double edge, it deals an extra 2 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shadow Chains",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "Three creatures",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 corruption damage; A < 0 restrained (save ends)",
+              "tier2": "4 corruption damage; A < 1 restrained (save ends)",
+              "tier3": "5 corruption damage; A < 2 restrained (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The assassin doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Slip Away",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The assassin can attempt to hide even while observed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Cursespitter",
+      "level": 1,
+      "roles": [
+        "Horde Hexer"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 10,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "might": -2,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Eye of Surlach",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 corruption damage; I < 0 weakened (save ends)",
+              "tier2": "4 corruption damage; I < 1 weakened (save ends)",
+              "tier3": "5 corruption damage; I < 2 weakened (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dizzying Hex",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One creature",
+          "cost": "1",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "I < 0 prone",
+              "tier2": "I < 1 prone and can't stand (EoT)",
+              "tier3": "Prone; I < 2 can't stand (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The cursespitter doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Monarch",
+      "level": 1,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 12,
+      "stamina": 80,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 1,
+      "free_strike": 4,
+      "might": 0,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 0,
+      "presence": 3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Handaxe",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "7 damage",
+              "tier2": "10 damage",
+              "tier3": "13 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally within 10 squares of the monarch can make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Get in Here!",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 20",
+          "target": "Special",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Two goblin runners appear in unoccupied spaces within distance."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Meat Shield",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One ally",
+          "trigger": "A creature targets the monarch with a strike.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The ally is the target of the triggering strike instead."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The monarch doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the monarch can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "What Are You Waiting For?",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can move up to their speed or make a free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Focus Fire",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 10",
+          "target": "One enemy or object",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each ally within 10 squares of the target can move up to their speed toward the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Kill!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "-"
+          ],
+          "usage": "-",
+          "distance": "Special",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each enemy in the encounter takes 2 damage for each goblin adjacent to them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Runner",
+      "level": 1,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "Gain an edge on strikes",
+      "might": -2,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Club Charge",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The runner doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Sniper",
+      "level": 1,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": -2,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the sniper doesn't use a move action this turn, this ability gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The sniper doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Spinecleaver",
+      "level": 1,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 5,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Axe",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage; push 1",
+              "tier2": "4 damage; push 3",
+              "tier3": "5 damage; push 4"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The spinecleaver doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Stinker",
+      "level": 1,
+      "roles": [
+        "Horde Controller"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 10,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "might": -2,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Toxic Winds",
+          "icon": "🔳",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 15",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 poison damage; slide 1",
+              "tier2": "2 poison damage; slide 2",
+              "tier3": "3 poison damage; slide 3"
+            },
+            {
+              "effect": "For each Malice spent, one target can be force moved 1 additional square.",
+              "cost": "1+"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Swamp Gas",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 cube within 10",
+          "target": "Special",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The area is filled with a green haze that lasts until the start of the stinker's next turn or until the stinker is reduced to 0 Stamina, and which can't be dispersed by wind. The area is difficult terrain for non-goblins, and each non-goblin who moves in the area takes 2 poison damage for each square moved."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The stinker doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Underboss",
+      "level": 1,
+      "roles": [
+        "Horde Support"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "might": -1,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Swordplay",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally adjacent to the target can make a free strike against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Get Reckless!",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of the underboss's next turn, each target gains an edge on strikes, and any strike made against a target gains an edge."
+            },
+            {
+              "effect": "Strikes made against targets no longer gain an edge.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The underboss doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Goblin Warrior",
+      "level": 1,
+      "roles": [
+        "Horde Harrier"
+      ],
+      "ancestry": [
+        "Goblin",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 6,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "might": -2,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spear Charge",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bury the Point",
+          "icon": "🗡",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "cost": "2",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage; M < 0 bleeding (save ends)",
+              "tier2": "6 damage; M < 1 bleeding (save ends)",
+              "tier3": "7 damage; M < 2 bleeding (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Crafty",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The warrior doesn't provoke opportunity attacks by moving."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Skitterling",
+      "level": 1,
+      "roles": [
+        "Minion Hexer"
+      ],
+      "ancestry": [
+        "Animal",
+        "Goblin"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 5,
+      "movement": "Fly",
+      "size": "1T",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "+3 bonus to speed",
+      "might": -5,
+      "agility": 2,
+      "reason": -4,
+      "intuition": 0,
+      "presence": -2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Claws",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 poison damage",
+              "tier2": "2 poison damage",
+              "tier3": "3 poison damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target takes a bane on their next strike."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Spider",
+      "level": 1,
+      "roles": [
+        "Elite Mount"
+      ],
+      "ancestry": [
+        "Animal",
+        "Goblin"
+      ],
+      "ev": 12,
+      "stamina": 60,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "3",
+      "stability": 2,
+      "free_strike": 4,
+      "might": 2,
+      "agility": 1,
+      "reason": -4,
+      "intuition": 0,
+      "presence": -3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bite",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 poison damage",
+              "tier2": "11 poison damage",
+              "tier3": "14 poison damage; M < 2 weakened (save ends)"
+            },
+            {
+              "effect": "For any tier outcome, if the target has M < 3, they are weakened (save ends).",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Leg Blade",
+          "icon": "🗡",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Trample",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Main action",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "5",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The spider shifts up to their speed and uses Leg Blade against each creature who comes adjacent to them during the shift. The spider makes one power roll against all targets."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Web",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 cube within 1",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "A < 0 restrained (save ends)",
+              "tier2": "A < 1 restrained (save ends)",
+              "tier3": "A < 2 restrained (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The area is difficult terrain for enemies."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Skitter",
+          "icon": "❗️",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The spider or any ally riding the spider takes damage.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The damage is halved, and the spider shifts up to 2 squares after the triggering effect resolves."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Ride Launcher",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any ally who leaps off the back of the spider can jump up to 6 squares without making a test, and takes no damage if they fall during the jump. After any ally jumps, the first melee strike the make on the same turn gains an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Wide Back",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "While riding the spider, two size 1 allies can occupy the same space."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Worg",
+      "level": 1,
+      "roles": [
+        "Horde Mount"
+      ],
+      "ancestry": [
+        "Animal",
+        "Goblin"
+      ],
+      "ev": 3,
+      "stamina": 15,
+      "speed": 5,
+      "size": "1L",
+      "stability": 1,
+      "free_strike": 1,
+      "might": 1,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bite",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Sprint",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The worg moves up to their speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Mounted Charger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a worg used as a mount charges, their rider gains an edge on melee strikes until the end of the rider's turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Shared Craft",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If the worg's rider has the Crafty trait, the worg also has that trait."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

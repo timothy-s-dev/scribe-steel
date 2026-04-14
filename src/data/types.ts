@@ -1,61 +1,54 @@
-export interface PowerRollTier {
-  tier: string;
-  result: string;
+export interface Effect {
+  roll?: number;
+  tier1?: string;
+  tier2?: string;
+  tier3?: string;
+  name?: string;
+  effect?: string;
+  cost?: string;
 }
 
-export interface Ability {
+export interface Feature {
+  type: "feature";
+  feature_type: "ability" | "trait";
   name: string;
-  type?: string;
-  action?: string;
+  icon?: string;
+  ability_type?: string;
   keywords?: string[];
+  usage?: string;
   distance?: string;
   target?: string;
-  damage?: string;
-  powerRoll?: PowerRollTier[];
-  effect?: string;
-}
-
-export interface Trait {
-  name: string;
-  description: string;
-}
-
-export interface Characteristics {
-  might: number;
-  agility: number;
-  reason: number;
-  intuition: number;
-  presence: number;
+  trigger?: string;
+  cost?: string;
+  effects: Effect[];
 }
 
 export interface Monster {
   name: string;
   level: number;
-  role: string;
-  keywords: string[];
-  ev: number;
-  size: string;
-  speed: number;
+  roles: string[];
+  ancestry: string[];
+  ev: number | null;
   stamina: number;
+  speed: number;
+  movement?: string;
+  size: string;
   stability: number;
-  freeStrike: number;
-  immunity: string | null;
-  weakness: string | null;
-  movement: string | null;
-  characteristics: Characteristics;
-  abilities: Ability[];
-  traits: Trait[];
-}
-
-export interface MaliceFeature {
-  cost: number;
-  name: string;
-  description: string;
+  free_strike: number;
+  with_captain?: string;
+  might: number;
+  agility: number;
+  reason: number;
+  intuition: number;
+  presence: number;
+  immunities?: string[];
+  weaknesses?: string[];
+  features: Feature[];
 }
 
 export interface MonsterGroup {
   name: string;
-  malice: MaliceFeature[];
+  malice: Feature[];
   monsters: Monster[];
 }
 
@@ -66,6 +59,6 @@ export interface Bestiary {
 export interface SavedMonsterGroup {
   version: number;
   name: string;
-  malice: MaliceFeature[];
+  malice: Feature[];
   monsters: Monster[];
 }

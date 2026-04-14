@@ -9,9 +9,10 @@ interface PreviewProps {
   files?: VirtualFile[];
   zoom: ZoomState;
   inputs?: Record<string, string>;
+  onPageCount?: (count: number) => void;
 }
 
-export function Preview({ content, template, files = [], zoom, inputs }: PreviewProps) {
+export function Preview({ content, template, files = [], zoom, inputs, onPageCount }: PreviewProps) {
   const { svg, error, loading } = useTypstCompiler(content, template, files, inputs);
   const pages = parseSvgPages(svg);
 
@@ -21,6 +22,11 @@ export function Preview({ content, template, files = [], zoom, inputs }: Preview
       zoom.setPageDimensions(pages[0].width, pages[0].height);
     }
   }, [pages.length > 0 ? pages[0].width : 0, pages.length > 0 ? pages[0].height : 0]);
+
+  // Report page count
+  useEffect(() => {
+    onPageCount?.(pages.length);
+  }, [pages.length, onPageCount]);
 
   if (loading && !svg) {
     return (

@@ -1,0 +1,830 @@
+{
+  "name": "Radenwights",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Trouser Cut",
+      "icon": "🗡",
+      "keywords": [
+        "Melee",
+        "Strike",
+        "Weapon"
+      ],
+      "usage": "Main action",
+      "distance": "Melee 1",
+      "target": "One creature",
+      "cost": "3",
+      "effects": [
+        {
+          "roll": 2,
+          "tier1": "7 damage; push 3",
+          "tier2": "10 damage; push 3, taunted (EoT)",
+          "tier3": "13 damage; push 5, taunted (EoT)"
+        },
+        {
+          "name": "Effect",
+          "effect": "If the target is wearing clothing covering the lower half of their body, they must use a maneuver once to pull that clothing up before they can move."
+        },
+        {
+          "name": "Special",
+          "effect": "This ability can't be used by a minion."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Rat Race",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Each radenwight in the encounter shifts up to their speed. If a radenwight ends this shift adjacent to one or more radenwights, they can make a melee free strike against each enemy adjacent to them."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Rally the Rodents",
+      "icon": "🔳",
+      "cost": "7",
+      "effects": [
+        {
+          "tier1": "7 sonic damage; the target can't take a respite activity during their next respite",
+          "tier2": "5 sonic damage",
+          "tier3": "No effect.",
+          "effect": "A radenwight uses music to coordinate living rats, forming a 10 wall of rats scurrying atop one another into unoccupied spaces anywhere on the encounter map. The wall doesn't block line of effect for radenwights and their allies, but it does for other creatures as the rats coordinate their movements with the radenwights. Each square of the wall has 10 Stamina.\n\nIf the last radenwight in the encounter dies and the wall is still standing, the rats let out a hideous screech as they disperse. Each enemy on the encounter map makes an Intuition test."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Radenwight Bruxer",
+      "level": 1,
+      "roles": [
+        "Platoon Brute"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 6,
+      "stamina": 40,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1L",
+      "stability": 2,
+      "free_strike": 4,
+      "might": 2,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lockjaw",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage; grabbed"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target grabbed this way takes 2 damage at the start of each of the bruxer's turns."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Flurry of Bites",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "1 burst",
+          "target": "Each enemy in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "3 damage; A < 0 bleeding (save ends)",
+              "tier2": "5 damage; A < 1 bleeding (save ends)",
+              "tier3": "8 damage; A < 2 bleeding (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The bruxer makes a free strike against the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lockdown",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any enemy who shifts adjacent to the bruxer has that shift end. Additionally, any enemy adjacent to the bruxer can't shift."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Maestro",
+      "level": 1,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 12,
+      "stamina": 80,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 1,
+      "free_strike": 4,
+      "might": -2,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 3,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Cacophony",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "5 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 sonic damage; slide 1, the maestro can shift 1 square",
+              "tier2": "6 sonic damage; slide 3, the maestro shifts up to 3 squares",
+              "tier3": "8 sonic damage; slide 5, the maestro shifts up to 5 squares"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each ally within distance can use Ready Rodent as a free triggered action once before the end of the round."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Tempo Changer",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "Two enemies",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "P < 1 slowed (save ends)",
+              "tier2": "P < 2 slowed (save ends)",
+              "tier3": "P < 3 slowed (save ends)"
+            },
+            {
+              "effect": "Each ally within 3 squares of any target has a +2 bonus to speed until the end of their next turn.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ever-Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance deals damage to an ally or takes damage from an ally.",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The maestro makes a free strike against the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the maestro can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Overture",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target can shift up to their speed or take the Defend action."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Solo Act",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 15",
+          "target": "One creature",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the end of their next turn, the target halves any damage they take, gains a +4 damage bonus to strikes, and has their speed doubled."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rondo of Rat",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each dead ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target stands, makes a free strike, then falls dead again. Any ally of the targets can use Ready Rodent as a free triggered action once in conjunction with these free strikes."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Mischiever",
+      "level": 1,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+1 damage bonus to strikes",
+      "might": -1,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dagger Dance",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the mischiever is hidden when they use this ability, they can target two creatures."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The mischiever makes a free strike against the target."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Piper",
+      "level": 1,
+      "roles": [
+        "Platoon Support"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 0,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 2,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Piercing Trill",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 sonic damage; push 1",
+              "tier2": "7 sonic damage; push 3",
+              "tier3": "9 sonic damage; push 4"
+            },
+            {
+              "name": "Effect",
+              "effect": "The piper or one ally within distance regains Stamina equal to the damage dealt."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Vivace Vivace!",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "3 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target who has used their Ready Rodent ability this round regains the use of their triggered action."
+            },
+            {
+              "effect": "The area increases to a 6 burst.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The piper makes a free strike against the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Musical Suggestion",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of the piper's turn, they can slide one adjacent creature up to 2 squares, ignoring stability."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Ratcrobat",
+      "level": 1,
+      "roles": [
+        "Platoon Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 3,
+      "might": -1,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "En Garde",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "4 damage",
+              "tier2": "6 damage",
+              "tier3": "8 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The ratcrobat shifts up to 2 squares after striking the first target, then can shift 1 square after striking the second target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Over Here, Thanks",
+          "icon": "🗡",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Maneuver",
+          "distance": "Melee 1",
+          "target": "One enemy",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The ratcrobat slides the target up to 3 squares, then can shift into any square the target left."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The ratcrobat makes a free strike against the target."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Gymratstics",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The ratcrobat gains an edge on strikes against larger creatures."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Redeye",
+      "level": 1,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "Gain an edge on strikes",
+      "might": 1,
+      "agility": 2,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 0,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Eyes-On-Me-Shot",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally of the redeye within 2 squares of the target shifts up to 2 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The redeye makes a free strike against the target."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Scrapper",
+      "level": 1,
+      "roles": [
+        "Minion Defender"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 3,
+      "stamina": 5,
+      "speed": 5,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 1,
+      "free_strike": 1,
+      "with_captain": "+2 bonus to melee distance",
+      "might": -1,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Buckler Bash",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage; taunted (EoT)",
+              "tier3": "3 damage; taunted (EoT)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The scrapper makes a free strike against the target."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radenwight Swiftpaw",
+      "level": 1,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Humanoid",
+        "Radenwight"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "movement": "Climb",
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 1,
+      "intuition": 0,
+      "presence": -1,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rapier Flunge",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage; slide 1, the swiftpaw can shift 1 square",
+              "tier2": "2 damage; slide 2, the swiftpaw shifts up to 2 squares",
+              "tier3": "3 damage; slide 3, the swiftpaw shifts up to 3 squares"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ready Rodent",
+          "icon": "❗️",
+          "keywords": [
+            "Melee",
+            "Weapon"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "trigger": "An ally deals damage to the target.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The swiftpaw makes a free strike against the target."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

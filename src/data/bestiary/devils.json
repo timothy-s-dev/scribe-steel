@@ -1,0 +1,1018 @@
+{
+  "name": "Devils",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Bureaucratic Tape",
+      "icon": "👤",
+      "cost": "3",
+      "effects": [
+        {
+          "effect": "One devil acting this turn uses a signature ability against an adjacent creature. On a tier 3 outcome, the target of the ability has a double bane on strikes (save ends)."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Underhanded Tactics",
+      "icon": "⭐️",
+      "cost": "5+",
+      "effects": [
+        {
+          "effect": "One or two devils can teleport to a space adjacent to one or more creatures who aren't hidden and make a free strike. For each 2 additional Malice spent on this feature, one additional devil can teleport."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Read the Small Print",
+      "icon": "🌀",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "Each enemy in the encounter is subject to a bad deal proposed by the devils. An enemy must choose between having damage weakness 5 or taking a bane on power rolls. The bad deal lasts until the end of the encounter."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Devil Adjudicator",
+      "level": 6,
+      "roles": [
+        "Elite Controller"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 32,
+      "stamina": 140,
+      "speed": 6,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 1,
+      "free_strike": 7,
+      "might": 0,
+      "agility": 1,
+      "reason": 2,
+      "intuition": 1,
+      "presence": 3,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Infernal Injunction",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 fire damage; I < 1 frightened (save ends)",
+              "tier2": "15 fire damage; I < 1 frightened (save ends)",
+              "tier3": "18 fire damage; I < 1 frightened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The adjudicator can slide a target frightened by this ability up to 2 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Adjudicator's Interdiction",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature",
+          "effects": [
+            {
+              "tier1": "The target is slowed, takes a bane on power rolls, and can't regain Stamina (save ends).",
+              "tier2": "The target is slowed and takes a bane on power rolls (save ends).",
+              "tier3": "Slowed (save ends)",
+              "name": "Effect",
+              "effect": "The target makes a Presence test."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Quid Pro Quo",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One ally or frightened creature",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The adjudicator and the target teleport to switch places."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Devilish Charm",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature targets the adjudicator with a strike.",
+          "cost": "2",
+          "effects": [
+            {
+              "tier1": "The adjudicator chooses a new target for the strike.",
+              "tier2": "The adjudicator halves the triggering damage.",
+              "tier3": "The target takes a bane on the strike.",
+              "name": "Effect",
+              "effect": "The target makes a Presence test."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Vexatious Litigation",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any creature within 10 squares of the adjudicator who has P < 3 takes a −2 penalty to saving throws."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the adjudicator's true name, the adjudicator loses their damage immunities, any nondamaging effects of their signature ability, and their Devilish Charm ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil Clerk",
+      "level": 5,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 7,
+      "stamina": 10,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+2 damage bonus to strikes",
+      "might": 3,
+      "agility": 0,
+      "reason": 1,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Quill Pushing",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage; push 1",
+              "tier2": "6 damage; push 2",
+              "tier3": "7 damage; push 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target adjacent to two or more clerks is taunted until the end of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the clerk's true name, the clerk loses their fire immunity and any nondamaging effects of their signature ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil High Judge",
+      "level": 6,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 32,
+      "stamina": 181,
+      "speed": 7,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 6,
+      "might": 1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Infernal Decree",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 12",
+          "target": "Three creatures or objects",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "10 damage; P < 2 the target can't hide (save ends)",
+              "tier2": "15 damage; P < 3 the target can't hide (save ends)",
+              "tier3": "19 damage; P < 4 the target can't hide (save ends)"
+            },
+            {
+              "effect": "While a target is unable to hide this way, any strike against them made by a devil gains an edge.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Compel the Jury",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 12",
+          "target": "Two creatures",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "I < 2 the target is charmed (save ends)",
+              "tier2": "I < 3 the target is charmed (save ends)",
+              "tier3": "I < 4 the target is charmed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "While charmed this way, a creature treats the high judge as an ally, and the high judge can spend 1 Malice on their turn to make that creature move up to 3 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Devilish Suggestion",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature targets the high judge with a strike.",
+          "cost": "2",
+          "effects": [
+            {
+              "tier1": "The target is charmed (save ends).",
+              "tier2": "The high judge chooses a new target for the strike.",
+              "tier3": "The target takes a bane on the strike.",
+              "name": "Effect",
+              "effect": "The target makes a **Presence test**."
+            },
+            {
+              "effect": "While charmed this way, a creature treats the high judge as an ally, and the high judge can spend 1 Malice on their turn to make that creature move up to 3 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the high judge can take 10 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the high judge's true name, the high judge loses their damage immunities, any nondamaging effects of their signature ability, and their Devilish Suggestion triggered action until the end of the encounter."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "All Rise",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "3 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "tier1": "15 psychic damage; the target is charmed (save ends)",
+              "tier2": "12 psychic damage; the target is charmed (save ends)",
+              "tier3": "7 psychic damage",
+              "name": "Effect",
+              "effect": "The target makes a **Presence test**."
+            },
+            {
+              "effect": "While charmed this way, a creature treats the high judge as an ally, and the high judge can spend 1 Malice on their turn to make that creature move up to 3 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Heed My Decree",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Self and each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target shifts up to their speed. The high judge can make each creature charmed by All Rise, Compel the Jury, or Devilish Suggestion move up to half that creature's speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Deceptive Stratagem",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "-",
+          "distance": "Ranged 12",
+          "target": "One creature",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target is an ally or a creature charmed by All Rise, Compel the Jury, or Devilish Suggestion, the high judge and the target teleport to swap places. Each ally within 12 squares of the high judge can then make a free strike against a target of the high judge's choice. Each creature charmed by All Rise, Compel the Jury, or Devilish Suggestion makes a free strike against a target of the high judge's choice."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil Jurist",
+      "level": 5,
+      "roles": [
+        "Elite Artillery"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 28,
+      "stamina": 120,
+      "speed": 6,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 7,
+      "might": 0,
+      "agility": 2,
+      "reason": 1,
+      "intuition": 1,
+      "presence": 3,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Hellfire",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Fire damage dealt by the jurist ignores damage immunity."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Fire and Brimstone",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 12",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 fire damage",
+              "tier2": "15 fire damage; A < 2 burning (save ends)",
+              "tier3": "18 fire damage; A < 3 burning (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "A burning creature takes 1d6 fire damage at the start of each of their turns. A burning object takes 1d6 fire damage at the end of each round."
+            },
+            {
+              "effect": "The jurist can target one additional creature or object for each Malice spent.",
+              "cost": "1+"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dismissal with Prejudice",
+          "icon": "❇️",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Main action",
+          "distance": "2 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 damage; slide 1",
+              "tier2": "10 damage; slide 3",
+              "tier3": "12 damage; slide 5"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the target has M < 2, the forced distance movement gains a +3 bonus."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Ashes to Ashes",
+          "icon": "🏹",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 12",
+          "target": "One creature",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "If the target is burning (see Fire and Brimstone), they take 6 fire damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Devilish Charm",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature targets the jurist with a strike.",
+          "cost": "2",
+          "effects": [
+            {
+              "tier1": "The jurist chooses a new target for the strike.",
+              "tier2": "The jurist halves the triggering damage.",
+              "tier3": "The target takes a bane on the strike.",
+              "name": "Effect",
+              "effect": "The target makes a Presence test."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the jurist's true name, the jurist loses their fire immunity, any nondamaging effects of their signature ability, and their Devilish Charm ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil Legate",
+      "level": 5,
+      "roles": [
+        "Elite Defender"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 28,
+      "stamina": 160,
+      "speed": 6,
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 6,
+      "might": 3,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Infernal Pike",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage",
+              "tier2": "14 damage; A < 2 slowed (save ends)",
+              "tier3": "17 damage; A < 3 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the targets are adjacent to each other, this ability deals an extra 3 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Writ of Execution",
+          "icon": "🗡",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "6 damage; M < 1 prone",
+              "tier2": "11 damage; M < 2 prone and can't stand (save ends)",
+              "tier3": "14 damage; M < 3 prone and can't stand (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this ability is used as part of the Charge main action, the legate ignores difficult terrain during the charge. Each creature and object whose space the legate moves through takes the damage from this ability, but not its additional effects."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Law and Order",
+          "icon": "🗡",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Maneuver",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target is taunted by the legate (save ends). The legate can have only one creature taunted at a time."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Devilish Charm",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature targets the legate with a strike.",
+          "cost": "2",
+          "effects": [
+            {
+              "tier1": "The legate chooses a new target for the strike.",
+              "tier2": "The legate halves the triggering damage.",
+              "tier3": "The target takes a bane on the strike.",
+              "name": "Effect",
+              "effect": "The target makes a Presence test."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Hellish Bailiff",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The legate has damage immunity 3 while in one of the Seven Cities of Hell or within 10 squares of a non-minion devil who is of a higher level than them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the legate's true name, the legate loses their damage immunities, any nondamaging effects of their signature ability, and their Devilish Charm ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil Magistrate",
+      "level": 6,
+      "roles": [
+        "Elite Harrier"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 32,
+      "stamina": 160,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 7,
+      "might": 1,
+      "agility": 3,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Edge of the Law",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 damage",
+              "tier2": "15 damage",
+              "tier3": "18 fire damage; R < 3 dazed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The magistrate shifts up to 3 squares before or after using this ability, or between each strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Verdict",
+          "icon": "🗡",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "11 damage",
+              "tier2": "17 damage",
+              "tier3": "21 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability has a double edge if the magistrate was hidden from the target, and deals an extra 5 damage if the target is dazed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Justice Turns Its Gaze",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The magistrate turns invisible until the start of their next turn, and can attempt to hide as a free maneuver before the end of the current turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Devilish Charm",
+          "icon": "❗️",
+          "keywords": [
+            "Magic",
+            "Ranged"
+          ],
+          "usage": "Triggered action",
+          "distance": "Ranged 5",
+          "target": "The triggering creature",
+          "trigger": "A creature targets the magistrate with a strike.",
+          "cost": "2",
+          "effects": [
+            {
+              "tier1": "The magistrate chooses a new target for the strike.",
+              "tier2": "The magistrate halves the triggering damage.",
+              "tier3": "The target takes a bane on the strike.",
+              "name": "Effect",
+              "effect": "The target makes a Presence test."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Leading",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever the magistrate moves away from an enemy who is adjacent to one of the magistrate's allies, they can shift instead."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the magistrate's true name, the magistrate loses their damage immunities, any nondamaging effects of their signature ability, and their Devilish Charm ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil Notary",
+      "level": 5,
+      "roles": [
+        "Minion Hexer"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 7,
+      "stamina": 8,
+      "speed": 6,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": 0,
+      "agility": 1,
+      "reason": 3,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Importunity",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 fire damage",
+              "tier2": "5 fire damage; R < 2 the target takes a bane on their next strike",
+              "tier3": "6 fire damage; R < 3 the target takes a bane on their next strike"
+            },
+            {
+              "name": "Effect",
+              "effect": "One non-minion devil within 5 squares of the notary gains an edge on their next strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the notary's true name, the notary loses their fire immunity and any nondamaging effects of their signature ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Devil Scrivener",
+      "level": 5,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Devil",
+        "Infernal"
+      ],
+      "ev": 7,
+      "stamina": 9,
+      "speed": 6,
+      "movement": "Fly",
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "+3 bonus to speed",
+      "might": 0,
+      "agility": 3,
+      "reason": 1,
+      "intuition": 1,
+      "presence": 2,
+      "immunities": [
+        "Fire 5"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Litigation",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Magic",
+            "Melee",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 corruption damage",
+              "tier2": "5 corruption damage; slowed (EoT)",
+              "tier3": "6 corruption damage; slowed (EoT)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The scrivener can shift 1 square."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "True Name",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "If a creature within 10 squares speaks the scrivener's true name, the scrivener loses their fire immunity and any nondamaging effects of their signature ability until the end of the encounter."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

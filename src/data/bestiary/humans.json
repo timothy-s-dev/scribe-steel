@@ -1,0 +1,1430 @@
+{
+  "name": "Humans",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "ability",
+      "name": "Alchemical Device",
+      "icon": "🔳",
+      "keywords": [
+        "Area",
+        "Magic",
+        "Ranged"
+      ],
+      "usage": "Maneuver",
+      "distance": "3 cube within 10",
+      "target": "Each enemy and object in the area",
+      "cost": "3",
+      "effects": [
+        {
+          "roll": 2,
+          "tier1": "4 corruption damage; A < 0 slowed (save ends)",
+          "tier2": "6 corruption damage; A < 1 slowed (save ends)",
+          "tier3": "9 corruption damage; A < 2 restrained (save ends)"
+        },
+        {
+          "name": "Special",
+          "effect": "This ability can't be used by a minion."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Exploit Opening",
+      "icon": "⭐️",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Each human acting this turn gains an edge on abilities until the end of their turn, or has a double edge on any ability that targets an enemy affected by a condition."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Staying Power",
+      "icon": "⭐️",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "Each non-minion human in the encounter regains Stamina equal to 5 times their level."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Giant Hawk",
+      "level": 1,
+      "roles": [
+        "Platoon Mount"
+      ],
+      "ancestry": [
+        "Animal",
+        "Human"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 5,
+      "movement": "Fly",
+      "size": "2",
+      "stability": 0,
+      "free_strike": 3,
+      "might": 2,
+      "agility": 2,
+      "reason": -3,
+      "intuition": 1,
+      "presence": -2,
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Talons",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "5 damage",
+              "tier2": "7 damage",
+              "tier3": "9 damage; grabbed"
+            },
+            {
+              "effect": "If this ability gains an edge or has a double edge, it deals an extra 2 damage.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dive",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The hawk moves up to their speed."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Mounted Platform",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Once per turn when the hawk moves, any creature riding the hawk can make a free strike during or after the movement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Apprentice Mage",
+      "level": 2,
+      "roles": [
+        "Minion Controller"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 4,
+      "stamina": 4,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Corruption 2",
+        "psychic 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lightning Strike",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 lightning damage",
+              "tier2": "3 lightning damage",
+              "tier3": "5 lightning damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the apprentice mage doesn't use a maneuver or a move action this turn, the target is also slowed (EoT)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The apprentice mage ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Archer",
+      "level": 1,
+      "roles": [
+        "Minion Artillery"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Crossbow",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The archer ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Bandit Chief",
+      "level": 3,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 20,
+      "stamina": 120,
+      "speed": 5,
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 5,
+      "might": 2,
+      "agility": 3,
+      "reason": 2,
+      "intuition": 3,
+      "presence": 2,
+      "immunities": [
+        "Corruption 4",
+        "psychic 4"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Whip and Magic Longsword",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "Two enemies or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "8 damage; pull 1",
+              "tier2": "12 damage; pull 2",
+              "tier3": "15 damage; pull 3"
+            },
+            {
+              "name": "Effect",
+              "effect": "Any target who is adjacent to the bandit chief after the power roll is resolved takes 3 corruption damage."
+            },
+            {
+              "effect": "This ability targets one additional target.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Kneel, Peasant!",
+          "icon": "🗡",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Maneuver",
+          "distance": "Melee 1",
+          "target": "One enemy",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "Push 1; M < 1 prone",
+              "tier2": "Push 2; M < 2 prone",
+              "tier3": "Push 4; M < 3 prone"
+            },
+            {
+              "effect": "The ability takes the Area keyword, loses the Melee keyword, and is a 1 burst that targets each enemy in the area.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Bloodstones",
+          "icon": "❗️",
+          "keywords": [
+            "Magic"
+          ],
+          "usage": "Triggered action",
+          "distance": "Self",
+          "target": "Self",
+          "trigger": "The bandit chief makes a power roll.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The bandit chief takes 5 corruption damage and increases the outcome of the power roll by one tier. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the bandit chief can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The bandit chief ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Shoot!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each artillery ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target makes a ranged free strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Form Up!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "-",
+          "distance": "10 burst",
+          "target": "Each ally in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target shifts up to their speed. Additionally, until the end of the encounter, while the bandit chief or any ally is adjacent to a target, they have damage immunity 2."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lead From the Front",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "-"
+          ],
+          "usage": "-",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The bandit chief shifts up to 10 squares regardless of their speed. During or after this movement, they can use their Whip and Magic Longsword against up to four targets. Additionally, one ally adjacent to each target can make a free strike against that target."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Blackguard",
+      "level": 1,
+      "roles": [
+        "Leader"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 12,
+      "stamina": 80,
+      "speed": 5,
+      "size": "1M",
+      "stability": 2,
+      "free_strike": 4,
+      "might": 3,
+      "agility": 2,
+      "reason": 2,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Corruption 2",
+        "psychic 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Zweihander Swing",
+          "icon": "❇️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Area",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "1 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage; M < 1 slowed (save ends)",
+              "tier2": "6 damage; M < 2 slowed (save ends)",
+              "tier3": "8 damage; M < 3 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "One ally within 10 squares can make a free strike."
+            },
+            {
+              "effect": "One ally within 10 squares can use their signature ability instead.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "You!",
+          "icon": "🏹",
+          "keywords": [
+            "Ranged"
+          ],
+          "usage": "Maneuver",
+          "distance": "Ranged 10",
+          "target": "One enemy",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The target is marked until the start of the blackguard's next turn. The blackguard and each of their allies gain an edge on abilities used against targets marked by the blackguard."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "End Effect",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the end of each of their turns, the blackguard can take 5 damage to end one effect on them that can be ended by a saving throw. This damage can't be reduced in any way."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The blackguard ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Parry!",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "Self or one ally",
+          "trigger": "A creature makes a strike against the blackguard or an ally adjacent to them.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The damage is halved."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Advance!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 1",
+          "keywords": [
+            "-"
+          ],
+          "usage": "-",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The blackguard shifts up to their speed. During or after this movement, they can use their Zweihander Swing twice."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Back!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 2",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "-",
+          "distance": "5 burst",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The blackguard slides each target up to 5 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "I Can Throw My Blade and So Should You!",
+          "icon": "☠️",
+          "ability_type": "Villain Action 3",
+          "keywords": [
+            "Area",
+            "Magic",
+            "Ranged",
+            "Weapon"
+          ],
+          "usage": "-",
+          "distance": "3 cube within 5",
+          "target": "Each enemy in the area",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The blackguard uses their Zweihander Swing against each target. Each ally within 5 squares of the area can then make a free strike against a target (one target per ally)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Brawler",
+      "level": 1,
+      "roles": [
+        "Platoon Brute"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 6,
+      "stamina": 40,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 2,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Haymaker",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage; M < 2 grabbed and the target takes a bane on the Escape Grab maneuver"
+            },
+            {
+              "name": "Effect",
+              "effect": "A target who is already grabbed takes an extra 2 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Throw",
+          "icon": "🗡",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Maneuver",
+          "distance": "Melee 1",
+          "target": "One creature grabbed by the brawler",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The brawler pushes the target up to 5 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Shoot the Hostage",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The brawler halves the damage from any strike if they have a creature or object grabbed of size 1S or larger. The grabbed creature or object takes the remaining damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The brawler ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Death Acolyte",
+      "level": 1,
+      "roles": [
+        "Minion Hexer"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 3,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "+5 bonus to ranged distance",
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Necrotic Bolt",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 10",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 corruption damage",
+              "tier2": "2 corruption damage",
+              "tier3": "3 corruption damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "One creature within 5 squares regains 1 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The death acolyte ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Death Cultist",
+      "level": 2,
+      "roles": [
+        "Platoon Support"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 8,
+      "stamina": 40,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 0,
+      "agility": 1,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 2,
+      "immunities": [
+        "Corruption 2",
+        "psychic 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Death Scythe",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 10",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 corruption damage",
+              "tier2": "9 corruption damage",
+              "tier3": "12 corruption damage; I < 2 weakened (save ends)"
+            },
+            {
+              "effect": "The death cultist regains Stamina equal to half the damage dealt.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rise, My Minions",
+          "icon": "❇️",
+          "keywords": [
+            "Area"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 burst",
+          "target": "Each dead minion in the area",
+          "cost": "1 per minion",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Each target who died during this encounter revives with full Stamina. They immediately die at the end of the encounter or if the death cultist is killed. A target can be revived multiple times by this ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The death cultist ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Guard",
+      "level": 1,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 5,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "+2 bonus to speed",
+      "might": 2,
+      "agility": 0,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Halberd",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 2",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "2 damage",
+              "tier2": "4 damage",
+              "tier3": "5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the guard is flanked, they can make a free strike against a different target adjacent to them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The guard ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Knave",
+      "level": 2,
+      "roles": [
+        "Platoon Defender"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 8,
+      "stamina": 50,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 2,
+      "agility": 0,
+      "reason": 1,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Corruption 2",
+        "psychic 2"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Morningstar and Javelin",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 5",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage; M < 2 the target has a double bane on their next power roll"
+            },
+            {
+              "name": "Effect",
+              "effect": "The target is taunted (EoT)."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "I'm Your Enemy",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever an adjacent creature the knave has taunted deals damage to a creature other than the knave, the knave can make a free strike against them."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Overwhelm",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "An enemy who starts their turn adjacent to the knave can't shift."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The knave ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Raider",
+      "level": 1,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 1,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 0,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Handaxes",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If this ability is used as part of a charge, the raider can make a ranged free strike before using the ability."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The raider ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Rogue",
+      "level": 1,
+      "roles": [
+        "Minion Ambusher"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 3,
+      "stamina": 4,
+      "speed": 7,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 2,
+      "with_captain": "Gain an edge on strikes",
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Concealed Dagger",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or Ranged 5",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "1 damage",
+              "tier2": "2 damage",
+              "tier3": "3 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "If the rogue is disguised or hidden when they use this ability, it deals an extra 3 damage."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The rogue ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Scoundrel",
+      "level": 1,
+      "roles": [
+        "Platoon Ambusher"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 6,
+      "stamina": 30,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 0,
+      "presence": 1,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rapier and Dagger",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage"
+            },
+            {
+              "effect": "If this ability gains an edge or has a double edge, it deals an extra 2 damage.",
+              "cost": "2"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dagger Storm",
+          "icon": "🌀",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Main action",
+          "distance": "-",
+          "target": "-",
+          "cost": "5",
+          "effects": [
+            {
+              "effect": "The scoundrel uses Rapier and Dagger against up to three targets. They shift up to 2 squares before or after each strike."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The scoundrel ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Storm Mage",
+      "level": 3,
+      "roles": [
+        "Platoon Controller"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 10,
+      "stamina": 40,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 5,
+      "might": 0,
+      "agility": 0,
+      "reason": 2,
+      "intuition": 0,
+      "presence": 1,
+      "immunities": [
+        "Corruption 3",
+        "psychic 3"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Lightning Bolt",
+          "icon": "🏹",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Magic",
+            "Ranged",
+            "Strike"
+          ],
+          "usage": "Main action",
+          "distance": "Ranged 15",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "7 lightning damage",
+              "tier2": "10 lightning damage",
+              "tier3": "13 lightning damage"
+            },
+            {
+              "effect": "The ability loses the Ranged and Strike keywords, takes the Area keyword, and is a 10 x 1 line within 15 that targets each enemy and object in the area.",
+              "cost": "5"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gust of Wind",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Magic"
+          ],
+          "usage": "Maneuver",
+          "distance": "5 cube within 1",
+          "target": "Each enemy and object in the area",
+          "cost": "3",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "Slide 2; M < 0 slowed (save ends)",
+              "tier2": "Slide 4; M < 1 slowed (save ends)",
+              "tier3": "Slide 6; M < 2 slowed (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "The gust of wind disperses gas or vapor and extinguishes any flames, including supernatural effects."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Arcane Shield",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Any melee ability targeting the storm mage takes a bane.\n\nAdditionally, whenever the mage takes damage from an adjacent enemy, the enemy takes 2 lightning damage, and if they have R < 1 they are pushed up to 2 squares."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The storm mage ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Human Trickshot",
+      "level": 1,
+      "roles": [
+        "Platoon Artillery"
+      ],
+      "ancestry": [
+        "Human",
+        "Humanoid"
+      ],
+      "ev": 6,
+      "stamina": 20,
+      "speed": 5,
+      "size": "1M",
+      "stability": 0,
+      "free_strike": 4,
+      "might": 0,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 0,
+      "immunities": [
+        "Corruption 1",
+        "psychic 1"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Trick Crossbow",
+          "icon": "⚔️",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Ranged",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1 or ranged 15",
+          "target": "One creature or object",
+          "effects": [
+            {
+              "roll": 2,
+              "tier1": "6 damage",
+              "tier2": "9 damage",
+              "tier3": "12 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "This ability ignores cover and concealment."
+            },
+            {
+              "effect": "This ability targets one additional target.",
+              "cost": "3"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Supernatural Insight",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The trickshot ignores concealment if it's granted by a supernatural effect."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getGroups } from '@/data/bestiary';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStorage } from '@/contexts/StorageContext';
+import { migrateMonsterGroup } from '@/data/migrate';
 import type { MonsterGroup, SavedMonsterGroup } from '@/data/types';
 
 export interface TaggedGroup extends MonsterGroup {
@@ -29,8 +30,9 @@ export function useAllGroups(): TaggedGroup[] {
 
       const loaded: TaggedGroup[] = [];
       for (const item of index.items) {
-        const doc = await load<SavedMonsterGroup>(item.fileId);
-        if (doc) {
+        const raw = await load<SavedMonsterGroup>(item.fileId);
+        if (raw) {
+          const doc = migrateMonsterGroup(raw);
           loaded.push({
             name: doc.name,
             malice: doc.malice,

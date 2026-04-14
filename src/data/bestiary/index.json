@@ -1,0 +1,206 @@
+[
+  {
+    "name": "Ajax the Invincible",
+    "file": "ajax-the-invincible.json"
+  },
+  {
+    "name": "Angulotls",
+    "file": "angulotls.json"
+  },
+  {
+    "name": "Animals",
+    "file": "animals.json"
+  },
+  {
+    "name": "Arixx",
+    "file": "arixx.json"
+  },
+  {
+    "name": "Ashen Hoarder",
+    "file": "ashen-hoarder.json"
+  },
+  {
+    "name": "Basilisks",
+    "file": "basilisks.json"
+  },
+  {
+    "name": "Bredbeddle",
+    "file": "bredbeddle.json"
+  },
+  {
+    "name": "Bugbears",
+    "file": "bugbears.json"
+  },
+  {
+    "name": "Chimera",
+    "file": "chimera.json"
+  },
+  {
+    "name": "Count Rhodar Von Glauer",
+    "file": "count-rhodar-von-glauer.json"
+  },
+  {
+    "name": "Demons",
+    "file": "demons.json"
+  },
+  {
+    "name": "Devils",
+    "file": "devils.json"
+  },
+  {
+    "name": "Draconians",
+    "file": "draconians.json"
+  },
+  {
+    "name": "Dragons",
+    "file": "dragons.json"
+  },
+  {
+    "name": "Dwarves",
+    "file": "dwarves.json"
+  },
+  {
+    "name": "Elementals",
+    "file": "elementals.json"
+  },
+  {
+    "name": "Elves High",
+    "file": "elves-high.json"
+  },
+  {
+    "name": "Elves Shadow",
+    "file": "elves-shadow.json"
+  },
+  {
+    "name": "Elves Wode",
+    "file": "elves-wode.json"
+  },
+  {
+    "name": "Fossil Cryptic",
+    "file": "fossil-cryptic.json"
+  },
+  {
+    "name": "Giants",
+    "file": "giants.json"
+  },
+  {
+    "name": "Gnolls",
+    "file": "gnolls.json"
+  },
+  {
+    "name": "Goblins",
+    "file": "goblins.json"
+  },
+  {
+    "name": "Griffons",
+    "file": "griffons.json"
+  },
+  {
+    "name": "Hag",
+    "file": "hag.json"
+  },
+  {
+    "name": "Hobgoblins",
+    "file": "hobgoblins.json"
+  },
+  {
+    "name": "Humans",
+    "file": "humans.json"
+  },
+  {
+    "name": "Kingfissure Worm",
+    "file": "kingfissure-worm.json"
+  },
+  {
+    "name": "Kobolds",
+    "file": "kobolds.json"
+  },
+  {
+    "name": "Lich",
+    "file": "lich.json"
+  },
+  {
+    "name": "Lightbenders",
+    "file": "lightbenders.json"
+  },
+  {
+    "name": "Lizardfolks",
+    "file": "lizardfolks.json"
+  },
+  {
+    "name": "Lord Syuul",
+    "file": "lord-syuul.json"
+  },
+  {
+    "name": "Manticores",
+    "file": "manticores.json"
+  },
+  {
+    "name": "Medusas",
+    "file": "medusas.json"
+  },
+  {
+    "name": "Minotaurs",
+    "file": "minotaurs.json"
+  },
+  {
+    "name": "Noncombatant",
+    "file": "noncombatant.json"
+  },
+  {
+    "name": "Ogres",
+    "file": "ogres.json"
+  },
+  {
+    "name": "Olothec",
+    "file": "olothec.json"
+  },
+  {
+    "name": "Orcs",
+    "file": "orcs.json"
+  },
+  {
+    "name": "Radenwights",
+    "file": "radenwights.json"
+  },
+  {
+    "name": "Shambling Mound",
+    "file": "shambling-mound.json"
+  },
+  {
+    "name": "Time Raiders",
+    "file": "time-raiders.json"
+  },
+  {
+    "name": "Trolls",
+    "file": "trolls.json"
+  },
+  {
+    "name": "Undead",
+    "file": "undead.json"
+  },
+  {
+    "name": "Valok",
+    "file": "valok.json"
+  },
+  {
+    "name": "Voiceless Talkers",
+    "file": "voiceless-talkers.json"
+  },
+  {
+    "name": "War Dogs",
+    "file": "war-dogs.json"
+  },
+  {
+    "name": "Werewolf",
+    "file": "werewolf.json"
+  },
+  {
+    "name": "Wyverns",
+    "file": "wyverns.json"
+  },
+  {
+    "name": "Xorannox the Tyract",
+    "file": "xorannox-the-tyract.json"
+  }
+]

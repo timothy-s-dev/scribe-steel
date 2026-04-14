@@ -1,0 +1,584 @@
+{
+  "name": "Trolls",
+  "malice": [
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Foul Spew",
+      "icon": "🔳",
+      "cost": "3",
+      "effects": [
+        {
+          "tier1": "12 acid damage; dazed (EoT)",
+          "tier2": "10 acid damage; weakened (EoT)",
+          "tier3": "6 acid damage",
+          "effect": "One troll acting this turn spews out a half-digested meal in a 5 x 1 line within 1 square of them. Each troll in the area regains 3 Stamina. Each enemy in the area makes a **Might test**."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Emergency Meal",
+      "icon": "🗡",
+      "cost": "5",
+      "effects": [
+        {
+          "effect": "Each troll in the encounter can make a free strike against a creature adjacent to them, and regains Stamina equal to the damage dealt."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "feature_type": "trait",
+      "name": "Bloody Banquet",
+      "icon": "❇️",
+      "cost": "7",
+      "effects": [
+        {
+          "effect": "Each winded troll in the encounter disgorges the contents of their stomach onto the ground around them, creating a 1 burst of foul vomitus that lasts until the end of the encounter. Each non-troll who enters this area for the first time in a round or starts their turn there takes 5 acid damage. Each troll in the area has a double edge on power rolls."
+        }
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "name": "Troll Butcher",
+      "level": 5,
+      "roles": [
+        "Elite Hexer"
+      ],
+      "ancestry": [
+        "Giant",
+        "Troll"
+      ],
+      "ev": 28,
+      "stamina": 120,
+      "speed": 8,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 6,
+      "might": 3,
+      "agility": 1,
+      "reason": 1,
+      "intuition": 0,
+      "presence": 0,
+      "weaknesses": [
+        "Acid 5",
+        "fire"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Savoring Bite",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "9 damage; M < 1 bleeding (save ends)",
+              "tier2": "14 damage; M < 2 bleeding (save ends)",
+              "tier3": "17 damage; M < 3 bleeding (save ends)"
+            },
+            {
+              "effect": "The butcher regains Stamina equal to the damage dealt.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Rotten Scraps",
+          "icon": "🔳",
+          "keywords": [
+            "Area",
+            "Ranged"
+          ],
+          "usage": "Main action",
+          "distance": "3 cube within 10",
+          "target": "Each creature in the area",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "5 poison damage; M < 1 weakened (save ends)",
+              "tier2": "9 poison damage; M < 2 weakened (save ends)",
+              "tier3": "11 poison damage; M < 3 weakened (save ends)"
+            },
+            {
+              "name": "Effect",
+              "effect": "Each troll in the area ignores the damage and instead regains 3 Stamina."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Gourmet Flesh",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "2",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The butcher enhances their next use of Savoring Bite, changing the damage type and condition imposed to one of the following pairs: corruption damage and dazed, acid damage and restrained, or lightning damage and frightened."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Acquired Taste",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Triggered action",
+          "distance": "Melee 1",
+          "target": "The triggering creature",
+          "trigger": "A creature within distance deals damage to the butcher with an ability that gains an edge, has a double edge, or uses a surge.",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The butcher makes a free strike against the target. Until the end of their next turn, the butcher gains an edge on power rolls and deals an extra 3 damage with strikes."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Bloody Feast",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Each ally within 5 squares of the butcher gains an edge on power rolls against any enemy affected by a condition."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Relentless Hunger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The butcher dies only if they are reduced to 0 Stamina by acid or fire damage, if they end their turn with 0 Stamina, or if they take acid or fire damage while at 0 Stamina."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Troll Crack Trooper",
+      "level": 9,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Giant",
+        "Troll"
+      ],
+      "ev": 11,
+      "stamina": 15,
+      "speed": 6,
+      "size": "2",
+      "stability": 4,
+      "free_strike": 5,
+      "with_captain": "+3 bonus to Stamina",
+      "might": 4,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 2,
+      "weaknesses": [
+        "Acid 5",
+        "fire"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Charging Chomp",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Charge",
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "5 damage; push 2",
+              "tier2": "7 damage; push 3; A < 3 3 damage",
+              "tier3": "9 damage; push 4; A < 4 5 damage"
+            },
+            {
+              "name": "Effect",
+              "effect": "The crack trooper's squad's Stamina pool regains Stamina equal to half the damage dealt."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Group Appetite",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The crack trooper dies only if their squad's Stamina pool is reduced to 0 Stamina by acid or fire damage, if they end their turn with 0 Stamina in their squad's Stamina pool, or if they take acid or fire damage while their squad's Stamina pool is at 0 Stamina."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Troll Glutton",
+      "level": 5,
+      "roles": [
+        "Elite Brute"
+      ],
+      "ancestry": [
+        "Giant",
+        "Troll"
+      ],
+      "ev": 28,
+      "stamina": 160,
+      "speed": 6,
+      "size": "2",
+      "stability": 4,
+      "free_strike": 7,
+      "might": 3,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 1,
+      "weaknesses": [
+        "Acid 5",
+        "fire"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Voracious Mastication",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "Two creatures or objects",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "10 damage",
+              "tier2": "15 damage; M < 2 slowed (save ends)",
+              "tier3": "18 damage; M < 3 slowed (save ends)"
+            },
+            {
+              "effect": "The glutton regains Stamina equal to the damage dealt.",
+              "cost": "1"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Crash Through",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Main action",
+          "distance": "Self",
+          "target": "Self",
+          "cost": "3",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The glutton shifts up to their speed in a straight line, ignoring difficult terrain. The first time during this movement that the glutton moves through the space of a creature or object their size or smaller, that creature or object takes 10 damage, or a creature can choose to fall prone instead. If the glutton moves into a creature or object larger than them and doesn't knock the creature prone or destroy the object, the glutton's movement ends and they are dazed until the end of their next turn."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Food Frenzy",
+          "icon": "👤",
+          "keywords": [
+            "-"
+          ],
+          "usage": "Maneuver",
+          "distance": "Self",
+          "target": "Self",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "Until the start of their next turn, the glutton has a double edge on strikes, and strikes made against them gain an edge."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Spiteful Retort",
+          "icon": "❗️",
+          "keywords": [
+            "Melee"
+          ],
+          "usage": "Free triggered action",
+          "distance": "Melee 1",
+          "target": "The triggering creature",
+          "trigger": "The glutton is reduced to 0 Stamina but doesn't die.",
+          "cost": "1",
+          "effects": [
+            {
+              "name": "Effect",
+              "effect": "The glutton uses Voracious Mastication against an adjacent creature."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Insatiable Appetite",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Once per turn, the glutton can use the Charge main actionas a free maneuver if they target a winded creature."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Relentless Hunger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The glutton dies only if they are reduced to 0 Stamina by acid or fire damage, if they end their turn with 0 Stamina, or if they take acid or fire damage while at 0 Stamina."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Troll Limbjumble",
+      "level": 5,
+      "roles": [
+        "Minion Hexer"
+      ],
+      "ancestry": [
+        "Troll"
+      ],
+      "ev": 7,
+      "stamina": 8,
+      "speed": 5,
+      "size": "1S",
+      "stability": 0,
+      "free_strike": 3,
+      "with_captain": "Gain an edge on strikes",
+      "might": 3,
+      "agility": 1,
+      "reason": -2,
+      "intuition": -1,
+      "presence": -1,
+      "weaknesses": [
+        "Acid 8",
+        "fire"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Arm and a Leg",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage; A < 2 prone",
+              "tier2": "5 damage; A < 3 prone",
+              "tier3": "6 damage; prone"
+            },
+            {
+              "name": "Effect",
+              "effect": "If a target made prone this way is already prone, they are grabbed instead."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Hyper-Regeneration",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "At the start of each of the limbjumble's squad's turns, the squad's Stamina pool increases as if each limbjumble were at full Stamina."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Troll Ravager",
+      "level": 9,
+      "roles": [
+        "Minion Harrier"
+      ],
+      "ancestry": [
+        "Giant",
+        "Troll"
+      ],
+      "ev": 11,
+      "stamina": 15,
+      "speed": 8,
+      "size": "2",
+      "stability": 2,
+      "free_strike": 4,
+      "with_captain": "+2 bonus to speed",
+      "might": 4,
+      "agility": 2,
+      "reason": 0,
+      "intuition": 1,
+      "presence": 1,
+      "weaknesses": [
+        "Acid 5",
+        "fire"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Dine and Dash",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 4,
+              "tier1": "4 damage; the ravager can shift 1 square",
+              "tier2": "6 damage; the ravager shifts up to 2 squares",
+              "tier3": "8 damage; the ravager shifts up to 3 squares"
+            },
+            {
+              "name": "Effect",
+              "effect": "The ravager's squad's Stamina pool regains Stamina equal to half the damage dealt."
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Group Appetite",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "The ravager dies only if their squad's Stamina pool is reduced to 0 Stamina by acid or fire damage, if they end their turn with 0 Stamina in their squad's Stamina pool, or if they take acid or fire damage while their squad's Stamina pool is at 0 Stamina."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Troll Whelp",
+      "level": 5,
+      "roles": [
+        "Minion Brute"
+      ],
+      "ancestry": [
+        "Giant",
+        "Troll"
+      ],
+      "ev": 7,
+      "stamina": 10,
+      "speed": 6,
+      "size": "1L",
+      "stability": 3,
+      "free_strike": 3,
+      "with_captain": "+2 damage bonus to strikes",
+      "might": 3,
+      "agility": 1,
+      "reason": -1,
+      "intuition": 0,
+      "presence": 0,
+      "weaknesses": [
+        "Acid 5",
+        "fire"
+      ],
+      "features": [
+        {
+          "type": "feature",
+          "feature_type": "ability",
+          "name": "Jaws and Claws",
+          "icon": "🗡",
+          "ability_type": "Signature Ability",
+          "keywords": [
+            "Melee",
+            "Strike",
+            "Weapon"
+          ],
+          "usage": "Main action",
+          "distance": "Melee 1",
+          "target": "One creature or object per minion",
+          "effects": [
+            {
+              "roll": 3,
+              "tier1": "3 damage",
+              "tier2": "6 damage; slide 1",
+              "tier3": "7 damage; slide 2; M < 2 bleeding (save ends)"
+            }
+          ]
+        },
+        {
+          "type": "feature",
+          "feature_type": "trait",
+          "name": "Lingering Hunger",
+          "icon": "⭐️",
+          "effects": [
+            {
+              "effect": "Whenever two or more whelps are simultaneously reduced to 0 Stamina by damage that isn't acid or fire damage, half of those whelps become troll limbjumbles with 4 Stamina."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -40,11 +40,14 @@
     text(size: 8pt, weight: "bold", fill: _label-fg)[Cost],
     text(size: 8pt, weight: "bold", fill: _label-fg)[Name],
     text(size: 8pt, weight: "bold", fill: _label-fg)[Description],
-    ..features.map(f => (
-      text(size: 10pt, weight: "bold", fill: _cost-fg)[#f.cost],
-      text(size: 9.5pt, weight: "bold")[#f.name],
-      text(size: 9.5pt)[#f.description],
-    )).flatten()
+    ..features.map(f => {
+      let desc = f.at("effects", default: ()).filter(e => "effect" in e.keys()).map(e => e.effect).join(" ")
+      (
+        text(size: 10pt, weight: "bold", fill: _cost-fg)[#f.at("cost", default: "")],
+        text(size: 9.5pt, weight: "bold")[#f.name],
+        text(size: 9.5pt)[#desc],
+      )
+    }).flatten()
   )
 }
 

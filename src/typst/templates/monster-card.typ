@@ -36,33 +36,37 @@
   else          { "0" }
 }
 
-// Ability block
+// Ability block (feature_type == "ability")
 
 #let _ability(ab) = {
-  let name   = ab.name
-  let damage = ab.at("damage",    default: none)
-  let type_  = ab.at("type",      default: none)
-  let action = ab.at("action",    default: none)
-  let kw     = ab.at("keywords",  default: none)
-  let dist   = ab.at("distance",  default: none)
-  let tgt    = ab.at("target",    default: none)
-  let pr     = ab.at("powerRoll", default: none)
-  let effect = ab.at("effect",    default: none)
+  let name       = ab.name
+  let type_      = ab.at("ability_type", default: none)
+  let usage      = ab.at("usage",        default: none)
+  let kw         = ab.at("keywords",     default: none)
+  let dist       = ab.at("distance",     default: none)
+  let tgt        = ab.at("target",       default: none)
+  let trigger    = ab.at("trigger",      default: none)
+  let cost       = ab.at("cost",         default: none)
+  let effects    = ab.at("effects",      default: ())
+
+  // Find power roll effect (has "roll" key)
+  let pr = effects.filter(e => "roll" in e.keys())
+  let named = effects.filter(e => "roll" not in e.keys() and "effect" in e.keys())
 
   block(above: 5pt, below: 0pt, width: 100%)[
     #grid(columns: (1fr, auto), inset: 0pt, column-gutter: 4pt,
       {
         text(size: 7.5pt, weight: "bold")[#name]
-        if damage != none { text(size: 7.5pt)[ #damage] }
+        if cost != none { text(size: 6.5pt, fill: _type-fg)[ (#cost Malice)] }
       },
       if type_ != none {
         text(size: 6.5pt, weight: "bold", fill: _type-fg)[#type_]
       } else { [] },
     )
-    #if kw != none or action != none [
+    #if kw != none or usage != none [
       #grid(columns: (1fr, auto), inset: 0pt, column-gutter: 4pt,
-        if kw     != none { text(size: 6.5pt, fill: _lbl)[#kw.join(", ")] } else { [] },
-        if action != none { text(size: 6.5pt, fill: _lbl)[#action]        } else { [] },
+        if kw    != none { text(size: 6.5pt, fill: _lbl)[#kw.join(", ")] } else { [] },
+        if usage != none { text(size: 6.5pt, fill: _lbl)[#usage]         } else { [] },
       )
     ]
     #if dist != none or tgt != none [
@@ -71,73 +75,92 @@
         if tgt  != none { text(size: 6.5pt, fill: _lbl)[#tgt]    } else { [] },
       )
     ]
-    #if pr != none {
+    #if trigger != none [
+      #text(size: 6.5pt)[#text(weight: "bold")[Trigger:] #trigger]
+    ]
+    #if pr.len() > 0 {
+      let p = pr.first()
       v(5pt)
-      for t in pr {
-        block(above: 0pt, below: 5pt, width: 100%)[
-          #grid(
-            columns: (_tier-box-w, 1fr),
-            column-gutter: 5pt,
-            align: horizon,
-            box(
-              fill: _tier-bg,
-              stroke: (paint: _rule, thickness: 0.4pt),
-              inset: (x: 3pt, y: 3pt),
-              radius: 2pt,
-              width: _tier-box-w,
-            )[#align(center)[#text(size: 6pt, weight: "bold")[#t.tier]]],
-            text(size: 6pt)[#t.result],
-          )
-        ]
+      // Tier rows
+      for (tier-label, tier-key) in (("\u{2264}11", "tier1"), ("12-16", "tier2"), ("17+", "tier3")) {
+        let result = p.at(tier-key, default: none)
+        if result != none {
+          block(above: 0pt, below: 5pt, width: 100%)[
+            #grid(
+              columns: (_tier-box-w, 1fr),
+              column-gutter: 5pt,
+              align: horizon,
+              box(
+                fill: _tier-bg,
+                stroke: (paint: _rule, thickness: 0.4pt),
+                inset: (x: 3pt, y: 3pt),
+                radius: 2pt,
+                width: _tier-box-w,
+              )[#align(center)[#text(size: 6pt, weight: "bold")[#tier-label]]],
+              text(size: 6pt)[#result],
+            )
+          ]
+        }
       }
       v(4pt)
     }
-    #if effect != none {
-      text(size: 6.5pt)[#text(weight: "bold")[Effect:] #effect]
-    }
+    #for eff in named [
+      #text(size: 6.5pt)[
+        #if eff.at("name", default: none) != none [#text(weight: "bold")[#eff.name:] ]
+        #if eff.at("cost", default: none) != none [#text(fill: _type-fg)[(#eff.cost Malice)] ]
+        #eff.effect
+      ]
+    ]
     #v(3pt)
     #line(length: 100%, stroke: (paint: _rule, thickness: 0.5pt))
   ]
 }
 
-// Trait block
+// Trait block (feature_type == "trait")
 
 #let _trait(tr) = block(above: 5pt, below: 0pt, width: 100%)[
-  #text(size: 7.5pt, weight: "bold")[\u{2605} #tr.name]
-  #text(size: 7pt)[ \u{2014} #tr.description]
+  #text(size: 7.5pt, weight: "bold")[#box(baseline: -1pt)[\u{2605}] #tr.name]
+  #for eff in tr.at("effects", default: ()) [
+    #if "effect" in eff.keys() [
+      #text(size: 7pt)[ \u{2014} #eff.effect]
+    ]
+  ]
   #v(3pt)
   #line(length: 100%, stroke: (paint: _rule, thickness: 0.5pt))
 ]
 
-// Render a mixed list of abilities and traits
+// Render a feature (dispatches by feature_type)
 
-#let _render-items(items) = {
-  for item in items {
-    if "description" in item.keys() { _trait(item) } else { _ability(item) }
-  }
+#let _render-feature(feat) = {
+  if feat.feature_type == "trait" { _trait(feat) } else { _ability(feat) }
+}
+
+// Render a list of features
+
+#let _render-features(features) = {
+  for feat in features { _render-feature(feat) }
 }
 
 // Header renderer
 
 #let _render-header(m, full: true) = {
-  let chars  = m.at("characteristics", default: (:))
-  let immune = m.at("immunity",  default: none)
-  let weak   = m.at("weakness",  default: none)
-  let move   = m.at("movement",  default: none)
+  let immune = m.at("immunities", default: none)
+  let weak   = m.at("weaknesses", default: none)
+  let move   = m.at("movement",   default: none)
 
   // Name + Level/Role bar
   block(width: 100%, fill: _hdr-bg, inset: (x: 7pt, y: 5pt), spacing: 0pt)[
     #text(size: 10pt, weight: "bold", fill: _hdr-fg)[#m.name]
     #h(1fr)
-    #text(size: 7pt, fill: rgb("#94a3b8"))[Level #m.level #m.role]
+    #text(size: 7pt, fill: rgb("#94a3b8"))[Level #m.level #m.roles.join(", ")]
   ]
 
   if full [
-    // Keywords + EV subtitle
+    // Ancestry + EV subtitle
     #block(width: 100%, fill: _sub-bg, inset: (x: 7pt, y: 2pt), spacing: 0pt)[
-      #text(size: 7pt, fill: _lbl)[#m.at("keywords", default: ()).join(", ")]
+      #text(size: 7pt, fill: _lbl)[#m.ancestry.join(", ")]
       #h(1fr)
-      #text(size: 7pt, fill: _lbl)[EV #m.ev]
+      #{ let ev = m.at("ev", default: none); if ev != none { text(size: 7pt, fill: _lbl)[EV #ev] } }
     ]
     // Stats table
     #block(spacing: 0pt, width: 100%)[
@@ -151,7 +174,7 @@
         text(size: 9pt, weight: "bold")[#m.speed],
         text(size: 9pt, weight: "bold")[#m.stamina],
         text(size: 9pt, weight: "bold")[#m.stability],
-        text(size: 9pt, weight: "bold")[#m.at("freeStrike")],
+        text(size: 9pt, weight: "bold")[#m.free_strike],
         text(size: 6pt, fill: _lbl)[Size],
         text(size: 6pt, fill: _lbl)[Spd],
         text(size: 6pt, fill: _lbl)[Stam],
@@ -164,8 +187,8 @@
       #block(spacing: 0pt, width: 100%)[
         #pad(x: 7pt, top: 3pt, bottom: 2pt)[
           #text(size: 7pt)[
-            #if immune != none [*Immune:* #immune#h(6pt)]
-            #if weak   != none [*Weak:* #weak]
+            #if immune != none [*Immune:* #immune.join(", ")#h(6pt)]
+            #if weak   != none [*Weak:* #weak.join(", ")]
           ]
           #if move != none and move != "" [
             #v(1pt)
@@ -185,93 +208,97 @@
         columns: (1fr, 1fr, 1fr, 1fr, 1fr),
         align: center,
         .._chars.map(c => text(size: 7.5pt, fill: _hdr-fg)[
-          #text(weight: "bold")[#c.lbl] #_sign(chars.at(c.key, default: 0))
+          #text(weight: "bold")[#c.lbl] #_sign(m.at(c.key, default: 0))
         ])
       )
     ]
   ]
 }
 
-// Auto-split: front vs back items
+// Paginate features into card-sized pages.
+// Returns an array of feature arrays, one per card side.
+// The first page uses the full header; subsequent pages use the compact header.
 
-#let _do-split(m) = {
-  let all-items = m.at("abilities", default: ()) + m.at("traits", default: ())
+// Measure the total height of a card side (header + padded features)
+// exactly as it would render, so spacing is accurate.
+#let _measure-card(m, features, full-header) = {
+  measure(block(width: _pw, above: 0pt, below: 0pt, spacing: 0pt)[
+    #set text(size: 10pt, fill: _ink)
+    #set par(leading: 0.4em, spacing: 0.5em)
+    #_render-header(m, full: full-header)
+    #pad(x: 7pt, top: 4pt, bottom: 4pt)[
+      #_render-features(features)
+    ]
+  ]).height
+}
 
-  let header-h  = measure(block(width: _pw)[#_render-header(m, full: true)]).height
-  let content-w = _pw - 14pt
-  let available = _ph - header-h - 8pt
+#let _paginate(m) = {
+  let all-features = m.at("features", default: ())
 
-  let front      = ()
-  let back       = ()
-  let used       = 0pt
-  let overflowed = false
+  let pages = ()
+  let current-page = ()
+  let is-first = true
 
-  for item in all-items {
-    if overflowed { back.push(item); continue }
-    let h = measure(
-      block(width: content-w)[
-        #if "description" in item.keys() { _trait(item) } else { _ability(item) }
-      ]
-    ).height + 5pt
-    if used + h <= available {
-      front.push(item)
-      used += h
+  for feat in all-features {
+    let candidate = current-page + (feat,)
+    let h = _measure-card(m, candidate, is-first)
+
+    if h > _ph and current-page.len() > 0 {
+      // Overflow: start a new page
+      pages.push(current-page)
+      current-page = (feat,)
+      is-first = false
     } else {
-      overflowed = true
-      back.push(item)
+      current-page = candidate
     }
   }
+  if current-page.len() > 0 {
+    pages.push(current-page)
+  }
 
-  (front: front, back: back)
+  pages
 }
 
-// Portrait card content
+// Render a single card side
 
-#let _portrait-front(m) = context {
-  let split = _do-split(m)
-  block(
+#let _card-side(m, features, full-header: false, flipped: false) = {
+  let inner = block(
     above: 0pt, below: 0pt,
     width: _pw, height: _ph,
     clip: true,
     stroke: (paint: _rule, thickness: 0.5pt),
     radius: 3pt,
   )[
-    #_render-header(m, full: true)
+    #_render-header(m, full: full-header)
     #pad(x: 7pt, top: 4pt, bottom: 4pt)[
-      #_render-items(split.front)
+      #_render-features(features)
     ]
   ]
+  if flipped { rotate(180deg, reflow: true, inner) } else { inner }
 }
 
-#let _portrait-back(m) = context {
-  let split = _do-split(m)
+// Render an empty card side (blank placeholder)
+
+#let _card-blank() = {
   block(
     above: 0pt, below: 0pt,
     width: _pw, height: _ph,
-    clip: true,
     stroke: (paint: _rule, thickness: 0.5pt),
     radius: 3pt,
-  )[
-    #if split.back.len() > 0 [
-      #_render-header(m, full: false)
-      #pad(x: 7pt, top: 4pt, bottom: 4pt)[
-        #_render-items(split.back)
-      ]
-    ]
-  ]
+  )[]
 }
-
-// Rotated card wrappers
-
-#let _front(m) = _portrait-front(m)
-#let _back(m)  = rotate(180deg, reflow: true, _portrait-back(m))
 
 // Main template
+//
+// Each monster produces a series of card sides (front page 1, then continuation
+// pages). We pair sides into front/back for double-sided printing: odd sides
+// are fronts, even sides are backs. Monsters are laid out 3 card slots per
+// sheet; a monster that needs more than 2 sides simply occupies extra slots.
 
 #let monster-card-sheet(
   monsters: (),
   body,
-) = {
+) = context {
   set document(title: "Monster Cards")
   set page(
     paper: "us-letter",
@@ -282,21 +309,65 @@
   set text(size: 10pt, fill: _ink)
   set par(leading: 0.4em, spacing: 0.5em)
 
-  let groups = ()
-  let i = 0
-  while i < monsters.len() {
-    groups.push(monsters.slice(i, calc.min(i + 3, monsters.len())))
-    i += 3
+  // Build a flat list of card sides: (monster, features, full-header?)
+  // Each monster gets ceil(pages/2)*2 sides (padded to even for front/back pairing).
+  let sides = ()
+  for m in monsters {
+    let pages = _paginate(m)
+    if pages.len() == 0 { pages = ((),) }
+
+    // First side always has full header
+    sides.push((m: m, features: pages.at(0), full: true))
+
+    // Remaining pages get compact header
+    for pi in range(1, pages.len()) {
+      sides.push((m: m, features: pages.at(pi), full: false))
+    }
+
+    // Pad to even number of sides so the back page lines up
+    if calc.rem(pages.len(), 2) != 0 {
+      sides.push(none)  // blank back
+    }
   }
 
-  for (gi, group) in groups.enumerate() {
+  // Group sides into pairs (front, back)
+  let pairs = ()
+  let pi = 0
+  while pi < sides.len() {
+    let front = sides.at(pi)
+    let back  = if pi + 1 < sides.len() { sides.at(pi + 1) } else { none }
+    pairs.push((front: front, back: back))
+    pi += 2
+  }
+
+  // Layout 3 card slots per sheet
+  let slots = ()
+  let si = 0
+  while si < pairs.len() {
+    slots.push(pairs.slice(si, calc.min(si + 3, pairs.len())))
+    si += 3
+  }
+
+  for (gi, group) in slots.enumerate() {
     if gi > 0 { pagebreak() }
 
     // Front page
-    stack(dir: ltr, spacing: _gap, ..group.map(_front))
+    stack(dir: ltr, spacing: _gap,
+      ..group.map(pair => {
+        let s = pair.front
+        if s == none { _card-blank() }
+        else { _card-side(s.m, s.features, full-header: s.full) }
+      })
+    )
 
-    // Back page (always generated for correct double-sided printing)
+    // Back page
     pagebreak()
-    stack(dir: ltr, spacing: _gap, ..group.map(_back))
+    stack(dir: ltr, spacing: _gap,
+      ..group.map(pair => {
+        let s = pair.back
+        if s == none { _card-blank() }
+        else { _card-side(s.m, s.features, full-header: s.full, flipped: true) }
+      })
+    )
   }
 }
