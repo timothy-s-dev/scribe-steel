@@ -172,7 +172,7 @@ export function TypstEditor({
         <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
           <div className="flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
             <span className="text-sm font-semibold font-body text-on-surface">
-              Typst Editor
+              {schema.name}
             </span>
           </div>
           {hasParams && (
