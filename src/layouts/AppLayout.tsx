@@ -32,9 +32,9 @@ const mainNav: NavEntry[] = [
   {
     label: 'Bestiary',
     items: [
-      { label: 'Stat Blocks', icon: 'menu_book', to: '/', placeholder: true },
+      { label: 'Monster Groups', icon: 'groups', to: '/monster-groups' },
       { label: 'Monster Cards', icon: 'skull', to: '/monster-cards' },
-      { label: 'Encounter Sheet', icon: 'swords', to: '/encounter-sheet' },
+      { label: 'Encounter Sheets', icon: 'swords', to: '/encounter-sheets' },
     ],
   },
 ];

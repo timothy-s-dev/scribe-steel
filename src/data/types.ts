@@ -53,12 +53,19 @@ export interface MaliceFeature {
   description: string;
 }
 
-export interface Faction {
+export interface MonsterGroup {
   name: string;
   malice: MaliceFeature[];
   monsters: Monster[];
 }
 
 export interface Bestiary {
-  factions: Faction[];
+  groups: MonsterGroup[];
+}
+
+export interface SavedMonsterGroup {
+  version: number;
+  name: string;
+  malice: MaliceFeature[];
+  monsters: Monster[];
 }

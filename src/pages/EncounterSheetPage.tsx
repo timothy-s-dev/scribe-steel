@@ -267,7 +267,7 @@ export function EncounterSheetPage() {
       <div className="w-1/3 flex-shrink-0 flex flex-col overflow-hidden border-r border-outline-variant/20">
         <div className="flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
           <span className="text-sm font-semibold font-body text-on-surface">
-            Encounter Sheet
+            Encounter Sheets
           </span>
         </div>
 

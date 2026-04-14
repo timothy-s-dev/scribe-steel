@@ -31,9 +31,9 @@ const bestiaryTools: Tool[] = [
     description: 'Pick monsters and generate printable 3x5 index cards with stats, abilities, and traits.',
   },
   {
-    label: 'Encounter Sheet',
+    label: 'Encounter Sheets',
     icon: 'swords',
-    to: '/encounter-sheet',
+    to: '/encounter-sheets',
     description: 'Build a one-page GM reference sheet for running combats — creature groups, malice features, conditions, and notes.',
   },
 ];

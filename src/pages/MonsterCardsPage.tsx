@@ -4,7 +4,7 @@ import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import { getFactions, getAllMonsters } from '@/data/bestiary';
+import { getGroups, getAllMonsters } from '@/data/bestiary';
 import monsterCardTyp from '@/typst/templates/monster-card.typ?raw';
 
 const TEMPLATE_FILE: VirtualFile = {
@@ -24,7 +24,7 @@ export function MonsterCardsPage() {
   const [printMode, setPrintMode] = useState(settings.printFriendly);
   const zoom = useZoom(settings.defaultZoom);
 
-  const factions = getFactions();
+  const groups = getGroups();
 
   const toggleMonster = useCallback((name: string) => {
     setSelected((prev) => {
@@ -35,21 +35,21 @@ export function MonsterCardsPage() {
     });
   }, []);
 
-  const toggleFaction = useCallback(
-    (factionName: string) => {
-      const faction = factions.find((f) => f.name === factionName);
-      if (!faction) return;
+  const toggleGroup = useCallback(
+    (groupName: string) => {
+      const group = groups.find((g) => g.name === groupName);
+      if (!group) return;
       setSelected((prev) => {
         const next = new Set(prev);
-        const allSelected = faction.monsters.every((m) => prev.has(m.name));
-        for (const m of faction.monsters) {
+        const allSelected = group.monsters.every((m) => prev.has(m.name));
+        for (const m of group.monsters) {
           if (allSelected) next.delete(m.name);
           else next.add(m.name);
         }
         return next;
       });
     },
-    [factions],
+    [groups],
   );
 
   const selectedMonsters = useMemo(
@@ -114,16 +114,16 @@ export function MonsterCardsPage() {
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-4">
-          {factions.map((faction) => {
-            const allChecked = faction.monsters.every((m) =>
+          {groups.map((group) => {
+            const allChecked = group.monsters.every((m) =>
               selected.has(m.name),
             );
-            const someChecked = faction.monsters.some((m) =>
+            const someChecked = group.monsters.some((m) =>
               selected.has(m.name),
             );
 
             return (
-              <div key={faction.name}>
+              <div key={group.name}>
                 <label className="flex items-center gap-2 cursor-pointer mb-2">
                   <input
                     type="checkbox"
@@ -131,16 +131,16 @@ export function MonsterCardsPage() {
                     ref={(el) => {
                       if (el) el.indeterminate = someChecked && !allChecked;
                     }}
-                    onChange={() => toggleFaction(faction.name)}
+                    onChange={() => toggleGroup(group.name)}
                     className="accent-primary"
                   />
                   <span className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
-                    {faction.name}
+                    {group.name}
                   </span>
                 </label>
 
                 <div className="space-y-0.5 ml-1">
-                  {faction.monsters.map((monster) => (
+                  {group.monsters.map((monster) => (
                     <label
                       key={monster.name}
                       className="flex items-start gap-2 cursor-pointer py-1 px-2 rounded-sm hover:bg-surface-container-low transition-colors"

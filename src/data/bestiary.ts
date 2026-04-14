@@ -1,4 +1,4 @@
-import type { Bestiary, Faction, Monster } from './types';
+import type { Bestiary, MonsterGroup, Monster } from './types';
 import data from './bestiary.json';
 
 const bestiary = data as Bestiary;
@@ -7,12 +7,12 @@ export function getBestiary(): Bestiary {
   return bestiary;
 }
 
-export function getFactions(): Faction[] {
-  return bestiary.factions;
+export function getGroups(): MonsterGroup[] {
+  return bestiary.groups;
 }
 
 export function getAllMonsters(): Monster[] {
-  return bestiary.factions.flatMap((f) => f.monsters);
+  return bestiary.groups.flatMap((g) => g.monsters);
 }
 
 export function getMonsterByName(name: string): Monster | undefined {
