@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTypstCompiler } from '@/hooks/useTypstCompiler';
 import type { VirtualFile } from '@/typst/compiler';
 import type { ZoomState } from '@/hooks/useZoom';
@@ -14,7 +14,7 @@ interface PreviewProps {
 
 export function Preview({ content, template, files = [], zoom, inputs, onPageCount }: PreviewProps) {
   const { svg, error, loading } = useTypstCompiler(content, template, files, inputs);
-  const pages = parseSvgPages(svg);
+  const pages = useMemo(() => parseSvgPages(svg), [svg]);
 
   // Report page dimensions to zoom controller
   useEffect(() => {
@@ -49,30 +49,56 @@ export function Preview({ content, template, files = [], zoom, inputs, onPageCou
       {pages.length > 0 && (
         <div className="flex flex-col items-center gap-4 py-6">
           {pages.map((page, i) => (
-            <div
-              key={i}
-              className="shadow-[0_2px_16px_rgba(0,0,0,0.3)]"
-              style={{
-                width: page.width * zoom.effectiveZoom,
-                height: page.height * zoom.effectiveZoom,
-              }}
-            >
-              <div
-                style={{
-                  width: page.width,
-                  height: page.height,
-                  transform: `scale(${zoom.effectiveZoom})`,
-                  transformOrigin: 'top left',
-                }}
-                dangerouslySetInnerHTML={{ __html: page.svg }}
-              />
-            </div>
+            <SvgPage key={i} page={page} zoom={zoom.effectiveZoom} />
           ))}
         </div>
       )}
     </div>
   );
 }
+
+// ── SvgPage ─────────────────────────────────────────────────────────────────
+// Renders a single SVG page via a ref, bypassing React reconciliation entirely.
+
+interface SvgPageProps {
+  page: ParsedPage;
+  zoom: number;
+}
+
+function SvgPage({ page, zoom }: SvgPageProps) {
+  const innerRef = useRef<HTMLDivElement>(null);
+  const mountedSvgRef = useRef<string | null>(null);
+
+  // Only touch innerHTML when the SVG content actually changes
+  useEffect(() => {
+    if (innerRef.current && page.svg !== mountedSvgRef.current) {
+      innerRef.current.innerHTML = page.svg;
+      mountedSvgRef.current = page.svg;
+    }
+  }, [page.svg]);
+
+  return (
+    <div
+      className="shadow-[0_2px_16px_rgba(0,0,0,0.3)]"
+      style={{
+        width: page.width * zoom,
+        height: page.height * zoom,
+      }}
+    >
+      <div
+        ref={innerRef}
+        style={{
+          width: page.width,
+          height: page.height,
+          transform: `scale(${zoom})`,
+          transformOrigin: 'top left',
+        }}
+      />
+    </div>
+  );
+}
+
+// ── SVG parsing ─────────────────────────────────────────────────────────────
 
 interface ParsedPage {
   width: number;
