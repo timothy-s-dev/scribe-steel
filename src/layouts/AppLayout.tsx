@@ -9,27 +9,52 @@ interface NavItem {
   placeholder?: boolean;
 }
 
-const mainNav: NavItem[] = [
-  { label: 'Monster Cards', icon: 'skull', to: '/monster-cards' },
-  { label: 'Encounter Sheet', icon: 'swords', to: '/encounter-sheet' },
-  { label: 'Letters and Notes', icon: 'architecture', to: '/letters-and-notes' },
-  { label: 'Lore Books', icon: 'auto_stories', to: '/lore-books' },
-  { label: 'Settings', icon: 'settings', to: '/', placeholder: true },
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+
+type NavEntry = NavItem | NavGroup;
+
+function isGroup(entry: NavEntry): entry is NavGroup {
+  return 'items' in entry;
+}
+
+const mainNav: NavEntry[] = [
+  {
+    label: 'Documents',
+    items: [
+      { label: 'Letters and Notes', icon: 'architecture', to: '/letters-and-notes' },
+      { label: 'Lore Books', icon: 'auto_stories', to: '/lore-books' },
+    ],
+  },
+  {
+    label: 'Bestiary',
+    items: [
+      { label: 'Stat Blocks', icon: 'menu_book', to: '/', placeholder: true },
+      { label: 'Monster Cards', icon: 'skull', to: '/monster-cards' },
+      { label: 'Encounter Sheet', icon: 'swords', to: '/encounter-sheet' },
+    ],
+  },
 ];
 
-const footerNav: NavItem[] = [
+const footerLinks: NavItem[] = [
   { label: 'Report a Bug', icon: 'bug_report', to: '/' },
   { label: 'GitHub', icon: 'code', to: '/' },
   { label: 'Release Notes', icon: 'history', to: '/' },
 ];
 
+const footerActions: NavItem[] = [
+  { label: 'Settings', icon: 'settings', to: '/', placeholder: true },
+];
+
 const inactiveClass = 'text-slate-400 font-medium hover:bg-surface-container-low hover:text-primary';
 const activeClass = 'text-primary font-bold bg-surface-container-high border-l-2 border-primary';
 
-function SidebarLink({ item, small }: { item: NavItem; small?: boolean }) {
+function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean; indented?: boolean }) {
   const base = [
     'flex items-center gap-3 transition-all duration-200 ease-in-out',
-    small ? 'px-4 py-2 text-xs' : 'px-4 py-3 text-sm tracking-wide',
+    small ? 'px-4 py-2 text-xs' : indented ? 'pl-8 pr-4 py-2.5 text-sm tracking-wide' : 'px-4 py-3 text-sm tracking-wide',
   ].join(' ');
 
   if (item.placeholder || small) {
@@ -69,17 +94,31 @@ export function AppLayout() {
         </Link>
 
         <nav className="flex-1 space-y-1">
-          {mainNav.map((item) => (
-            <SidebarLink key={item.label} item={item} />
-          ))}
+          {mainNav.map((entry) =>
+            isGroup(entry) ? (
+              <div key={entry.label} className="pt-3 first:pt-0">
+                <div className="px-4 pb-1 text-xs font-label font-bold tracking-widest uppercase text-on-surface-variant/50">
+                  {entry.label}
+                </div>
+                {entry.items.map((item) => (
+                  <SidebarLink key={item.label} item={item} indented />
+                ))}
+              </div>
+            ) : (
+              <SidebarLink key={entry.label} item={entry} />
+            ),
+          )}
         </nav>
 
         <div className="mt-auto pt-6 flex flex-col gap-y-1">
-          <SignInButton />
-          <div className="my-2" />
-          {footerNav.map((item) => (
+          {footerLinks.map((item) => (
             <SidebarLink key={item.label} item={item} small />
           ))}
+          <div className="my-2 mx-4 border-t border-outline-variant/20" />
+          {footerActions.map((item) => (
+            <SidebarLink key={item.label} item={item} small />
+          ))}
+          <SignInButton />
         </div>
       </aside>
 
