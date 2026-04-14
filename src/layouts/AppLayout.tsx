@@ -100,8 +100,9 @@ export function AppLayout() {
           <h1 className="font-headline text-xl font-bold tracking-tighter text-secondary leading-none mb-2">
             Scribe Steel
           </h1>
-          <p className="font-label text-xs tracking-widest uppercase text-outline opacity-70">
-            Print-Ready Play Aids
+          <p className="font-label text-xs tracking-widest uppercase text-outline opacity-70 flex items-end justify-between">
+            <span>Print-Ready Play Aids</span>
+            <span className="text-[10px] tracking-normal opacity-50">v{__APP_VERSION__}</span>
           </p>
         </Link>
 
