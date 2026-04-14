@@ -47,15 +47,17 @@ const baseExtensions = [markdown(), editorTheme, EditorView.lineWrapping];
 function readOnlyPreambleExtensions(preambleLength: number) {
   if (preambleLength <= 0) return [];
 
-  // Block changes that touch the preamble range
+  // Block user edits that touch the preamble range, but allow
+  // full-document replacements (triggered externally when the value prop
+  // or preamble changes).
   const changeFilter = EditorState.changeFilter.of((tr: Transaction) => {
     if (!tr.docChanged) return true;
+    const docLen = tr.startState.doc.length;
     let dominated = true;
     tr.changes.iterChangedRanges((fromA, toA) => {
       if (fromA < preambleLength || toA < preambleLength) {
-        // Change touches the preamble — but allow if it's a full-document
-        // replace (which happens when the preamble itself is updated externally)
-        if (!(fromA === 0 && toA >= preambleLength)) {
+        // Allow full-document replacements (external value updates)
+        if (!(fromA === 0 && toA === docLen)) {
           dominated = false;
         }
       }

@@ -11,12 +11,18 @@ import {
   type ParamsFormProps,
 } from '@/typst/templateSchema';
 
+export interface DocumentData {
+  params: Record<string, string>;
+  body: string;
+}
+
 interface TypstEditorProps {
   schema: TemplateSchema;
   initialContent?: string;
   initialParams?: Record<string, string>;
   paramsForm?: ComponentType<ParamsFormProps>;
   hideEditor?: boolean;
+  onChange?: (data: DocumentData) => void;
 }
 
 function PreviewToolbar({
@@ -133,6 +139,7 @@ export function TypstEditor({
   initialParams = {},
   paramsForm: ParamsForm,
   hideEditor = false,
+  onChange,
 }: TypstEditorProps) {
   const [content, setContent] = useState(initialContent);
   const [paramValues, setParamValues] = useState<Record<string, string>>(initialParams);
@@ -152,14 +159,20 @@ export function TypstEditor({
   );
 
   const handleParamChange = useCallback((key: string, value: string) => {
-    setParamValues((prev) => ({ ...prev, [key]: value }));
-  }, []);
+    setParamValues((prev) => {
+      const next = { ...prev, [key]: value };
+      onChange?.({ params: next, body: content });
+      return next;
+    });
+  }, [content, onChange]);
 
   const handleEditorChange = useCallback(
     (newFullSource: string) => {
-      setContent(newFullSource.slice(preamble.length));
+      const newBody = newFullSource.slice(preamble.length);
+      setContent(newBody);
+      onChange?.({ params: paramValues, body: newBody });
     },
-    [preamble],
+    [preamble, paramValues, onChange],
   );
 
   const hasParams = (schema.params?.length ?? 0) > 0;
