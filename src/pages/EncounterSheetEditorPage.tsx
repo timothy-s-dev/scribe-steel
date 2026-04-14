@@ -1,11 +1,15 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
 import { useAllGroups } from '@/hooks/useAllGroups';
+import { useStorage } from '@/contexts/StorageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import type { Monster, Feature } from '@/data/types';
+import type { Monster, Feature, SavedEncounter } from '@/data/types';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
 
 const TEMPLATE_FILE: VirtualFile = {
@@ -88,31 +92,140 @@ const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm fon
 const labelClass = 'text-xs font-label text-on-surface-variant';
 const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-1.5 py-1 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 
+// ── Helpers to convert between saved and form state ─────────────────────────
+
+function savedToFormState(saved: SavedEncounter) {
+  return {
+    encounter: saved.encounter,
+    objective: saved.objective,
+    victory: saved.victory,
+    failure: saved.failure,
+    malice: saved.malice.map((m) => ({ id: id(), ...m })),
+    groups: saved.groups.map((g) => ({
+      id: id(),
+      label: g.label,
+      creatures: g.creatures.map((c) => ({
+        id: id(),
+        name: c.name,
+        stamina: c.stamina,
+        stability: c.stability,
+        speed: c.speed,
+        freeStrike: c.freeStrike,
+        distance: c.distance,
+        notes: c.notes,
+        count: c.count ?? null,
+      })),
+    })),
+    notes: saved.notes,
+  };
+}
+
+function maliceFeatureToEntry(f: Feature): MaliceEntry {
+  const cost = f.cost ? parseInt(f.cost, 10) || 0 : 0;
+  const description = f.effects.map((e) => e.effect).filter(Boolean).join(' ');
+  return { id: id(), cost, name: f.name, description };
+}
+
 // ── Main component ───────────────────────────────────────────────────────────
 
-export function EncounterSheetPage() {
-  const [encounter, setEncounter] = useState('Horde of Demons');
-  const [objective, setObjective] = useState('Escape to the elevator before the Roiling Fog rises and engulfs the party.');
-  const [victory, setVictory] = useState('The party reaches the elevator and ascends.');
-  const [failure, setFailure] = useState('Any hero is swallowed by the advancing fog.');
-  const [malice, setMalice] = useState<MaliceEntry[]>([
-    { id: id(), cost: 3, name: 'Fog Surge', description: 'The fog advances an additional 3 squares toward the party.' },
-    { id: id(), cost: 5, name: 'Pit Eruption', description: 'A 2x2 pit opens under a random hero. DC 12 Agility or fall prone.' },
-  ]);
-  const [groups, setGroups] = useState<GroupEntry[]>([
-    {
-      id: id(),
-      label: 'Group 1 — Vanguard',
-      creatures: [
-        { id: id(), name: 'Muceron', stamina: '30', stability: 0, speed: 5, freeStrike: '3', distance: 'Melee 2', notes: 'Leader; retreats at 10 HP', count: null },
-        { id: id(), name: 'Pitling', stamina: '3', stability: 0, speed: 5, freeStrike: '2', distance: 'Ranged 10', notes: 'Spawns each round', count: 8 },
-      ],
-    },
-  ]);
+export function EncounterSheetEditorPage() {
+  const { fileId } = useParams<{ fileId: string }>();
+  const isDemo = fileId === 'demo';
+  const navigate = useNavigate();
+  const { load, saveStatus } = useStorage();
+  const { isSignedIn, isLoading: authLoading } = useAuth();
+
+  const [loading, setLoading] = useState(!isDemo);
+  const [error, setError] = useState<string | null>(null);
+  const [docName, setDocName] = useState(isDemo ? 'Demo' : '');
+
+  const [encounter, setEncounter] = useState('');
+  const [objective, setObjective] = useState('');
+  const [victory, setVictory] = useState('');
+  const [failure, setFailure] = useState('');
+  const [malice, setMalice] = useState<MaliceEntry[]>([]);
+  const [groups, setGroups] = useState<GroupEntry[]>([]);
   const { settings } = useSettings();
   const [notes, setNotes] = useState('');
   const [printMode, setPrintMode] = useState(settings.printFriendly);
   const zoom = useZoom(settings.defaultZoom);
+  const [initialized, setInitialized] = useState(isDemo);
+
+  const { triggerSave } = useAutoSave({
+    category: 'encounters',
+    name: docName,
+    fileId: isDemo ? null : (fileId ?? null),
+  });
+
+  // Load document from Drive
+  useEffect(() => {
+    if (isDemo || !fileId || authLoading) return;
+    if (!isSignedIn) {
+      setError('Sign in to load encounters');
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    load<SavedEncounter>(fileId).then((data) => {
+      if (data) {
+        const state = savedToFormState(data);
+        setEncounter(state.encounter);
+        setObjective(state.objective);
+        setVictory(state.victory);
+        setFailure(state.failure);
+        setMalice(state.malice);
+        setGroups(state.groups);
+        setNotes(state.notes);
+        setDocName(data.encounter);
+        setInitialized(true);
+      } else {
+        setError('Failed to load encounter');
+      }
+      setLoading(false);
+    });
+  }, [fileId, isDemo, load, isSignedIn, authLoading]);
+
+  // Get the name from the index cache
+  useEffect(() => {
+    if (isDemo) return;
+    try {
+      const raw = localStorage.getItem('scribe-steel-index-encounters');
+      if (raw) {
+        const index = JSON.parse(raw);
+        const item = index.items?.find((i: { fileId: string }) => i.fileId === fileId);
+        if (item) setDocName(item.name);
+      }
+    } catch { /* ignore */ }
+  }, [fileId, isDemo]);
+
+  // Auto-save on changes
+  const buildSaveData = useCallback((): SavedEncounter => ({
+    version: 1,
+    encounter,
+    objective,
+    victory,
+    failure,
+    malice: malice.map((m) => ({ cost: m.cost, name: m.name, description: m.description })),
+    groups: groups.map((g) => ({
+      label: g.label,
+      creatures: g.creatures.map((c) => ({
+        name: c.name,
+        stamina: c.stamina,
+        stability: c.stability,
+        speed: c.speed,
+        freeStrike: c.freeStrike,
+        distance: c.distance,
+        notes: c.notes,
+        ...(c.count != null && c.count > 0 ? { count: c.count } : {}),
+      })),
+    })),
+    notes,
+  }), [encounter, objective, victory, failure, malice, groups, notes]);
+
+  useEffect(() => {
+    if (!initialized || isDemo) return;
+    triggerSave(buildSaveData());
+  }, [initialized, isDemo, triggerSave, buildSaveData]);
 
   // Malice handlers
   const addMalice = useCallback(() => setMalice((prev) => [...prev, emptyMalice()]), []);
@@ -187,6 +300,23 @@ export function EncounterSheetPage() {
     [allMonsters],
   );
 
+  // Import malice from a monster group
+  const importMaliceFromGroup = useCallback(
+    (groupName: string) => {
+      const group = allGroups.find((g) => g.name === groupName);
+      if (!group || group.malice.length === 0) return;
+      const entries = group.malice.map(maliceFeatureToEntry);
+      setMalice((prev) => [...prev, ...entries]);
+    },
+    [allGroups],
+  );
+
+  // Groups that have malice features
+  const groupsWithMalice = useMemo(
+    () => allGroups.filter((g) => g.malice.length > 0),
+    [allGroups],
+  );
+
   // Build encounter data for JSON
   const encounterData = useMemo<EncounterData>(
     () => ({
@@ -253,7 +383,7 @@ export function EncounterSheetPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'encounter-sheet.pdf';
+      a.download = `${encounter || 'encounter-sheet'}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
@@ -263,14 +393,54 @@ export function EncounterSheetPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-sm font-body text-on-surface-variant">Loading encounter...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <p className="text-sm font-body text-tertiary">{error}</p>
+        <button
+          onClick={() => navigate('/encounter-sheets')}
+          className="text-sm font-label text-primary hover:text-primary/80 cursor-pointer"
+        >
+          Back to list
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Left column: encounter form */}
       <div className="w-1/3 flex-shrink-0 flex flex-col overflow-hidden border-r border-outline-variant/20">
-        <div className="flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
-          <span className="text-sm font-semibold font-body text-on-surface">
-            Encounter Sheets
+        <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0">
+          <button
+            onClick={() => navigate('/encounter-sheets')}
+            className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            title="Back to list"
+          >
+            <span className="material-symbols-outlined text-lg">arrow_back</span>
+          </button>
+          <span className="text-sm font-semibold font-body text-on-surface truncate flex-1">
+            {docName || 'Encounter Sheet'}
           </span>
+          {!isDemo && (
+            <span className="text-xs font-label text-on-surface-variant/50">
+              {saveStatus === 'saving'
+                ? 'Saving...'
+                : saveStatus === 'saved'
+                  ? 'Saved'
+                  : saveStatus === 'error'
+                    ? 'Save failed'
+                    : ''}
+            </span>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-5">
@@ -326,7 +496,28 @@ export function EncounterSheetPage() {
                 </button>
               </div>
             ))}
-            <AddButton onClick={addMalice}>Add Malice Feature</AddButton>
+            <div className="flex gap-3 items-center">
+              <AddButton onClick={addMalice}>Add Malice Feature</AddButton>
+              {groupsWithMalice.length > 0 && (
+                <div className="flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm text-primary">download</span>
+                  <select
+                    className={`${smallInputClass} text-xs text-primary`}
+                    value=""
+                    onChange={(e) => {
+                      if (e.target.value) importMaliceFromGroup(e.target.value);
+                    }}
+                  >
+                    <option value="">Import from group...</option>
+                    {groupsWithMalice.map((group) => (
+                      <option key={group.name} value={group.name}>
+                        {group.name}{group.custom ? ' (Custom)' : ''} ({group.malice.length})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
           </section>
 
           {/* Creature Groups */}

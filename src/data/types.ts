@@ -62,3 +62,26 @@ export interface SavedMonsterGroup {
   malice: Feature[];
   monsters: Monster[];
 }
+
+export interface SavedEncounter {
+  version: number;
+  encounter: string;
+  objective: string;
+  victory: string;
+  failure: string;
+  malice: { cost: number; name: string; description: string }[];
+  groups: {
+    label: string;
+    creatures: {
+      name: string;
+      stamina: string;
+      stability: number;
+      speed: number;
+      freeStrike: string;
+      distance: string;
+      notes: string;
+      count?: number;
+    }[];
+  }[];
+  notes: string;
+}

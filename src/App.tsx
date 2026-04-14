@@ -6,7 +6,8 @@ import { LettersAndNotesEditorPage } from '@/pages/LettersAndNotesEditorPage';
 import { LoreBooksPage } from '@/pages/LoreBooksPage';
 import { LoreBooksEditorPage } from '@/pages/LoreBooksEditorPage';
 import { MonsterCardsPage } from '@/pages/MonsterCardsPage';
-import { EncounterSheetPage } from '@/pages/EncounterSheetPage';
+import { EncounterSheetsPage } from '@/pages/EncounterSheetsPage';
+import { EncounterSheetEditorPage } from '@/pages/EncounterSheetEditorPage';
 import { MonsterGroupsPage } from '@/pages/MonsterGroupsPage';
 import { MonsterGroupsEditorPage } from '@/pages/MonsterGroupsEditorPage';
 import { SettingsPage } from '@/pages/SettingsPage';
@@ -18,7 +19,8 @@ function App() {
         <Route element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route path="monster-cards" element={<MonsterCardsPage />} />
-          <Route path="encounter-sheets" element={<EncounterSheetPage />} />
+          <Route path="encounter-sheets" element={<EncounterSheetsPage />} />
+          <Route path="encounter-sheets/:fileId" element={<EncounterSheetEditorPage />} />
           <Route path="monster-groups" element={<MonsterGroupsPage />} />
           <Route path="monster-groups/:fileId" element={<MonsterGroupsEditorPage />} />
           <Route path="letters-and-notes" element={<LettersAndNotesPage />} />
