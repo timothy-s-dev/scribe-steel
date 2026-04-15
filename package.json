@@ -21,6 +21,7 @@
     "@myriaddreamin/typst-ts-renderer": "^0.7.0-rc2",
     "@myriaddreamin/typst-ts-web-compiler": "^0.7.0-rc2",
     "@myriaddreamin/typst.ts": "^0.7.0-rc2",
+    "@sentry/react": "^10.48.0",
     "@tailwindcss/vite": "^4.2.2",
     "@uiw/react-codemirror": "^4.25.9",
     "class-variance-authority": "^0.7.1",

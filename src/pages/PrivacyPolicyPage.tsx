@@ -82,11 +82,22 @@ export function PrivacyPolicyPage() {
 
           <section className="space-y-2">
             <h2 className="text-base font-headline font-semibold text-on-surface">
-              No Tracking or Analytics
+              Error Monitoring
             </h2>
             <p>
-              Scribe Steel does not use cookies, analytics, advertising, or any
-              third-party tracking. No usage data is collected or shared.
+              Scribe Steel uses{' '}
+              <a
+                href="https://sentry.io/privacy/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline underline-offset-2 hover:text-primary/80"
+              >
+                Sentry
+              </a>{' '}
+              to detect and diagnose errors. When something goes wrong, Sentry
+              receives technical details about the error (such as the stack
+              trace and browser information). No advertising, analytics, or
+              other third-party tracking is used.
             </p>
           </section>
 
@@ -107,6 +118,10 @@ export function PrivacyPolicyPage() {
               <li>
                 <strong className="text-on-surface">Google Drive API</strong> —
                 for saving and loading your documents
+              </li>
+              <li>
+                <strong className="text-on-surface">Sentry</strong> — for error
+                monitoring and diagnostics
               </li>
             </ul>
             <p>
