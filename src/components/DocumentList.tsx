@@ -92,7 +92,7 @@ export function DocumentList({
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 bg-surface-container flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-xl text-on-surface-variant">
+          <span className="material-symbols-outlined text-xl text-on-surface-variant" aria-hidden="true">
             {icon}
           </span>
           <h1 className="text-lg font-headline font-semibold text-on-surface">
@@ -105,7 +105,7 @@ export function DocumentList({
             disabled={creating}
             className="flex items-center gap-1.5 px-4 py-2 text-sm font-label font-bold tracking-wide bg-primary/20 text-primary rounded-sm hover:bg-primary/30 transition-colors disabled:opacity-50 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-lg">add</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
             {creating ? 'Creating...' : 'New'}
           </button>
         )}
@@ -116,7 +116,7 @@ export function DocumentList({
         {creating && <CreatingOverlay />}
         {!isSignedIn ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30">
+            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30" aria-hidden="true">
               cloud_off
             </span>
             <p className="text-sm font-body text-on-surface-variant">
@@ -135,7 +135,7 @@ export function DocumentList({
           </div>
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30">
+            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30" aria-hidden="true">
               {icon}
             </span>
             <p className="text-sm font-body text-on-surface-variant">
@@ -150,7 +150,7 @@ export function DocumentList({
                 onClick={() => navigate(`${basePath}/${item.fileId}`)}
                 className="flex items-center gap-3 px-4 py-3 rounded-sm bg-surface-container-low hover:bg-surface-container transition-colors text-left cursor-pointer"
               >
-                <span className="material-symbols-outlined text-lg text-on-surface-variant">
+                <span className="material-symbols-outlined text-lg text-on-surface-variant" aria-hidden="true">
                   description
                 </span>
                 <div className="flex-1 min-w-0">
@@ -169,7 +169,7 @@ export function DocumentList({
                     </div>
                   )}
                 </div>
-                <span className="material-symbols-outlined text-lg text-on-surface-variant/50">
+                <span className="material-symbols-outlined text-lg text-on-surface-variant/50" aria-hidden="true">
                   chevron_right
                 </span>
               </button>

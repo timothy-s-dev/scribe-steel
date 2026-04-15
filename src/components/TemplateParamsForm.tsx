@@ -14,6 +14,7 @@ export function TemplateParamsForm({ params, values, onChange }: ParamsFormProps
       >
         <span
           className="material-symbols-outlined text-sm transition-transform"
+          aria-hidden="true"
           style={{ transform: collapsed ? 'rotate(-90deg)' : '' }}
         >
           expand_more

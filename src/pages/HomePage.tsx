@@ -19,7 +19,7 @@ const documentTools: Tool[] = [
     label: 'Lore Books',
     icon: 'auto_stories',
     to: '/lore-books',
-    description: <>Executive summary style documents summarizing in-world texts. Inspired by <a href="https://thealexandrian.net/wordpress/45361/roleplaying-games/ptolus-running-the-campaign-using-lore-books" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">The Alexandrian's post about Lore Books</a>.</>,
+    description: <>Executive summary style documents summarizing in-world texts. Inspired by <a href="https://thealexandrian.net/wordpress/45361/roleplaying-games/ptolus-running-the-campaign-using-lore-books" target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/40 hover:decoration-primary">The Alexandrian's post about Lore Books</a>.</>,
   },
 ];
 
@@ -42,7 +42,7 @@ function ToolCard({ tool }: { tool: Tool }) {
   return (
     <div className="group bg-surface-container-low rounded-md p-8 flex flex-col">
       <div className="flex items-center gap-4 mb-4">
-        <span className="material-symbols-outlined text-3xl text-primary">
+        <span className="material-symbols-outlined text-3xl text-primary" aria-hidden="true">
           {tool.icon}
         </span>
         <div className="h-px flex-1 bg-outline-variant/30" />
@@ -58,7 +58,7 @@ function ToolCard({ tool }: { tool: Tool }) {
         className="mt-6 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 hover:gap-3 transition-all no-underline"
       >
         Open
-        <span className="material-symbols-outlined text-lg">arrow_forward</span>
+        <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_forward</span>
       </Link>
     </div>
   );
@@ -86,11 +86,11 @@ export function HomePage() {
               Printable play aids for <strong className="text-on-surface">Draw Steel</strong> — monster reference cards, encounter sheets, handwritten letters, lore books, and more to come. Everything renders as a live preview and exports to PDF, ready to print or share virtually with your players.
             </p>
             <p className="text-base">
-              Templates are powered by <a href="https://typst.app" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Typst</a>, a modern typesetting language. The editor gives you direct access to the Typst source, so you can tweak layouts beyond what the form controls offer.
+              Templates are powered by <a href="https://typst.app" target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/40 hover:decoration-primary">Typst</a>, a modern typesetting language. The editor gives you direct access to the Typst source, so you can tweak layouts beyond what the form controls offer.
             </p>
             {isConfigured && !isSignedIn && (
               <p className="text-base">
-                <button onClick={signIn} className="text-primary hover:underline cursor-pointer font-semibold">Sign in with Google</button> to save your work to Google Drive. You can try out the tools without signing in, but your work won't be saved between sessions.
+                <button onClick={signIn} className="text-primary underline decoration-primary/40 hover:decoration-primary cursor-pointer font-semibold">Sign in with Google</button> to save your work to Google Drive. You can try out the tools without signing in, but your work won't be saved between sessions.
               </p>
             )}
           </div>

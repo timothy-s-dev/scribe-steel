@@ -422,10 +422,11 @@ export function EncounterSheetEditorPage() {
         <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0">
           <button
             onClick={() => navigate('/encounter-sheets')}
-            className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            aria-label="Back to list"
             title="Back to list"
           >
-            <span className="material-symbols-outlined text-lg">arrow_back</span>
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_back</span>
           </button>
           <span className="text-sm font-semibold font-body text-on-surface truncate flex-1">
             {docName || 'Encounter Sheet'}
@@ -489,10 +490,11 @@ export function EncounterSheetEditorPage() {
                 />
                 <button
                   onClick={() => removeMalice(m.id)}
-                  className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0"
+                  className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                  aria-label="Remove malice feature"
                   title="Remove"
                 >
-                  <span className="material-symbols-outlined text-base">close</span>
+                  <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
                 </button>
               </div>
             ))}
@@ -500,7 +502,7 @@ export function EncounterSheetEditorPage() {
               <AddButton onClick={addMalice}>Add Malice Feature</AddButton>
               {groupsWithMalice.length > 0 && (
                 <div className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm text-primary">download</span>
+                  <span className="material-symbols-outlined text-sm text-primary" aria-hidden="true">download</span>
                   <select
                     className={`${smallInputClass} text-xs text-primary`}
                     value=""
@@ -534,10 +536,11 @@ export function EncounterSheetEditorPage() {
                   />
                   <button
                     onClick={() => removeGroup(g.id)}
-                    className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0"
+                    className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                    aria-label="Remove group"
                     title="Remove group"
                   >
-                    <span className="material-symbols-outlined text-base">close</span>
+                    <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
                   </button>
                 </div>
 
@@ -583,14 +586,14 @@ export function EncounterSheetEditorPage() {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <button onClick={zoom.zoomOut} className="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Zoom out">
-              <span className="material-symbols-outlined text-lg">remove</span>
+            <button onClick={zoom.zoomOut} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom out" title="Zoom out">
+              <span className="material-symbols-outlined text-lg" aria-hidden="true">remove</span>
             </button>
             <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
               {zoom.zoomPercent}%
             </span>
-            <button onClick={zoom.zoomIn} className="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Zoom in">
-              <span className="material-symbols-outlined text-lg">add</span>
+            <button onClick={zoom.zoomIn} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom in" title="Zoom in">
+              <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
             </button>
             <div className="w-px h-4 bg-outline-variant/30 mx-1" />
             <button
@@ -651,7 +654,7 @@ function AddButton({ onClick, children }: { onClick: () => void; children: React
       onClick={onClick}
       className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors"
     >
-      <span className="material-symbols-outlined text-sm">add</span>
+      <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
       {children}
     </button>
   );
@@ -700,10 +703,11 @@ function CreatureRow({
         </select>
         <button
           onClick={onRemove}
-          className="p-0.5 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0"
+          className="p-0.5 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Remove creature"
           title="Remove creature"
         >
-          <span className="material-symbols-outlined text-base">close</span>
+          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
         </button>
       </div>
       {/* Row 2: stats */}

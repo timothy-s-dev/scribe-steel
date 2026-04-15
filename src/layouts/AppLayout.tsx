@@ -61,7 +61,7 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
   if (item.external) {
     return (
       <a href={item.to} target="_blank" rel="noopener noreferrer" className={`${base} ${inactiveClass}`}>
-        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`}>
+        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`} aria-hidden="true">
           {item.icon}
         </span>
         <span className="font-body">{item.label}</span>
@@ -72,7 +72,7 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
   if (item.placeholder || small) {
     return (
       <NavLink to={item.to} className={`${base} ${inactiveClass}`}>
-        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`}>
+        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`} aria-hidden="true">
           {item.icon}
         </span>
         <span className="font-body">{item.label}</span>
@@ -86,7 +86,7 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
       end
       className={({ isActive }) => `${base} ${isActive ? activeClass : inactiveClass}`}
     >
-      <span className="material-symbols-outlined text-xl">{item.icon}</span>
+      <span className="material-symbols-outlined text-xl" aria-hidden="true">{item.icon}</span>
       <span className="font-body">{item.label}</span>
     </NavLink>
   );
@@ -95,6 +95,12 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
 export function AppLayout() {
   return (
     <div className="flex min-h-screen bg-surface">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-on-primary focus:rounded-sm focus:text-sm focus:font-label focus:font-bold"
+      >
+        Skip to content
+      </a>
       <aside className="hidden md:flex sticky top-0 h-screen w-72 bg-surface flex-col py-8 px-6 shadow-[0_0_40px_-15px_rgba(165,204,223,0.06)]">
         <Link to="/" className="mb-8 px-2 block no-underline">
           <h1 className="font-headline text-xl font-bold tracking-tighter text-secondary leading-none mb-2">
@@ -135,7 +141,7 @@ export function AppLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-y-auto custom-scrollbar bg-surface relative">
+      <main id="main-content" className="flex-1 overflow-y-auto custom-scrollbar bg-surface relative">
         <Outlet />
       </main>
       <SaveStatusBanner />

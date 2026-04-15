@@ -9,7 +9,7 @@ export function SettingsPage() {
     <div className="h-screen flex flex-col">
       <div className="flex items-center px-6 py-4 bg-surface-container flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-xl text-on-surface-variant">
+          <span className="material-symbols-outlined text-xl text-on-surface-variant" aria-hidden="true">
             settings
           </span>
           <h1 className="text-lg font-headline font-semibold text-on-surface">

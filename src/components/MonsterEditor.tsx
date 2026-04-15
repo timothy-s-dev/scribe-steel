@@ -139,9 +139,10 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
       <div className="flex items-center gap-3 p-3 rounded-sm bg-surface-container/50">
         <button
           onClick={() => setExpanded(true)}
-          className="flex-1 flex items-center gap-3 text-left cursor-pointer"
+          className="flex-1 flex items-center gap-3 text-left cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label={`Expand ${monster.name || 'Unnamed Monster'}`}
         >
-          <span className="material-symbols-outlined text-lg text-primary">expand_more</span>
+          <span className="material-symbols-outlined text-lg text-primary" aria-hidden="true">expand_more</span>
           <span className="text-sm font-body font-semibold text-on-surface">
             {monster.name || 'Unnamed Monster'}
           </span>
@@ -151,10 +152,11 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
         </button>
         <button
           onClick={onRemove}
-          className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer"
+          className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Remove monster"
           title="Remove monster"
         >
-          <span className="material-symbols-outlined text-base">close</span>
+          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
         </button>
       </div>
     );
@@ -168,19 +170,21 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
       <div className="flex items-center gap-2">
         <button
           onClick={() => setExpanded(false)}
-          className="p-0.5 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+          className="p-0.5 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label={`Collapse ${monster.name || 'New Monster'}`}
         >
-          <span className="material-symbols-outlined text-lg">expand_less</span>
+          <span className="material-symbols-outlined text-lg" aria-hidden="true">expand_less</span>
         </button>
         <span className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant flex-1">
           {monster.name || 'New Monster'}
         </span>
         <button
           onClick={onRemove}
-          className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors cursor-pointer"
+          className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Remove monster"
           title="Remove monster"
         >
-          <span className="material-symbols-outlined text-base">close</span>
+          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
         </button>
       </div>
 
@@ -295,8 +299,8 @@ function AbilityFeatureEditor({
           <input className={`${inputClass} w-36`} value={feature.ability_type ?? ''} onChange={(e) => set('ability_type', e.target.value || undefined)} placeholder="Type (optional)" />
           <input className={`${inputClass} w-28`} value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)} placeholder="Usage" />
         </div>
-        <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer">
-          <span className="material-symbols-outlined text-base">close</span>
+        <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove ability" title="Remove">
+          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
         </button>
       </div>
 
@@ -313,7 +317,7 @@ function AbilityFeatureEditor({
           onClick={() => setShowPowerRoll(!showPowerRoll)}
           className="text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer flex items-center gap-1"
         >
-          <span className="material-symbols-outlined text-sm">
+          <span className="material-symbols-outlined text-sm" aria-hidden="true">
             {showPowerRoll ? 'expand_less' : 'expand_more'}
           </span>
           Power Roll
@@ -391,8 +395,8 @@ function TraitFeatureEditor({
           placeholder="Description"
         />
       </div>
-      <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer">
-        <span className="material-symbols-outlined text-base">close</span>
+      <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove trait" title="Remove">
+        <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
       </button>
     </div>
   );
@@ -444,7 +448,7 @@ function AddButton({ onClick, children }: { onClick: () => void; children: React
       onClick={onClick}
       className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
     >
-      <span className="material-symbols-outlined text-sm">add</span>
+      <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
       {children}
     </button>
   );

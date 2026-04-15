@@ -216,10 +216,11 @@ export function MonsterGroupsEditorPage() {
       <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
         <button
           onClick={() => navigate('/monster-groups')}
-          className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+          className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Back to list"
           title="Back to list"
         >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_back</span>
         </button>
         <input
           className="text-sm font-body font-semibold text-on-surface bg-transparent border-none focus:outline-none flex-1"
@@ -272,9 +273,11 @@ export function MonsterGroupsEditorPage() {
               />
               <button
                 onClick={() => removeMalice(i)}
-                className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer"
+                className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                aria-label="Remove malice feature"
+                title="Remove"
               >
-                <span className="material-symbols-outlined text-base">close</span>
+                <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
               </button>
             </div>
           ))}
@@ -282,7 +285,7 @@ export function MonsterGroupsEditorPage() {
             onClick={addMalice}
             className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm">add</span>
+            <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
             Add Malice Feature
           </button>
         </section>
@@ -305,14 +308,14 @@ export function MonsterGroupsEditorPage() {
               onClick={addMonster}
               className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-sm">add</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
               Add Monster
             </button>
             <button
               onClick={() => setCopyDialogOpen(true)}
               className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-sm">content_copy</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span>
               Copy from Bestiary
             </button>
           </div>

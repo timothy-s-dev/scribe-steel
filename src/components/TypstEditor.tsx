@@ -82,20 +82,22 @@ function PreviewToolbar({
       <div className="flex items-center gap-1.5">
         <button
           onClick={zoom.zoomOut}
-          className="p-1 text-on-surface-variant hover:text-primary transition-colors"
+          className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Zoom out"
           title="Zoom out"
         >
-          <span className="material-symbols-outlined text-lg">remove</span>
+          <span className="material-symbols-outlined text-lg" aria-hidden="true">remove</span>
         </button>
         <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
           {zoom.zoomPercent}%
         </span>
         <button
           onClick={zoom.zoomIn}
-          className="p-1 text-on-surface-variant hover:text-primary transition-colors"
+          className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Zoom in"
           title="Zoom in"
         >
-          <span className="material-symbols-outlined text-lg">add</span>
+          <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
         </button>
         <div className="w-px h-4 bg-outline-variant/30 mx-1" />
         <button
