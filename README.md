@@ -1,73 +1,30 @@
-# React + TypeScript + Vite
+# Scribe Steel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A GM toolkit for [Draw Steel](https://mcdmproductions.com/draw-steel) that lets you build, edit, and export game documents — rendered with [Typst](https://typst.app/) directly in the browser.
 
-Currently, two official plugins are available:
+**Live site:** [scribesteel.com](https://scribesteel.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Document Types
 
-## React Compiler
+- **Monster Cards** — 3x5 index cards with creature stats
+- **Encounter Sheets** — one-page GM reference for running combats
+- **Monster Groups** — manage collections of creatures
+- **Letters & Notes** — handwritten-style props for players
+- **Lore Books** — in-world document summaries
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React 19, TypeScript, Vite
+- [Typst](https://typst.app/) (in-browser document rendering via WASM)
+- Tailwind CSS 4
+- Google OAuth + Drive (`drive.file` scope) for cloud storage
+- Firebase Hosting
+- Sentry for error monitoring
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local development setup.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## License
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+[MIT](LICENSE)
