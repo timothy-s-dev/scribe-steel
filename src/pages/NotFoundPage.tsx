@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export function NotFoundPage() {
+  usePageTitle('Page Not Found');
   return (
     <div className="h-screen flex flex-col items-center justify-center px-6 text-center">
       <span className="material-symbols-outlined text-6xl text-outline-variant mb-4" aria-hidden="true">

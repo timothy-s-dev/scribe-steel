@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useNavigate } from 'react-router-dom';
 import { useStorage, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
 
 export function EncounterSheetsPage() {
+  usePageTitle('Encounter Sheets');
   const { isSignedIn } = useAuth();
   const { fetchIndex, cachedIndex, save } = useStorage();
   const navigate = useNavigate();

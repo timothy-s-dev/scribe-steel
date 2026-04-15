@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useStorage, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { getGroups } from '@/data/bestiary';
@@ -17,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
 
 export function MonsterGroupsPage() {
+  usePageTitle('Monster Groups');
   const { isSignedIn } = useAuth();
   const { fetchIndex, cachedIndex, save } = useStorage();
   const navigate = useNavigate();

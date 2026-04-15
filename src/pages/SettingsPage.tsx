@@ -1,8 +1,10 @@
 import { useSettings } from '@/hooks/useSettings';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Switch } from '@/components/ui/switch';
 import type { ZoomMode } from '@/hooks/useZoom';
 
 export function SettingsPage() {
+  usePageTitle('Settings');
   const { settings, setSettings } = useSettings();
 
   return (

@@ -1,4 +1,7 @@
+import { usePageTitle } from '@/hooks/usePageTitle';
+
 export function PrivacyPolicyPage() {
+  usePageTitle('Privacy Policy');
   return (
     <div className="h-screen flex flex-col">
       <div className="flex items-center px-6 py-4 bg-surface-container flex-shrink-0">

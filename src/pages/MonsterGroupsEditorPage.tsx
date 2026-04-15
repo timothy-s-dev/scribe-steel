@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
@@ -51,6 +52,7 @@ function emptyMaliceFeature(): Feature {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function MonsterGroupsEditorPage() {
+  usePageTitle('Monster Group');
   const { fileId } = useParams<{ fileId: string }>();
   const navigate = useNavigate();
   const { load, saveStatus } = useStorage();

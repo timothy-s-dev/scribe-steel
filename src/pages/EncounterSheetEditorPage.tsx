@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
@@ -129,6 +130,7 @@ function maliceFeatureToEntry(f: Feature): MaliceEntry {
 // ── Main component ───────────────────────────────────────────────────────────
 
 export function EncounterSheetEditorPage() {
+  usePageTitle('Encounter Sheet');
   const { fileId } = useParams<{ fileId: string }>();
   const isDemo = fileId === 'demo';
   const navigate = useNavigate();

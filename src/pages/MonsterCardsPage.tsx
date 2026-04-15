@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
@@ -23,6 +24,7 @@ function monsterKey(groupName: string, monsterName: string) {
 }
 
 export function MonsterCardsPage() {
+  usePageTitle('Monster Cards');
   const { settings } = useSettings();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [printMode, setPrintMode] = useState(settings.printFriendly);

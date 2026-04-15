@@ -1,6 +1,8 @@
 import { DocumentList } from '@/components/DocumentList';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export function LoreBooksPage() {
+  usePageTitle('Lore Books');
   return (
     <DocumentList
       category="lore-books"

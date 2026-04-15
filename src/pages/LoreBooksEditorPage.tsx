@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { TypstEditor, type DocumentData } from '@/components/TypstEditor';
 import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -36,6 +37,7 @@ interface SavedDocument {
 }
 
 export function LoreBooksEditorPage() {
+  usePageTitle('Lore Book');
   const { fileId } = useParams<{ fileId: string }>();
   const isNew = fileId === 'demo';
   const navigate = useNavigate();

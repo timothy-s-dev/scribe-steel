@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 interface Tool {
   label: string;
@@ -65,6 +66,7 @@ function ToolCard({ tool }: { tool: Tool }) {
 }
 
 export function HomePage() {
+  usePageTitle();
   const { isSignedIn, isConfigured, signIn } = useAuth();
 
   return (
