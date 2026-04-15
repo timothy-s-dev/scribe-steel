@@ -19,7 +19,7 @@ const documentTools: Tool[] = [
     label: 'Lore Books',
     icon: 'auto_stories',
     to: '/lore-books',
-    description: <>Executive summary style documents summarizing in-world texts. Inspired by <a href="https://thealexandrian.net/wordpress/45361/roleplaying-games/ptolus-running-the-campaign-using-lore-books" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>The Alexandrian's post about Lore Books</a>.</>,
+    description: <>Executive summary style documents summarizing in-world texts. Inspired by <a href="https://thealexandrian.net/wordpress/45361/roleplaying-games/ptolus-running-the-campaign-using-lore-books" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">The Alexandrian's post about Lore Books</a>.</>,
   },
 ];
 
@@ -40,10 +40,7 @@ const bestiaryTools: Tool[] = [
 
 function ToolCard({ tool }: { tool: Tool }) {
   return (
-    <Link
-      to={tool.to}
-      className="group bg-surface-container-low rounded-md p-8 flex flex-col transition-all duration-300 hover:bg-surface-container-high no-underline"
-    >
+    <div className="group bg-surface-container-low rounded-md p-8 flex flex-col">
       <div className="flex items-center gap-4 mb-4">
         <span className="material-symbols-outlined text-3xl text-primary">
           {tool.icon}
@@ -56,11 +53,14 @@ function ToolCard({ tool }: { tool: Tool }) {
       <p className="text-sm text-outline leading-relaxed flex-1">
         {tool.description}
       </p>
-      <span className="mt-6 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 group-hover:gap-3 transition-all">
+      <Link
+        to={tool.to}
+        className="mt-6 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 hover:gap-3 transition-all no-underline"
+      >
         Open
         <span className="material-symbols-outlined text-lg">arrow_forward</span>
-      </span>
-    </Link>
+      </Link>
+    </div>
   );
 }
 
