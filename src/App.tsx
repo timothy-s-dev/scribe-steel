@@ -11,6 +11,7 @@ import { EncounterSheetEditorPage } from '@/pages/EncounterSheetEditorPage';
 import { MonsterGroupsPage } from '@/pages/MonsterGroupsPage';
 import { MonsterGroupsEditorPage } from '@/pages/MonsterGroupsEditorPage';
 import { SettingsPage } from '@/pages/SettingsPage';
+import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="lore-books" element={<LoreBooksPage />} />
           <Route path="lore-books/:fileId" element={<LoreBooksEditorPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="privacy" element={<PrivacyPolicyPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

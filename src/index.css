@@ -96,6 +96,14 @@
   }
 }
 
+/* Storage notice toast overrides */
+[data-sonner-toast].storage-notice {
+  transition: opacity 0.4s, transform 0.4s !important;
+}
+[data-sonner-toast][data-styled="true"].storage-notice [data-title] {
+  font-weight: 700;
+}
+
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
