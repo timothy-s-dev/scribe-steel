@@ -13,7 +13,6 @@ import { MonsterGroupsEditorPage } from '@/pages/MonsterGroupsEditorPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { ErrorTestPage } from '@/pages/ErrorTestPage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 function App() {
@@ -34,7 +33,6 @@ function App() {
             <Route path="lore-books/:fileId" element={<LoreBooksEditorPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="privacy" element={<PrivacyPolicyPage />} />
-            <Route path="errortest" element={<ErrorTestPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
