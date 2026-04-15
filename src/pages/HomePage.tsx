@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PenTool, BookOpen, Skull, Swords, ArrowRight, type LucideIcon } from 'lucide-react';
 
 interface Tool {
   label: string;
-  icon: string;
+  icon: LucideIcon;
   to: string;
   description: React.ReactNode;
 }
@@ -12,13 +13,13 @@ interface Tool {
 const documentTools: Tool[] = [
   {
     label: 'Letters and Notes',
-    icon: 'architecture',
+    icon: PenTool,
     to: '/letters-and-notes',
     description: 'Create handwritten-style props to hand your players — letters, journal entries, mysterious notes.',
   },
   {
     label: 'Lore Books',
-    icon: 'auto_stories',
+    icon: BookOpen,
     to: '/lore-books',
     description: <>Executive summary style documents summarizing in-world texts. Inspired by <a href="https://thealexandrian.net/wordpress/45361/roleplaying-games/ptolus-running-the-campaign-using-lore-books" target="_blank" rel="noopener noreferrer" className="text-primary underline decoration-primary/40 hover:decoration-primary">The Alexandrian's post about Lore Books</a>.</>,
   },
@@ -27,25 +28,24 @@ const documentTools: Tool[] = [
 const bestiaryTools: Tool[] = [
   {
     label: 'Monster Cards',
-    icon: 'skull',
+    icon: Skull,
     to: '/monster-cards',
     description: 'Pick monsters and generate printable 3x5 index cards with stats, abilities, and traits.',
   },
   {
     label: 'Encounter Sheets',
-    icon: 'swords',
+    icon: Swords,
     to: '/encounter-sheets',
     description: 'Build a one-page GM reference sheet for running combats — creature groups, malice features, conditions, and notes.',
   },
 ];
 
 function ToolCard({ tool }: { tool: Tool }) {
+  const Icon = tool.icon;
   return (
     <div className="group bg-surface-container-low rounded-md p-8 flex flex-col">
       <div className="flex items-center gap-4 mb-4">
-        <span className="material-symbols-outlined text-3xl text-primary" aria-hidden="true">
-          {tool.icon}
-        </span>
+        <Icon size={28} className="text-primary" aria-hidden="true" />
         <div className="h-px flex-1 bg-outline-variant/30" />
       </div>
       <h4 className="font-headline text-xl mb-2 text-on-surface">
@@ -59,7 +59,7 @@ function ToolCard({ tool }: { tool: Tool }) {
         className="mt-6 text-secondary font-label text-sm font-bold tracking-widest uppercase flex items-center gap-2 hover:gap-3 transition-all no-underline"
       >
         Open
-        <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_forward</span>
+        <ArrowRight size={18} aria-hidden="true" />
       </Link>
     </div>
   );

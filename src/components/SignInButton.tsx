@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { CloudCheck, CloudOff } from 'lucide-react';
 
 export function SignInButton() {
   const { isSignedIn, isLoading, isConfigured, signIn, signOut } = useAuth();
@@ -25,7 +26,7 @@ export function SignInButton() {
         onClick={signOut}
         className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full cursor-pointer"
       >
-        <span className="material-symbols-outlined text-lg" aria-hidden="true">cloud_done</span>
+        <CloudCheck size={18} aria-hidden="true" />
         <span className="font-body">Sign Out</span>
       </button>
     );
@@ -36,7 +37,7 @@ export function SignInButton() {
       onClick={signIn}
       className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full cursor-pointer"
     >
-      <span className="material-symbols-outlined text-lg" aria-hidden="true">cloud_off</span>
+      <CloudOff size={18} aria-hidden="true" />
       <span className="font-body">Sign in with Google</span>
     </button>
   );

@@ -13,20 +13,26 @@ export interface TaggedGroup extends MonsterGroup {
  * Returns all monster groups: preset groups from the bundled bestiary,
  * plus any custom groups saved to Google Drive.
  */
-export function useAllGroups(): TaggedGroup[] {
+export function useAllGroups(): { groups: TaggedGroup[]; loading: boolean } {
   const { isSignedIn } = useAuth();
   const { fetchIndex, load } = useStorage();
   const [customGroups, setCustomGroups] = useState<TaggedGroup[]>([]);
+  const [loading, setLoading] = useState(isSignedIn);
 
   useEffect(() => {
     if (!isSignedIn) {
       setCustomGroups([]);
+      setLoading(false);
       return;
     }
 
+    setLoading(true);
     (async () => {
       const index = await fetchIndex('monsters');
-      if (!index || index.items.length === 0) return;
+      if (!index || index.items.length === 0) {
+        setLoading(false);
+        return;
+      }
 
       const loaded: TaggedGroup[] = [];
       for (const item of index.items) {
@@ -42,9 +48,10 @@ export function useAllGroups(): TaggedGroup[] {
         }
       }
       setCustomGroups(loaded);
+      setLoading(false);
     })();
   }, [isSignedIn, fetchIndex, load]);
 
   const preset: TaggedGroup[] = getGroups().map((g) => ({ ...g, custom: false }));
-  return [...preset, ...customGroups];
+  return { groups: [...preset, ...customGroups], loading };
 }

@@ -1,5 +1,6 @@
 import { DocumentList } from '@/components/DocumentList';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { BookOpen } from 'lucide-react';
 
 export function LoreBooksPage() {
   usePageTitle('Lore Books');
@@ -8,7 +9,7 @@ export function LoreBooksPage() {
       category="lore-books"
       basePath="/lore-books"
       title="Lore Books"
-      icon="auto_stories"
+      icon={BookOpen}
       templateName="lore-books"
       defaultParams={{
         title: '',

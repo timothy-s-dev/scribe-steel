@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, type ComponentType } from 'react';
+import { Minus, Plus } from 'lucide-react';
 import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
 import { TemplateParamsForm } from '@/components/TemplateParamsForm';
@@ -86,7 +87,7 @@ function PreviewToolbar({
           aria-label="Zoom out"
           title="Zoom out"
         >
-          <span className="material-symbols-outlined text-lg" aria-hidden="true">remove</span>
+          <Minus size={18} aria-hidden="true" />
         </button>
         <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
           {zoom.zoomPercent}%
@@ -97,7 +98,7 @@ function PreviewToolbar({
           aria-label="Zoom in"
           title="Zoom in"
         >
-          <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
+          <Plus size={18} aria-hidden="true" />
         </button>
         <div className="w-px h-4 bg-outline-variant/30 mx-1" />
         <button

@@ -2,6 +2,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Switch } from '@/components/ui/switch';
 import type { ZoomMode } from '@/hooks/useZoom';
+import { Settings } from 'lucide-react';
 
 export function SettingsPage() {
   usePageTitle('Settings');
@@ -11,9 +12,7 @@ export function SettingsPage() {
     <div className="h-screen flex flex-col">
       <div className="flex items-center px-6 py-4 bg-surface-container flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-xl text-on-surface-variant" aria-hidden="true">
-            settings
-          </span>
+          <Settings size={20} className="text-on-surface-variant" aria-hidden="true" />
           <h1 className="text-lg font-headline font-semibold text-on-surface">
             Settings
           </h1>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import type { ParamsFormProps } from '@/typst/templateSchema';
 
 export function TemplateParamsForm({ params, values, onChange }: ParamsFormProps) {
@@ -12,13 +13,12 @@ export function TemplateParamsForm({ params, values, onChange }: ParamsFormProps
         onClick={() => setCollapsed(!collapsed)}
         className="w-full flex items-center gap-2 px-4 py-1.5 text-xs font-label text-on-surface-variant hover:text-primary transition-colors"
       >
-        <span
-          className="material-symbols-outlined text-sm transition-transform"
+        <ChevronDown
+          size={14}
+          className="transition-transform"
           aria-hidden="true"
           style={{ transform: collapsed ? 'rotate(-90deg)' : '' }}
-        >
-          expand_more
-        </span>
+        />
         Template Settings
       </button>
       {!collapsed && (

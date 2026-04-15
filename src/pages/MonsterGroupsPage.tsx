@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { Users, Plus, CloudOff, ChevronRight } from 'lucide-react';
 import { useStorage, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { getGroups } from '@/data/bestiary';
@@ -79,9 +80,7 @@ export function MonsterGroupsPage() {
     <div className="h-screen flex flex-col">
       <div className="flex items-center justify-between px-6 py-4 bg-surface-container flex-shrink-0">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-xl text-on-surface-variant" aria-hidden="true">
-            groups
-          </span>
+          <Users size={20} className="text-on-surface-variant" aria-hidden="true" />
           <h1 className="text-lg font-headline font-semibold text-on-surface">
             Monster Groups
           </h1>
@@ -92,7 +91,7 @@ export function MonsterGroupsPage() {
             disabled={creating}
             className="flex items-center gap-1.5 px-4 py-2 text-sm font-label font-bold tracking-wide bg-primary/20 text-primary rounded-sm hover:bg-primary/30 transition-colors disabled:opacity-50 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
+            <Plus size={18} aria-hidden="true" />
             {creating ? 'Creating...' : 'New Group'}
           </button>
         )}
@@ -102,9 +101,7 @@ export function MonsterGroupsPage() {
         {creating && <CreatingOverlay />}
         {!isSignedIn ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30" aria-hidden="true">
-              cloud_off
-            </span>
+            <CloudOff size={48} className="text-on-surface-variant/30" aria-hidden="true" />
             <p className="text-sm font-body text-on-surface-variant">
               Sign in with Google to create and manage monster groups.
             </p>
@@ -115,9 +112,7 @@ export function MonsterGroupsPage() {
           </div>
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30" aria-hidden="true">
-              groups
-            </span>
+            <Users size={48} className="text-on-surface-variant/30" aria-hidden="true" />
             <p className="text-sm font-body text-on-surface-variant">
               No monster groups yet. Click <strong>New Group</strong> to create one.
             </p>
@@ -130,9 +125,7 @@ export function MonsterGroupsPage() {
                 onClick={() => navigate(`/monster-groups/${item.fileId}`)}
                 className="flex items-center gap-3 px-4 py-3 rounded-sm bg-surface-container-low hover:bg-surface-container transition-colors text-left cursor-pointer"
               >
-                <span className="material-symbols-outlined text-lg text-on-surface-variant" aria-hidden="true">
-                  groups
-                </span>
+                <Users size={18} className="text-on-surface-variant" aria-hidden="true" />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-body font-semibold text-on-surface truncate">
                     {item.name}
@@ -149,9 +142,7 @@ export function MonsterGroupsPage() {
                     </div>
                   )}
                 </div>
-                <span className="material-symbols-outlined text-lg text-on-surface-variant/50" aria-hidden="true">
-                  chevron_right
-                </span>
+                <ChevronRight size={18} className="text-on-surface-variant/50" aria-hidden="true" />
               </button>
             ))}
           </div>

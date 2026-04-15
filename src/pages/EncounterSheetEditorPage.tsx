@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { ArrowLeft, X, Plus, Download, Minus } from 'lucide-react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
@@ -267,7 +268,7 @@ export function EncounterSheetEditorPage() {
   }, []);
 
   // Auto-fill creature from bestiary
-  const allGroups = useAllGroups();
+  const { groups: allGroups } = useAllGroups();
   const allMonsters = useMemo(() => allGroups.flatMap((g) => g.monsters), [allGroups]);
   const fillFromBestiary = useCallback(
     (gid: number, cid: number, monsterName: string) => {
@@ -428,7 +429,7 @@ export function EncounterSheetEditorPage() {
             aria-label="Back to list"
             title="Back to list"
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_back</span>
+            <ArrowLeft size={18} aria-hidden="true" />
           </button>
           <span className="text-sm font-semibold font-body text-on-surface truncate flex-1">
             {docName || 'Encounter Sheet'}
@@ -496,7 +497,7 @@ export function EncounterSheetEditorPage() {
                   aria-label="Remove malice feature"
                   title="Remove"
                 >
-                  <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+                  <X size={16} aria-hidden="true" />
                 </button>
               </div>
             ))}
@@ -504,7 +505,7 @@ export function EncounterSheetEditorPage() {
               <AddButton onClick={addMalice}>Add Malice Feature</AddButton>
               {groupsWithMalice.length > 0 && (
                 <div className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm text-primary" aria-hidden="true">download</span>
+                  <Download size={14} className="text-primary" aria-hidden="true" />
                   <select
                     className={`${smallInputClass} text-xs text-primary`}
                     value=""
@@ -542,7 +543,7 @@ export function EncounterSheetEditorPage() {
                     aria-label="Remove group"
                     title="Remove group"
                   >
-                    <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+                    <X size={16} aria-hidden="true" />
                   </button>
                 </div>
 
@@ -589,13 +590,13 @@ export function EncounterSheetEditorPage() {
 
           <div className="flex items-center gap-1.5">
             <button onClick={zoom.zoomOut} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom out" title="Zoom out">
-              <span className="material-symbols-outlined text-lg" aria-hidden="true">remove</span>
+              <Minus size={18} aria-hidden="true" />
             </button>
             <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
               {zoom.zoomPercent}%
             </span>
             <button onClick={zoom.zoomIn} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom in" title="Zoom in">
-              <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
+              <Plus size={18} aria-hidden="true" />
             </button>
             <div className="w-px h-4 bg-outline-variant/30 mx-1" />
             <button
@@ -656,7 +657,7 @@ function AddButton({ onClick, children }: { onClick: () => void; children: React
       onClick={onClick}
       className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors"
     >
-      <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
+      <Plus size={14} aria-hidden="true" />
       {children}
     </button>
   );
@@ -709,7 +710,7 @@ function CreatureRow({
           aria-label="Remove creature"
           title="Remove creature"
         >
-          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
       {/* Row 2: stats */}

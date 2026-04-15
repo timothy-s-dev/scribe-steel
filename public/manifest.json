@@ -1,0 +1,21 @@
+{
+  "name": "Scribe Steel",
+  "short_name": "Scribe Steel",
+  "description": "Printable play aids for Draw Steel — monster reference cards, encounter sheets, handwritten letters, lore books, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#863bff",
+  "icons": [
+    {
+      "src": "/192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

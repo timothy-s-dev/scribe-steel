@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { ArrowLeft, X, Plus, Copy } from 'lucide-react';
 import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
@@ -222,7 +223,7 @@ export function MonsterGroupsEditorPage() {
           aria-label="Back to list"
           title="Back to list"
         >
-          <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_back</span>
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <input
           className="text-sm font-body font-semibold text-on-surface bg-transparent border-none focus:outline-none flex-1"
@@ -279,7 +280,7 @@ export function MonsterGroupsEditorPage() {
                 aria-label="Remove malice feature"
                 title="Remove"
               >
-                <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+                <X size={16} aria-hidden="true" />
               </button>
             </div>
           ))}
@@ -287,7 +288,7 @@ export function MonsterGroupsEditorPage() {
             onClick={addMalice}
             className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
+            <Plus size={14} aria-hidden="true" />
             Add Malice Feature
           </button>
         </section>
@@ -310,14 +311,14 @@ export function MonsterGroupsEditorPage() {
               onClick={addMonster}
               className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
+              <Plus size={14} aria-hidden="true" />
               Add Monster
             </button>
             <button
               onClick={() => setCopyDialogOpen(true)}
               className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span>
+              <Copy size={14} aria-hidden="true" />
               Copy from Bestiary
             </button>
           </div>

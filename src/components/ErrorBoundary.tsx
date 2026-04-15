@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import * as Sentry from '@sentry/react';
+import { CircleAlert, RotateCcw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -29,9 +30,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="h-screen flex flex-col items-center justify-center px-6 text-center bg-surface">
-          <span className="material-symbols-outlined text-6xl text-tertiary mb-4" aria-hidden="true">
-            error
-          </span>
+          <CircleAlert size={56} className="text-tertiary mb-4" aria-hidden="true" />
           <h1 className="text-2xl font-headline font-bold text-on-surface mb-2">
             Something went wrong
           </h1>
@@ -42,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
             onClick={() => window.location.reload()}
             className="text-sm font-label font-bold tracking-widest uppercase text-secondary hover:text-secondary/80 flex items-center gap-2 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-lg" aria-hidden="true">refresh</span>
+            <RotateCcw size={18} aria-hidden="true" />
             Reload
           </button>
         </div>

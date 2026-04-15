@@ -1,10 +1,11 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { SignInButton } from '@/components/SignInButton';
 import { SaveStatusBanner } from '@/components/SaveStatusBanner';
+import { PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
 
 interface NavItem {
   label: string;
-  icon: string;
+  icon: LucideIcon;
   to: string;
   placeholder?: boolean;
   external?: boolean;
@@ -25,28 +26,28 @@ const mainNav: NavEntry[] = [
   {
     label: 'Documents',
     items: [
-      { label: 'Letters and Notes', icon: 'architecture', to: '/letters-and-notes' },
-      { label: 'Lore Books', icon: 'auto_stories', to: '/lore-books' },
+      { label: 'Letters and Notes', icon: PenTool, to: '/letters-and-notes' },
+      { label: 'Lore Books', icon: BookOpen, to: '/lore-books' },
     ],
   },
   {
     label: 'Bestiary',
     items: [
-      { label: 'Monster Groups', icon: 'groups', to: '/monster-groups' },
-      { label: 'Monster Cards', icon: 'skull', to: '/monster-cards' },
-      { label: 'Encounter Sheets', icon: 'swords', to: '/encounter-sheets' },
+      { label: 'Monster Groups', icon: Users, to: '/monster-groups' },
+      { label: 'Monster Cards', icon: Skull, to: '/monster-cards' },
+      { label: 'Encounter Sheets', icon: Swords, to: '/encounter-sheets' },
     ],
   },
 ];
 
 const footerLinks: NavItem[] = [
-  { label: 'Report a Bug', icon: 'bug_report', to: 'https://github.com/timothy-s-dev/scribe-steel/issues/new/choose', external: true },
-  { label: 'Release Notes', icon: 'history', to: 'https://github.com/timothy-s-dev/scribe-steel/releases', external: true },
-  { label: 'Privacy Policy', icon: 'policy', to: '/privacy' },
+  { label: 'Report a Bug', icon: Bug, to: 'https://github.com/timothy-s-dev/scribe-steel/issues/new/choose', external: true },
+  { label: 'Release Notes', icon: History, to: 'https://github.com/timothy-s-dev/scribe-steel/releases', external: true },
+  { label: 'Privacy Policy', icon: Shield, to: '/privacy' },
 ];
 
 const footerActions: NavItem[] = [
-  { label: 'Settings', icon: 'settings', to: '/settings' },
+  { label: 'Settings', icon: Settings, to: '/settings' },
 ];
 
 const inactiveClass = 'text-slate-400 font-medium hover:bg-surface-container-low hover:text-primary';
@@ -58,12 +59,13 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
     small ? 'px-4 py-2 text-xs' : indented ? 'pl-8 pr-4 py-2.5 text-sm tracking-wide' : 'px-4 py-3 text-sm tracking-wide',
   ].join(' ');
 
+  const iconSize = small ? 18 : 20;
+  const Icon = item.icon;
+
   if (item.external) {
     return (
       <a href={item.to} target="_blank" rel="noopener noreferrer" className={`${base} ${inactiveClass}`}>
-        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`} aria-hidden="true">
-          {item.icon}
-        </span>
+        <Icon size={iconSize} aria-hidden="true" />
         <span className="font-body">{item.label}</span>
       </a>
     );
@@ -72,9 +74,7 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
   if (item.placeholder || small) {
     return (
       <NavLink to={item.to} className={`${base} ${inactiveClass}`}>
-        <span className={`material-symbols-outlined ${small ? 'text-lg' : 'text-xl'}`} aria-hidden="true">
-          {item.icon}
-        </span>
+        <Icon size={iconSize} aria-hidden="true" />
         <span className="font-body">{item.label}</span>
       </NavLink>
     );
@@ -86,7 +86,7 @@ function SidebarLink({ item, small, indented }: { item: NavItem; small?: boolean
       end
       className={({ isActive }) => `${base} ${isActive ? activeClass : inactiveClass}`}
     >
-      <span className="material-symbols-outlined text-xl" aria-hidden="true">{item.icon}</span>
+      <Icon size={20} aria-hidden="true" />
       <span className="font-body">{item.label}</span>
     </NavLink>
   );

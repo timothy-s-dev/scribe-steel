@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Monster, Feature, Effect } from '@/data/types';
+import { ChevronDown, ChevronUp, X, Plus } from 'lucide-react';
 
 // ── Shared styles ────────────────────────────────────────────────────────────
 
@@ -142,7 +143,7 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
           className="flex-1 flex items-center gap-3 text-left cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label={`Expand ${monster.name || 'Unnamed Monster'}`}
         >
-          <span className="material-symbols-outlined text-lg text-primary" aria-hidden="true">expand_more</span>
+          <ChevronDown size={18} className="text-primary" aria-hidden="true" />
           <span className="text-sm font-body font-semibold text-on-surface">
             {monster.name || 'Unnamed Monster'}
           </span>
@@ -156,7 +157,7 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
           aria-label="Remove monster"
           title="Remove monster"
         >
-          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
     );
@@ -173,7 +174,7 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
           className="p-0.5 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label={`Collapse ${monster.name || 'New Monster'}`}
         >
-          <span className="material-symbols-outlined text-lg" aria-hidden="true">expand_less</span>
+          <ChevronUp size={18} aria-hidden="true" />
         </button>
         <span className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant flex-1">
           {monster.name || 'New Monster'}
@@ -184,7 +185,7 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
           aria-label="Remove monster"
           title="Remove monster"
         >
-          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
 
@@ -300,7 +301,7 @@ function AbilityFeatureEditor({
           <input className={`${inputClass} w-28`} value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)} placeholder="Usage" />
         </div>
         <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove ability" title="Remove">
-          <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
 
@@ -317,9 +318,7 @@ function AbilityFeatureEditor({
           onClick={() => setShowPowerRoll(!showPowerRoll)}
           className="text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer flex items-center gap-1"
         >
-          <span className="material-symbols-outlined text-sm" aria-hidden="true">
-            {showPowerRoll ? 'expand_less' : 'expand_more'}
-          </span>
+          {showPowerRoll ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
           Power Roll
         </button>
         {showPowerRoll && prIndex >= 0 && (
@@ -396,7 +395,7 @@ function TraitFeatureEditor({
         />
       </div>
       <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove trait" title="Remove">
-        <span className="material-symbols-outlined text-base" aria-hidden="true">close</span>
+        <X size={16} aria-hidden="true" />
       </button>
     </div>
   );
@@ -448,7 +447,7 @@ function AddButton({ onClick, children }: { onClick: () => void; children: React
       onClick={onClick}
       className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
     >
-      <span className="material-symbols-outlined text-sm" aria-hidden="true">add</span>
+      <Plus size={14} aria-hidden="true" />
       {children}
     </button>
   );

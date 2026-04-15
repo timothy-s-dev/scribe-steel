@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { Minus, Plus, ChevronRight, ChevronDown } from 'lucide-react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
@@ -31,7 +32,7 @@ export function MonsterCardsPage() {
   const zoom = useZoom(settings.defaultZoom);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
-  const groups = useAllGroups();
+  const { groups, loading: groupsLoading } = useAllGroups();
 
   const toggleMonster = useCallback((groupName: string, name: string) => {
     const key = monsterKey(groupName, name);
@@ -155,6 +156,11 @@ export function MonsterCardsPage() {
               onToggleMonster={toggleMonster}
             />
           ))}
+          {groupsLoading && (
+            <p className="text-xs font-label text-on-surface-variant text-center py-2">
+              Loading custom groups...
+            </p>
+          )}
         </div>
 
         {/* Selection summary */}
@@ -196,7 +202,7 @@ export function MonsterCardsPage() {
               aria-label="Zoom out"
               title="Zoom out"
             >
-              <span className="material-symbols-outlined text-lg" aria-hidden="true">remove</span>
+              <Minus size={18} aria-hidden="true" />
             </button>
             <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
               {zoom.zoomPercent}%
@@ -207,7 +213,7 @@ export function MonsterCardsPage() {
               aria-label="Zoom in"
               title="Zoom in"
             >
-              <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
+              <Plus size={18} aria-hidden="true" />
             </button>
             <div className="w-px h-4 bg-outline-variant/30 mx-1" />
             <button
@@ -294,9 +300,7 @@ function GroupPicker({
           className="flex items-center justify-center w-5 h-5 text-on-surface-variant/50 hover:text-on-surface-variant transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label={isCollapsed ? `Expand ${group.name}` : `Collapse ${group.name}`}
         >
-          <span className="material-symbols-outlined text-base leading-none" aria-hidden="true">
-            {isCollapsed ? 'chevron_right' : 'expand_more'}
-          </span>
+          {isCollapsed ? <ChevronRight size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
         </button>
         <label className="flex items-center gap-2 cursor-pointer flex-1">
           <input

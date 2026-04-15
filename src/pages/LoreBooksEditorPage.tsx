@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { TypstEditor, type DocumentData } from '@/components/TypstEditor';
 import { useStorage } from '@/contexts/StorageContext';
@@ -133,7 +134,7 @@ export function LoreBooksEditorPage() {
           aria-label="Back to list"
           title="Back to list"
         >
-          <span className="material-symbols-outlined text-lg" aria-hidden="true">arrow_back</span>
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <span className="text-sm font-body font-semibold text-on-surface truncate">
           {docName}
