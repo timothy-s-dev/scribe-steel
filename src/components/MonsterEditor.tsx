@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Monster, Feature, Effect } from '@/data/types';
-import { ChevronDown, ChevronUp, X, Plus } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronRight, X, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 
 // ── Shared styles ────────────────────────────────────────────────────────────
 
@@ -49,7 +49,7 @@ function emptyAbilityFeature(): Feature & { _id: number } {
     distance: '',
     target: '',
     effects: [
-      { roll: 0, tier1: '', tier2: '', tier3: '' },
+      { name: 'Effect', effect: '' },
     ],
   };
 }
@@ -126,6 +126,22 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
     (id: number) => {
       setFeatures((prev) => {
         const next = prev.filter((f) => f._id !== id);
+        onChange({ ...monster, features: stripKeys(next) });
+        return next;
+      });
+    },
+    [monster, onChange],
+  );
+
+  const moveFeature = useCallback(
+    (id: number, direction: -1 | 1) => {
+      setFeatures((prev) => {
+        const idx = prev.findIndex((f) => f._id === id);
+        if (idx < 0) return prev;
+        const target = idx + direction;
+        if (target < 0 || target >= prev.length) return prev;
+        const next = [...prev];
+        [next[idx], next[target]] = [next[target], next[idx]];
         onChange({ ...monster, features: stripKeys(next) });
         return next;
       });
@@ -233,22 +249,28 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
 
       {/* Features (Abilities + Traits) */}
       <Section label="Features">
-        {features.map((feat) => (
-          feat.feature_type === 'ability' ? (
-            <AbilityFeatureEditor
-              key={feat._id}
-              feature={feat}
-              onChange={(updater) => updateFeature(feat._id, updater)}
-              onRemove={() => removeFeature(feat._id)}
-            />
-          ) : (
-            <TraitFeatureEditor
-              key={feat._id}
-              feature={feat}
-              onChange={(updater) => updateFeature(feat._id, updater)}
-              onRemove={() => removeFeature(feat._id)}
-            />
-          )
+        {features.map((feat, idx) => (
+          <FeatureWrapper
+            key={feat._id}
+            feature={feat}
+            isFirst={idx === 0}
+            isLast={idx === features.length - 1}
+            onMoveUp={() => moveFeature(feat._id, -1)}
+            onMoveDown={() => moveFeature(feat._id, 1)}
+            onRemove={() => removeFeature(feat._id)}
+          >
+            {feat.feature_type === 'ability' ? (
+              <AbilityFeatureEditor
+                feature={feat}
+                onChange={(updater) => updateFeature(feat._id, updater)}
+              />
+            ) : (
+              <TraitFeatureEditor
+                feature={feat}
+                onChange={(updater) => updateFeature(feat._id, updater)}
+              />
+            )}
+          </FeatureWrapper>
         ))}
         <div className="flex gap-3">
           <AddButton onClick={addAbility}>Add Ability</AddButton>
@@ -259,22 +281,93 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
   );
 }
 
+// ── Feature wrapper (collapse, reorder, remove) ────────────────────────────
+
+function FeatureWrapper({
+  feature,
+  isFirst,
+  isLast,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+  children,
+}: {
+  feature: KeyedFeature;
+  isFirst: boolean;
+  isLast: boolean;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onRemove: () => void;
+  children: React.ReactNode;
+}) {
+  const [collapsed, setCollapsed] = useState(!!feature.name);
+  const label = feature.name || (feature.feature_type === 'ability' ? 'Unnamed Ability' : 'Unnamed Trait');
+  const tag = feature.feature_type === 'ability' ? 'Ability' : 'Trait';
+
+  return (
+    <div className="rounded-sm bg-surface-container-low border border-outline-variant/20">
+      {/* Header */}
+      <div className="flex items-center gap-1 px-2 py-1.5">
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-0.5 text-on-surface-variant/50 hover:text-on-surface-variant transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label={collapsed ? `Expand ${label}` : `Collapse ${label}`}
+        >
+          {collapsed ? <ChevronRight size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
+        </button>
+        <span className="text-xs font-label font-bold text-on-surface truncate flex-1">
+          {label}
+        </span>
+        <span className="text-[9px] font-label text-on-surface-variant/50 uppercase tracking-wide">
+          {tag}
+        </span>
+        <button
+          onClick={onMoveUp}
+          disabled={isFirst}
+          className="p-0.5 text-on-surface-variant/50 hover:text-primary transition-colors cursor-pointer rounded-sm disabled:opacity-30 disabled:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Move up"
+          title="Move up"
+        >
+          <ArrowUp size={14} aria-hidden="true" />
+        </button>
+        <button
+          onClick={onMoveDown}
+          disabled={isLast}
+          className="p-0.5 text-on-surface-variant/50 hover:text-primary transition-colors cursor-pointer rounded-sm disabled:opacity-30 disabled:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label="Move down"
+          title="Move down"
+        >
+          <ArrowDown size={14} aria-hidden="true" />
+        </button>
+        <button
+          onClick={onRemove}
+          className="p-0.5 text-on-surface-variant/50 hover:text-tertiary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          aria-label={`Remove ${label}`}
+          title="Remove"
+        >
+          <X size={14} aria-hidden="true" />
+        </button>
+      </div>
+
+      {/* Body */}
+      {!collapsed && (
+        <div className="px-3 pb-3">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Ability Feature editor ──────────────────────────────────────────────────
 
 function AbilityFeatureEditor({
   feature,
   onChange,
-  onRemove,
 }: {
   feature: KeyedFeature;
   onChange: (updater: (f: KeyedFeature) => KeyedFeature) => void;
-  onRemove: () => void;
 }) {
-  const powerRollEffect = feature.effects.find((e) => e.roll != null);
-  const [showPowerRoll, setShowPowerRoll] = useState(
-    powerRollEffect != null && (powerRollEffect.tier1 !== '' || powerRollEffect.tier2 !== '' || powerRollEffect.tier3 !== ''),
-  );
-
   const set = (field: string, value: unknown) =>
     onChange((f) => ({ ...f, [field]: value }));
 
@@ -285,69 +378,117 @@ function AbilityFeatureEditor({
     }));
   };
 
-  // Find indices for power roll and named effects
+  const removeEffect = (index: number) => {
+    onChange((f) => ({
+      ...f,
+      effects: f.effects.filter((_, i) => i !== index),
+    }));
+  };
+
+  const addEffect = () => {
+    onChange((f) => ({
+      ...f,
+      effects: [...f.effects, { name: 'Effect', effect: '' }],
+    }));
+  };
+
+  // Find power roll and named effects
   const prIndex = feature.effects.findIndex((e) => e.roll != null);
+  const hasPowerRoll = prIndex >= 0;
   const namedEffects = feature.effects
     .map((e, i) => ({ e, i }))
-    .filter(({ e }) => e.roll == null && e.effect != null);
+    .filter(({ e }) => e.roll == null);
+
+  const addPowerRoll = () => {
+    onChange((f) => ({
+      ...f,
+      effects: [{ roll: 0, tier1: '', tier2: '', tier3: '' }, ...f.effects],
+    }));
+  };
+
+  const removePowerRoll = () => {
+    onChange((f) => ({
+      ...f,
+      effects: f.effects.filter((e) => e.roll == null),
+    }));
+  };
 
   return (
-    <div className="p-3 rounded-sm bg-surface-container-low/50 space-y-2">
+    <div className="space-y-2">
       {/* Desktop: name, type, usage on one row; Mobile: stacked */}
-      <div className="flex gap-2 items-start">
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
-          <input className={inputClass} value={feature.name} onChange={(e) => set('name', e.target.value)} placeholder="Ability name" />
-          <input className={inputClass} value={feature.ability_type ?? ''} onChange={(e) => set('ability_type', e.target.value || undefined)} placeholder="Type (optional)" />
-          <input className={inputClass} value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)} placeholder="Usage" />
-        </div>
-        <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove ability" title="Remove">
-          <X size={16} aria-hidden="true" />
-        </button>
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
+        <LabeledInput label="Name" value={feature.name} onChange={(v) => set('name', v)} />
+        <LabeledSelect label="Type" value={feature.ability_type ?? ''} onChange={(v) => set('ability_type', v || undefined)} options={ABILITY_TYPES} placeholder="(none)" />
+        <LabeledSelect label="Usage" value={feature.usage ?? ''} onChange={(v) => set('usage', v || undefined)} options={ABILITY_USAGES} placeholder="(none)" />
       </div>
 
       {/* Desktop: keywords, distance, target on one row; Mobile: stacked */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
-        <input className={inputClass} value={(feature.keywords ?? []).join(', ')} onChange={(e) => set('keywords', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} placeholder="Keywords" />
-        <input className={inputClass} value={feature.distance ?? ''} onChange={(e) => set('distance', e.target.value || undefined)} placeholder="Distance" />
-        <input className={inputClass} value={feature.target ?? ''} onChange={(e) => set('target', e.target.value || undefined)} placeholder="Target" />
+        <LabeledInput label="Keywords" value={(feature.keywords ?? []).join(', ')} onChange={(v) => set('keywords', v.split(',').map((s: string) => s.trim()).filter(Boolean))} />
+        <LabeledInput label="Distance" value={feature.distance ?? ''} onChange={(v) => set('distance', v || undefined)} />
+        <LabeledInput label="Target" value={feature.target ?? ''} onChange={(v) => set('target', v || undefined)} />
       </div>
 
-      {/* Power Roll toggle + tiers */}
-      <div>
-        <button
-          onClick={() => setShowPowerRoll(!showPowerRoll)}
-          className="text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer flex items-center gap-1"
-        >
-          {showPowerRoll ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
-          Power Roll
-        </button>
-        {showPowerRoll && prIndex >= 0 && (
-          <div className="mt-2 space-y-1">
-            <div className="grid grid-cols-[80px_1fr] gap-2">
-              <div>
-                <div className={labelClass}>Bonus</div>
-                <input type="number" className={`${inputClass} w-full text-center`} value={feature.effects[prIndex].roll ?? 0} onChange={(e) => updateEffect(prIndex, { roll: parseInt(e.target.value) || 0 })} />
-              </div>
-              <div />
-            </div>
-            {(['tier1', 'tier2', 'tier3'] as const).map((tier, i) => (
-              <div key={tier} className="grid grid-cols-[80px_1fr] gap-2">
-                <span className={`${inputClass} text-center text-xs flex items-center justify-center`}>
-                  {i === 0 ? '\u226411' : i === 1 ? '12-16' : '17+'}
-                </span>
-                <input className={inputClass} value={feature.effects[prIndex][tier] ?? ''} onChange={(e) => updateEffect(prIndex, { [tier]: e.target.value })} placeholder="Result" />
-              </div>
-            ))}
+      {/* Trigger (for triggered actions) */}
+      {feature.trigger != null && (
+        <LabeledInput label="Trigger" value={feature.trigger} onChange={(v) => set('trigger', v || undefined)} />
+      )}
+
+      {/* Power Roll */}
+      {hasPowerRoll ? (
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <div className={labelClass}>Power Roll</div>
+            <button
+              onClick={removePowerRoll}
+              className="text-[10px] font-label text-on-surface-variant/50 hover:text-tertiary transition-colors cursor-pointer"
+            >
+              Remove
+            </button>
           </div>
-        )}
-      </div>
+          <div className="grid grid-cols-[80px_1fr] gap-2">
+            <div>
+              <div className={labelClass}>Bonus</div>
+              <input type="number" className={`${inputClass} w-full text-center`} value={feature.effects[prIndex].roll ?? 0} onChange={(e) => updateEffect(prIndex, { roll: parseInt(e.target.value) || 0 })} />
+            </div>
+            <div />
+          </div>
+          {(['tier1', 'tier2', 'tier3'] as const).map((tier, i) => (
+            <div key={tier} className="grid grid-cols-[80px_1fr] gap-2">
+              <span className={`${inputClass} text-center text-xs flex items-center justify-center`}>
+                {i === 0 ? '\u226411' : i === 1 ? '12-16' : '17+'}
+              </span>
+              <input className={inputClass} value={feature.effects[prIndex][tier] ?? ''} onChange={(e) => updateEffect(prIndex, { [tier]: e.target.value })} placeholder="Result" />
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       {/* Named effects */}
       {namedEffects.map(({ e, i }) => (
         <div key={i} className="space-y-1">
           <div className="flex gap-2 items-center">
-            <span className="text-xs font-label text-on-surface-variant">{e.name || 'Effect'}:</span>
-            {e.cost && <span className="text-xs font-label text-primary">{e.cost}</span>}
+            <input
+              className={`${inputClass} w-24`}
+              value={e.name ?? ''}
+              onChange={(ev) => updateEffect(i, { name: ev.target.value })}
+              placeholder="Label"
+            />
+            <input
+              className={`${inputClass} w-16 text-center`}
+              value={e.cost ?? ''}
+              onChange={(ev) => updateEffect(i, { cost: ev.target.value || undefined })}
+              placeholder="Cost"
+            />
+            <div className="flex-1" />
+            <button
+              onClick={() => removeEffect(i)}
+              className="p-0.5 text-on-surface-variant/50 hover:text-tertiary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              aria-label="Remove effect"
+              title="Remove effect"
+            >
+              <X size={14} aria-hidden="true" />
+            </button>
           </div>
           <textarea
             className={`${inputClass} w-full`}
@@ -358,6 +499,17 @@ function AbilityFeatureEditor({
           />
         </div>
       ))}
+
+      {/* Add buttons */}
+      <div className="flex gap-3">
+        {!hasPowerRoll && (
+          <AddButton onClick={addPowerRoll}>Add Power Roll</AddButton>
+        )}
+        <AddButton onClick={addEffect}>Add Effect</AddButton>
+        {feature.trigger == null && (
+          <AddButton onClick={() => set('trigger', '')}>Add Trigger</AddButton>
+        )}
+      </div>
     </div>
   );
 }
@@ -367,38 +519,27 @@ function AbilityFeatureEditor({
 function TraitFeatureEditor({
   feature,
   onChange,
-  onRemove,
 }: {
   feature: KeyedFeature;
   onChange: (updater: (f: KeyedFeature) => KeyedFeature) => void;
-  onRemove: () => void;
 }) {
   return (
-    <div className="p-3 rounded-sm bg-surface-container-low/50">
-      <div className="flex gap-2 items-start">
-        <div className="flex-1 grid grid-cols-[1fr_2fr] gap-2">
-          <input
-            className={inputClass}
-            value={feature.name}
-            onChange={(e) => onChange((f) => ({ ...f, name: e.target.value }))}
-            placeholder="Trait name"
-          />
-          <input
-            className={inputClass}
-            value={feature.effects[0]?.effect ?? ''}
-            onChange={(e) =>
-              onChange((f) => ({
-                ...f,
-                effects: [{ ...f.effects[0], effect: e.target.value }],
-              }))
-            }
-            placeholder="Description"
-          />
-        </div>
-        <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove trait" title="Remove">
-          <X size={16} aria-hidden="true" />
-        </button>
-      </div>
+    <div className="grid grid-cols-[1fr_2fr] gap-2">
+      <LabeledInput
+        label="Name"
+        value={feature.name}
+        onChange={(v) => onChange((f) => ({ ...f, name: v }))}
+      />
+      <LabeledInput
+        label="Description"
+        value={feature.effects[0]?.effect ?? ''}
+        onChange={(v) =>
+          onChange((f) => ({
+            ...f,
+            effects: [{ ...f.effects[0], effect: v }],
+          }))
+        }
+      />
     </div>
   );
 }
@@ -442,6 +583,51 @@ function LabeledInput({
     </div>
   );
 }
+
+function LabeledSelect({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: string[];
+  placeholder?: string;
+}) {
+  return (
+    <div>
+      <div className={labelClass}>{label}</div>
+      <select
+        className={`${inputClass} w-full`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="">{placeholder ?? `Select ${label.toLowerCase()}`}</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>{opt}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+const ABILITY_TYPES = [
+  'Signature Ability',
+  'Villain Action 1',
+  'Villain Action 2',
+  'Villain Action 3',
+];
+
+const ABILITY_USAGES = [
+  'Main action',
+  'Maneuver',
+  'Triggered action',
+  'Free maneuver',
+  'Free triggered action',
+];
 
 function AddButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
   return (
