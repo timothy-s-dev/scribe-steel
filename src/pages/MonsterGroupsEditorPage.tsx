@@ -6,7 +6,6 @@ import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { getAllMonsterSummaries, loadMonsterByName } from '@/data/bestiary';
-import { migrateMonsterGroup } from '@/data/migrate';
 import { MonsterEditor, emptyMonster } from '@/components/MonsterEditor';
 import type { SavedMonsterGroup, Monster, Feature } from '@/data/types';
 import {
@@ -81,9 +80,8 @@ export function MonsterGroupsEditorPage() {
       return;
     }
     setLoading(true);
-    load<SavedMonsterGroup>(fileId).then((raw) => {
-      if (raw) {
-        const data = migrateMonsterGroup(raw);
+    load<SavedMonsterGroup>(fileId).then((data) => {
+      if (data) {
         setDoc(data);
         setDocName(data.name);
         setMaliceKeys(data.malice.map(() => uid()));

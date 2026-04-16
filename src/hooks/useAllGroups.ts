@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { getGroupSummaries, loadGroup, type GroupSummary, type MonsterSummary } from '@/data/bestiary';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStorage } from '@/contexts/StorageContext';
-import { migrateMonsterGroup } from '@/data/migrate';
 import type { MonsterGroup, SavedMonsterGroup } from '@/data/types';
 
 export interface TaggedGroupSummary extends GroupSummary {
@@ -47,9 +46,8 @@ export function useAllGroups(): {
       const loaded: TaggedGroupSummary[] = [];
       const cache = new Map<string, MonsterGroup>();
       for (const item of index.items) {
-        const raw = await load<SavedMonsterGroup>(item.fileId);
-        if (raw) {
-          const doc = migrateMonsterGroup(raw);
+        const doc = await load<SavedMonsterGroup>(item.fileId);
+        if (doc) {
           cache.set(doc.name, doc);
           loaded.push({
             name: doc.name,
