@@ -79,8 +79,8 @@ function PreviewToolbar({
         </label>
       </div>
 
-      {/* Zoom controls — centered */}
-      <div className="flex items-center gap-1.5">
+      {/* Zoom controls — centered (hidden on mobile) */}
+      <div className="hidden sm:flex items-center gap-1.5">
         <button
           onClick={zoom.zoomOut}
           className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
@@ -137,6 +137,8 @@ function PreviewToolbar({
   );
 }
 
+type MobileTab = 'edit' | 'preview';
+
 export function TypstEditor({
   schema,
   initialContent = '',
@@ -149,6 +151,7 @@ export function TypstEditor({
   const [content, setContent] = useState(initialContent);
   const [paramValues, setParamValues] = useState<Record<string, string>>(initialParams);
   const [printMode, setPrintMode] = useState(settings.printFriendly);
+  const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
   const zoom = useZoom(settings.defaultZoom);
 
   const preamble = useMemo(
@@ -183,52 +186,89 @@ export function TypstEditor({
   const hasParams = (schema.params?.length ?? 0) > 0;
   const FormComponent = ParamsForm ?? TemplateParamsForm;
 
+  const editorPanel = !hideEditor && (
+    <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+      <div className="flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
+        <span className="text-sm font-semibold font-body text-on-surface">
+          {schema.name}
+        </span>
+      </div>
+      {hasParams && (
+        <FormComponent
+          params={schema.params!}
+          values={paramValues}
+          onChange={handleParamChange}
+        />
+      )}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <Editor
+          value={fullSource}
+          onChange={handleEditorChange}
+          readOnlyPrefix={preamble.length}
+        />
+      </div>
+    </div>
+  );
+
+  const previewPanel = (
+    <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+      <PreviewToolbar
+        zoom={zoom}
+        printMode={printMode}
+        onPrintModeChange={setPrintMode}
+        fullSource={fullSource}
+        files={schema.files}
+        inputs={inputs}
+      />
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <Preview
+          content={fullSource}
+          template=""
+          files={schema.files}
+          zoom={zoom}
+          inputs={inputs}
+        />
+      </div>
+    </div>
+  );
+
   return (
-    <div className="flex h-full overflow-hidden">
-      {/* Left column: editor toolbar + params form + editor */}
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Mobile tab toggle */}
       {!hideEditor && (
-        <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-          <div className="flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
-            <span className="text-sm font-semibold font-body text-on-surface">
-              {schema.name}
-            </span>
-          </div>
-          {hasParams && (
-            <FormComponent
-              params={schema.params!}
-              values={paramValues}
-              onChange={handleParamChange}
-            />
-          )}
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <Editor
-              value={fullSource}
-              onChange={handleEditorChange}
-              readOnlyPrefix={preamble.length}
-            />
-          </div>
+        <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+          <button
+            onClick={() => setMobileTab('edit')}
+            className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+              mobileTab === 'edit'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-on-surface-variant'
+            }`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setMobileTab('preview')}
+            className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+              mobileTab === 'preview'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-on-surface-variant'
+            }`}
+          >
+            Preview
+          </button>
         </div>
       )}
 
-      {/* Right column: preview toolbar + preview */}
-      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        <PreviewToolbar
-          zoom={zoom}
-          printMode={printMode}
-          onPrintModeChange={setPrintMode}
-          fullSource={fullSource}
-          files={schema.files}
-          inputs={inputs}
-        />
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <Preview
-            content={fullSource}
-            template=""
-            files={schema.files}
-            zoom={zoom}
-            inputs={inputs}
-          />
-        </div>
+      {/* Desktop: side by side */}
+      <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
+        {editorPanel}
+        {previewPanel}
+      </div>
+
+      {/* Mobile: tab-switched */}
+      <div className="md:hidden flex-1 min-h-0 overflow-hidden">
+        {hideEditor || mobileTab === 'preview' ? previewPanel : editorPanel}
       </div>
     </div>
   );

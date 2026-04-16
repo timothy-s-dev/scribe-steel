@@ -191,7 +191,7 @@ export function MonsterGroupsEditorPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-full">
         <p className="text-sm font-body text-on-surface-variant">Loading monster group...</p>
       </div>
     );
@@ -199,7 +199,7 @@ export function MonsterGroupsEditorPage() {
 
   if (error || !doc) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen gap-4">
+      <div className="flex flex-col items-center justify-center h-full gap-4">
         <p className="text-sm font-body text-tertiary">{error || 'Group not found'}</p>
         <button
           onClick={() => navigate('/monster-groups')}
@@ -212,7 +212,7 @@ export function MonsterGroupsEditorPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
         <button
@@ -247,34 +247,44 @@ export function MonsterGroupsEditorPage() {
       {/* Body */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-6 max-w-4xl">
         {/* Malice Features */}
-        <section className="space-y-2">
+        <section className="space-y-4 md:space-y-2">
           <h3 className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
             Malice Features
           </h3>
           {doc.malice.map((m, i) => (
-            <div key={maliceKeys[i]} className="flex gap-1.5 items-start">
+            <div key={maliceKeys[i]} className="space-y-1 md:space-y-0 md:flex md:gap-1.5 md:items-start">
+              <div className="flex gap-1.5 items-start">
+                <input
+                  className={`${smallInputClass} w-16 text-center`}
+                  value={maliceCostDisplay(m)}
+                  onChange={(e) => updateMalice(i, 'cost', e.target.value)}
+                  title="Cost"
+                  placeholder="3"
+                />
+                <input
+                  className={`${smallInputClass} flex-1 md:w-28 md:flex-none`}
+                  value={m.name}
+                  onChange={(e) => updateMalice(i, 'name', e.target.value)}
+                  placeholder="Name"
+                />
+                <button
+                  onClick={() => removeMalice(i)}
+                  className="md:hidden p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                  aria-label="Remove malice feature"
+                  title="Remove"
+                >
+                  <X size={16} aria-hidden="true" />
+                </button>
+              </div>
               <input
-                className={`${smallInputClass} w-16 text-center`}
-                value={maliceCostDisplay(m)}
-                onChange={(e) => updateMalice(i, 'cost', e.target.value)}
-                title="Cost"
-                placeholder="3"
-              />
-              <input
-                className={`${smallInputClass} w-28`}
-                value={m.name}
-                onChange={(e) => updateMalice(i, 'name', e.target.value)}
-                placeholder="Name"
-              />
-              <input
-                className={`${smallInputClass} flex-1`}
+                className={`${smallInputClass} w-full md:flex-1`}
                 value={maliceDescriptionDisplay(m)}
                 onChange={(e) => updateMalice(i, 'description', e.target.value)}
                 placeholder="Description"
               />
               <button
                 onClick={() => removeMalice(i)}
-                className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                className="hidden md:block p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                 aria-label="Remove malice feature"
                 title="Remove"
               >

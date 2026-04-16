@@ -5,7 +5,7 @@ import { Compass, ArrowLeft } from 'lucide-react';
 export function NotFoundPage() {
   usePageTitle('Page Not Found');
   return (
-    <div className="h-screen flex flex-col items-center justify-center px-6 text-center">
+    <div className="h-full flex flex-col items-center justify-center px-6 text-center">
       <Compass size={56} className="text-outline-variant mb-4" aria-hidden="true" />
       <h1 className="text-2xl font-headline font-bold text-on-surface mb-2">
         Page not found

@@ -1,4 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
+
+type MobileTab = 'edit' | 'preview';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { ArrowLeft, X, Plus, Download, Minus } from 'lucide-react';
@@ -152,6 +154,7 @@ export function EncounterSheetEditorPage() {
   const { settings } = useSettings();
   const [notes, setNotes] = useState('');
   const [printMode, setPrintMode] = useState(settings.printFriendly);
+  const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
   const zoom = useZoom(settings.defaultZoom);
   const [initialized, setInitialized] = useState(isDemo);
 
@@ -418,10 +421,8 @@ export function EncounterSheetEditorPage() {
     );
   }
 
-  return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Left column: encounter form */}
-      <div className="w-1/3 flex-shrink-0 flex flex-col overflow-hidden border-r border-outline-variant/20">
+  const formPanel = (
+    <div className="flex-1 min-w-0 md:w-1/3 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
         <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0">
           <button
             onClick={() => navigate('/encounter-sheets')}
@@ -576,57 +577,96 @@ export function EncounterSheetEditorPage() {
             />
           </section>
         </div>
+    </div>
+  );
+
+  const previewPanel = (
+    <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
+        <div className="flex-1">
+          <label className="flex items-center gap-2 cursor-pointer w-fit">
+            <Switch size="sm" checked={printMode} onCheckedChange={setPrintMode} />
+            <span className="text-xs font-label text-on-surface-variant">Print-Friendly</span>
+          </label>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-1.5">
+          <button onClick={zoom.zoomOut} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom out" title="Zoom out">
+            <Minus size={18} aria-hidden="true" />
+          </button>
+          <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
+            {zoom.zoomPercent}%
+          </span>
+          <button onClick={zoom.zoomIn} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom in" title="Zoom in">
+            <Plus size={18} aria-hidden="true" />
+          </button>
+          <div className="w-px h-4 bg-outline-variant/30 mx-1" />
+          <button
+            onClick={() => zoom.setMode('fit-width')}
+            className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${zoom.mode === 'fit-width' ? 'text-primary bg-surface-container-high' : 'text-on-surface-variant hover:text-primary'}`}
+          >
+            Fit Width
+          </button>
+          <button
+            onClick={() => zoom.setMode('fit-page')}
+            className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${zoom.mode === 'fit-page' ? 'text-primary bg-surface-container-high' : 'text-on-surface-variant hover:text-primary'}`}
+          >
+            Fit Page
+          </button>
+        </div>
+
+        <div className="flex-1 flex justify-end">
+          <button
+            onClick={handleExportPdf}
+            disabled={exporting}
+            className="px-4 py-1.5 text-xs font-label font-bold tracking-wide uppercase bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-bright transition-colors disabled:opacity-50"
+          >
+            {exporting ? 'Exporting...' : 'Export PDF'}
+          </button>
+        </div>
       </div>
 
-      {/* Right column: preview */}
-      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
-          <div className="flex-1">
-            <label className="flex items-center gap-2 cursor-pointer w-fit">
-              <Switch size="sm" checked={printMode} onCheckedChange={setPrintMode} />
-              <span className="text-xs font-label text-on-surface-variant">Print-Friendly</span>
-            </label>
-          </div>
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <Preview content={source} template="" files={files} zoom={zoom} inputs={inputs} />
+      </div>
+    </div>
+  );
 
-          <div className="flex items-center gap-1.5">
-            <button onClick={zoom.zoomOut} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom out" title="Zoom out">
-              <Minus size={18} aria-hidden="true" />
-            </button>
-            <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
-              {zoom.zoomPercent}%
-            </span>
-            <button onClick={zoom.zoomIn} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom in" title="Zoom in">
-              <Plus size={18} aria-hidden="true" />
-            </button>
-            <div className="w-px h-4 bg-outline-variant/30 mx-1" />
-            <button
-              onClick={() => zoom.setMode('fit-width')}
-              className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${zoom.mode === 'fit-width' ? 'text-primary bg-surface-container-high' : 'text-on-surface-variant hover:text-primary'}`}
-            >
-              Fit Width
-            </button>
-            <button
-              onClick={() => zoom.setMode('fit-page')}
-              className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${zoom.mode === 'fit-page' ? 'text-primary bg-surface-container-high' : 'text-on-surface-variant hover:text-primary'}`}
-            >
-              Fit Page
-            </button>
-          </div>
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Mobile tab toggle */}
+      <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+        <button
+          onClick={() => setMobileTab('edit')}
+          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+            mobileTab === 'edit'
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-on-surface-variant'
+          }`}
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => setMobileTab('preview')}
+          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+            mobileTab === 'preview'
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-on-surface-variant'
+          }`}
+        >
+          Preview
+        </button>
+      </div>
 
-          <div className="flex-1 flex justify-end">
-            <button
-              onClick={handleExportPdf}
-              disabled={exporting}
-              className="px-4 py-1.5 text-xs font-label font-bold tracking-wide uppercase bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-bright transition-colors disabled:opacity-50"
-            >
-              {exporting ? 'Exporting...' : 'Export PDF'}
-            </button>
-          </div>
-        </div>
+      {/* Desktop: side by side */}
+      <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
+        {formPanel}
+        {previewPanel}
+      </div>
 
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <Preview content={source} template="" files={files} zoom={zoom} inputs={inputs} />
-        </div>
+      {/* Mobile: tab-switched */}
+      <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
+        {mobileTab === 'edit' ? formPanel : previewPanel}
       </div>
     </div>
   );

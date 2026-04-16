@@ -53,7 +53,8 @@ describe('App smoke tests', () => {
   it('renders the monster cards page', async () => {
     render(<TestApp route="/monster-cards" />);
     const main = await screen.findByRole('main');
-    expect(await within(main).findByText('Monster Cards')).toBeInTheDocument();
+    const matches = await within(main).findAllByText('Monster Cards');
+    expect(matches.length).toBeGreaterThan(0);
   });
 
   it('renders the encounter sheets page', async () => {

@@ -1,6 +1,8 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Minus, Plus, ChevronRight, ChevronDown } from 'lucide-react';
+
+type MobileTab = 'select' | 'preview';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
@@ -33,6 +35,7 @@ export function MonsterCardsPage() {
   const zoom = useZoom(settings.defaultZoom);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [loadedMonsters, setLoadedMonsters] = useState<Monster[]>([]);
+  const [mobileTab, setMobileTab] = useState<MobileTab>('select');
 
   const { groups, loading: groupsLoading, loadGroup } = useAllGroups();
 
@@ -164,139 +167,176 @@ export function MonsterCardsPage() {
     }
   }
 
-  return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Left column: monster picker */}
-      <div className="w-80 flex-shrink-0 flex flex-col overflow-hidden border-r border-outline-variant/20">
-        <div className="flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
-          <span className="text-sm font-semibold font-body text-on-surface">
-            Monster Cards
-          </span>
-        </div>
+  const pickerPanel = (
+    <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
+      <div className="hidden md:flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
+        <span className="text-sm font-semibold font-body text-on-surface">
+          Monster Cards
+        </span>
+      </div>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-4">
-          {groups.map((group) => (
-            <GroupPicker
-              key={group.name}
-              group={group}
-              selected={selected}
-              isCollapsed={!expanded.has(group.name)}
-              onToggleCollapse={() => toggleExpanded(group.name)}
-              onToggleGroup={() => toggleGroup(group.name)}
-              onToggleMonster={toggleMonster}
-            />
-          ))}
-          {groupsLoading && (
-            <p className="text-xs font-label text-on-surface-variant text-center py-2">
-              Loading custom groups...
-            </p>
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-4">
+        {groups.map((group) => (
+          <GroupPicker
+            key={group.name}
+            group={group}
+            selected={selected}
+            isCollapsed={!expanded.has(group.name)}
+            onToggleCollapse={() => toggleExpanded(group.name)}
+            onToggleGroup={() => toggleGroup(group.name)}
+            onToggleMonster={toggleMonster}
+          />
+        ))}
+        {groupsLoading && (
+          <p className="text-xs font-label text-on-surface-variant text-center py-2">
+            Loading custom groups...
+          </p>
+        )}
+      </div>
+
+      {/* Selection summary */}
+      <div className="px-4 py-3 bg-surface-container flex-shrink-0">
+        <div className="text-xs font-label text-on-surface-variant">
+          {selected.size} monster
+          {selected.size !== 1 ? 's' : ''} selected
+          {sheetCount != null && (
+            <>
+              {' '}
+              · {sheetCount} sheet{sheetCount !== 1 ? 's' : ''}
+            </>
           )}
         </div>
+      </div>
+    </div>
+  );
 
-        {/* Selection summary */}
-        <div className="px-4 py-3 bg-surface-container flex-shrink-0">
-          <div className="text-xs font-label text-on-surface-variant">
-            {selected.size} monster
-            {selected.size !== 1 ? 's' : ''} selected
-            {sheetCount != null && (
-              <>
-                {' '}
-                · {sheetCount} sheet{sheetCount !== 1 ? 's' : ''}
-              </>
-            )}
-          </div>
+  const previewPanel = (
+    <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
+        <div className="flex-1">
+          <label className="flex items-center gap-2 cursor-pointer w-fit">
+            <Switch
+              size="sm"
+              checked={printMode}
+              onCheckedChange={setPrintMode}
+            />
+            <span className="text-xs font-label text-on-surface-variant">
+              Print-Friendly
+            </span>
+          </label>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-1.5">
+          <button
+            onClick={zoom.zoomOut}
+            className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            aria-label="Zoom out"
+            title="Zoom out"
+          >
+            <Minus size={18} aria-hidden="true" />
+          </button>
+          <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
+            {zoom.zoomPercent}%
+          </span>
+          <button
+            onClick={zoom.zoomIn}
+            className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            aria-label="Zoom in"
+            title="Zoom in"
+          >
+            <Plus size={18} aria-hidden="true" />
+          </button>
+          <div className="w-px h-4 bg-outline-variant/30 mx-1" />
+          <button
+            onClick={() => zoom.setMode('fit-width')}
+            className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${
+              zoom.mode === 'fit-width'
+                ? 'text-primary bg-surface-container-high'
+                : 'text-on-surface-variant hover:text-primary'
+            }`}
+          >
+            Fit Width
+          </button>
+          <button
+            onClick={() => zoom.setMode('fit-page')}
+            className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${
+              zoom.mode === 'fit-page'
+                ? 'text-primary bg-surface-container-high'
+                : 'text-on-surface-variant hover:text-primary'
+            }`}
+          >
+            Fit Page
+          </button>
+        </div>
+
+        <div className="flex-1 flex justify-end">
+          <button
+            onClick={handleExportPdf}
+            disabled={exporting || !hasSelection}
+            className="px-4 py-1.5 text-xs font-label font-bold tracking-wide uppercase bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-bright transition-colors disabled:opacity-50"
+          >
+            {exporting ? 'Exporting...' : 'Export PDF'}
+          </button>
         </div>
       </div>
 
-      {/* Right column: preview */}
-      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        {/* Toolbar */}
-        <div className="flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
-          <div className="flex-1">
-            <label className="flex items-center gap-2 cursor-pointer w-fit">
-              <Switch
-                size="sm"
-                checked={printMode}
-                onCheckedChange={setPrintMode}
-              />
-              <span className="text-xs font-label text-on-surface-variant">
-                Print-Friendly
-              </span>
-            </label>
+      <div className="flex-1 min-h-0 overflow-hidden">
+        {hasSelection && loadedMonsters.length > 0 ? (
+          <Preview
+            content={source}
+            template=""
+            files={files}
+            zoom={zoom}
+            inputs={inputs}
+            onPageCount={handlePageCount}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full bg-surface-container-low">
+            <p className="text-2xl font-body text-on-surface-variant/70">
+              Select monsters to generate cards
+            </p>
           </div>
+        )}
+      </div>
+    </div>
+  );
 
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={zoom.zoomOut}
-              className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-              aria-label="Zoom out"
-              title="Zoom out"
-            >
-              <Minus size={18} aria-hidden="true" />
-            </button>
-            <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
-              {zoom.zoomPercent}%
-            </span>
-            <button
-              onClick={zoom.zoomIn}
-              className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-              aria-label="Zoom in"
-              title="Zoom in"
-            >
-              <Plus size={18} aria-hidden="true" />
-            </button>
-            <div className="w-px h-4 bg-outline-variant/30 mx-1" />
-            <button
-              onClick={() => zoom.setMode('fit-width')}
-              className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${
-                zoom.mode === 'fit-width'
-                  ? 'text-primary bg-surface-container-high'
-                  : 'text-on-surface-variant hover:text-primary'
-              }`}
-            >
-              Fit Width
-            </button>
-            <button
-              onClick={() => zoom.setMode('fit-page')}
-              className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${
-                zoom.mode === 'fit-page'
-                  ? 'text-primary bg-surface-container-high'
-                  : 'text-on-surface-variant hover:text-primary'
-              }`}
-            >
-              Fit Page
-            </button>
-          </div>
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Mobile tab toggle */}
+      <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+        <button
+          onClick={() => setMobileTab('select')}
+          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+            mobileTab === 'select'
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-on-surface-variant'
+          }`}
+        >
+          Select Monsters
+        </button>
+        <button
+          onClick={() => setMobileTab('preview')}
+          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+            mobileTab === 'preview'
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-on-surface-variant'
+          }`}
+        >
+          Preview
+        </button>
+      </div>
 
-          <div className="flex-1 flex justify-end">
-            <button
-              onClick={handleExportPdf}
-              disabled={exporting || !hasSelection}
-              className="px-4 py-1.5 text-xs font-label font-bold tracking-wide uppercase bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-bright transition-colors disabled:opacity-50"
-            >
-              {exporting ? 'Exporting...' : 'Export PDF'}
-            </button>
-          </div>
-        </div>
+      {/* Desktop: side by side */}
+      <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
+        {pickerPanel}
+        {previewPanel}
+      </div>
 
-        <div className="flex-1 min-h-0 overflow-hidden">
-          {hasSelection && loadedMonsters.length > 0 ? (
-            <Preview
-              content={source}
-              template=""
-              files={files}
-              zoom={zoom}
-              inputs={inputs}
-              onPageCount={handlePageCount}
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full bg-surface-container-low">
-              <p className="text-2xl font-body text-on-surface-variant/70">
-                Select monsters to generate cards
-              </p>
-            </div>
-          )}
-        </div>
+      {/* Mobile: tab-switched */}
+      <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
+        {mobileTab === 'select' ? pickerPanel : previewPanel}
       </div>
     </div>
   );

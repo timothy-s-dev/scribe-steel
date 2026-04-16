@@ -191,13 +191,13 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
 
       {/* Identity */}
       <Section label="Identity">
-        <div className="grid grid-cols-[1fr_60px_1fr_60px] gap-2">
+        <div className="grid grid-cols-[1fr_60px] md:grid-cols-[1fr_60px_1fr_60px] gap-2">
           <LabeledInput label="Name" value={monster.name} onChange={(v) => update('name', v)} />
           <LabeledInput label="Level" type="number" value={monster.level} onChange={(v) => update('level', parseInt(v) || 1)} />
-          <LabeledInput label="Roles (comma-sep)" value={monster.roles.join(', ')} onChange={(v) => update('roles', v.split(',').map((s) => s.trim()).filter(Boolean))} />
+          <LabeledInput label="Roles" value={monster.roles.join(', ')} onChange={(v) => update('roles', v.split(',').map((s) => s.trim()).filter(Boolean))} />
           <LabeledInput label="EV" type="number" value={monster.ev ?? ''} onChange={(v) => update('ev', v ? parseInt(v) || 0 : null)} />
         </div>
-        <LabeledInput label="Ancestry (comma-separated)" value={monster.ancestry.join(', ')} onChange={(v) => update('ancestry', v.split(',').map((s) => s.trim()).filter(Boolean))} />
+        <LabeledInput label="Ancestry" value={monster.ancestry.join(', ')} onChange={(v) => update('ancestry', v.split(',').map((s) => s.trim()).filter(Boolean))} />
       </Section>
 
       {/* Combat Stats */}
@@ -210,8 +210,8 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
           <LabeledInput label="Free Strike" type="number" value={monster.free_strike} onChange={(v) => update('free_strike', parseInt(v) || 0)} />
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <LabeledInput label="Immunities (comma-sep)" value={(monster.immunities ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('immunities', arr.length ? arr : undefined); }} placeholder="e.g., Fire 5" />
-          <LabeledInput label="Weaknesses (comma-sep)" value={(monster.weaknesses ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('weaknesses', arr.length ? arr : undefined); }} placeholder="e.g., Holy 3" />
+          <LabeledInput label="Immunities" value={(monster.immunities ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('immunities', arr.length ? arr : undefined); }} placeholder="e.g., Fire 5" />
+          <LabeledInput label="Weaknesses" value={(monster.weaknesses ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('weaknesses', arr.length ? arr : undefined); }} placeholder="e.g., Holy 3" />
           <LabeledInput label="Movement" value={monster.movement ?? ''} onChange={(v) => update('movement', v || undefined)} placeholder="e.g., Fly, Teleport" />
         </div>
       </Section>
@@ -293,23 +293,23 @@ function AbilityFeatureEditor({
 
   return (
     <div className="p-3 rounded-sm bg-surface-container-low/50 space-y-2">
-      {/* Row 1: name, ability_type, usage, remove */}
+      {/* Desktop: name, type, usage on one row; Mobile: stacked */}
       <div className="flex gap-2 items-start">
-        <div className="flex-1 grid grid-cols-[1fr_auto_auto] gap-2">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
           <input className={inputClass} value={feature.name} onChange={(e) => set('name', e.target.value)} placeholder="Ability name" />
-          <input className={`${inputClass} w-36`} value={feature.ability_type ?? ''} onChange={(e) => set('ability_type', e.target.value || undefined)} placeholder="Type (optional)" />
-          <input className={`${inputClass} w-28`} value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)} placeholder="Usage" />
+          <input className={inputClass} value={feature.ability_type ?? ''} onChange={(e) => set('ability_type', e.target.value || undefined)} placeholder="Type (optional)" />
+          <input className={inputClass} value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)} placeholder="Usage" />
         </div>
         <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove ability" title="Remove">
           <X size={16} aria-hidden="true" />
         </button>
       </div>
 
-      {/* Row 2: keywords, distance, target */}
-      <div className="grid grid-cols-[1fr_auto_auto] gap-2">
-        <input className={inputClass} value={(feature.keywords ?? []).join(', ')} onChange={(e) => set('keywords', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} placeholder="Keywords (comma-separated)" />
-        <input className={`${inputClass} w-28`} value={feature.distance ?? ''} onChange={(e) => set('distance', e.target.value || undefined)} placeholder="Distance" />
-        <input className={`${inputClass} w-36`} value={feature.target ?? ''} onChange={(e) => set('target', e.target.value || undefined)} placeholder="Target" />
+      {/* Desktop: keywords, distance, target on one row; Mobile: stacked */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
+        <input className={inputClass} value={(feature.keywords ?? []).join(', ')} onChange={(e) => set('keywords', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} placeholder="Keywords" />
+        <input className={inputClass} value={feature.distance ?? ''} onChange={(e) => set('distance', e.target.value || undefined)} placeholder="Distance" />
+        <input className={inputClass} value={feature.target ?? ''} onChange={(e) => set('target', e.target.value || undefined)} placeholder="Target" />
       </div>
 
       {/* Power Roll toggle + tiers */}
@@ -374,29 +374,31 @@ function TraitFeatureEditor({
   onRemove: () => void;
 }) {
   return (
-    <div className="flex gap-2 items-start">
-      <div className="flex-1 grid grid-cols-[1fr_2fr] gap-2">
-        <input
-          className={inputClass}
-          value={feature.name}
-          onChange={(e) => onChange((f) => ({ ...f, name: e.target.value }))}
-          placeholder="Trait name"
-        />
-        <input
-          className={inputClass}
-          value={feature.effects[0]?.effect ?? ''}
-          onChange={(e) =>
-            onChange((f) => ({
-              ...f,
-              effects: [{ ...f.effects[0], effect: e.target.value }],
-            }))
-          }
-          placeholder="Description"
-        />
+    <div className="p-3 rounded-sm bg-surface-container-low/50">
+      <div className="flex gap-2 items-start">
+        <div className="flex-1 grid grid-cols-[1fr_2fr] gap-2">
+          <input
+            className={inputClass}
+            value={feature.name}
+            onChange={(e) => onChange((f) => ({ ...f, name: e.target.value }))}
+            placeholder="Trait name"
+          />
+          <input
+            className={inputClass}
+            value={feature.effects[0]?.effect ?? ''}
+            onChange={(e) =>
+              onChange((f) => ({
+                ...f,
+                effects: [{ ...f.effects[0], effect: e.target.value }],
+              }))
+            }
+            placeholder="Description"
+          />
+        </div>
+        <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove trait" title="Remove">
+          <X size={16} aria-hidden="true" />
+        </button>
       </div>
-      <button onClick={onRemove} className="p-1 text-on-surface-variant/50 hover:text-tertiary transition-colors flex-shrink-0 cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Remove trait" title="Remove">
-        <X size={16} aria-hidden="true" />
-      </button>
     </div>
   );
 }

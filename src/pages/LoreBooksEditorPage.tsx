@@ -104,7 +104,7 @@ export function LoreBooksEditorPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-full">
         <p className="text-sm font-body text-on-surface-variant">Loading document...</p>
       </div>
     );
@@ -112,7 +112,7 @@ export function LoreBooksEditorPage() {
 
   if (error || !doc) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen gap-4">
+      <div className="flex flex-col items-center justify-center h-full gap-4">
         <p className="text-sm font-body text-tertiary">{error || 'Document not found'}</p>
         <button
           onClick={() => navigate('/lore-books')}
@@ -125,7 +125,7 @@ export function LoreBooksEditorPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col">
       {/* Doc header */}
       <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
         <button

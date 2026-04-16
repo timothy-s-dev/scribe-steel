@@ -89,7 +89,7 @@ export function DocumentList({
   }, [newName, category, templateName, defaultParams, defaultBody, save, navigate, basePath]);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 bg-surface-container flex-shrink-0">
         <div className="flex items-center gap-3">

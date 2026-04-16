@@ -4,7 +4,7 @@ import { Shield } from 'lucide-react';
 export function PrivacyPolicyPage() {
   usePageTitle('Privacy Policy');
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col">
       <div className="flex items-center px-6 py-4 bg-surface-container flex-shrink-0">
         <div className="flex items-center gap-3">
           <Shield size={20} className="text-on-surface-variant" aria-hidden="true" />
