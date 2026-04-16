@@ -5,7 +5,7 @@ import { ArrowLeft, X, Plus, Copy } from 'lucide-react';
 import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
-import { getAllMonsters } from '@/data/bestiary';
+import { getAllMonsterSummaries, loadMonsterByName } from '@/data/bestiary';
 import { migrateMonsterGroup } from '@/data/migrate';
 import { MonsterEditor, emptyMonster } from '@/components/MonsterEditor';
 import type { SavedMonsterGroup, Monster, Feature } from '@/data/types';
@@ -176,9 +176,9 @@ export function MonsterGroupsEditorPage() {
   );
 
   const copyFromBestiary = useCallback(
-    (monsterName: string) => {
+    async (monsterName: string) => {
       if (!doc) return;
-      const source = getAllMonsters().find((m) => m.name === monsterName);
+      const source = await loadMonsterByName(monsterName);
       if (!source) return;
       const copy = structuredClone(source);
       const updated = { ...doc, monsters: [...doc.monsters, copy] };
@@ -332,7 +332,7 @@ export function MonsterGroupsEditorPage() {
             <DialogTitle>Copy from Bestiary</DialogTitle>
           </DialogHeader>
           <div className="max-h-80 overflow-y-auto space-y-1">
-            {getAllMonsters().map((m) => (
+            {getAllMonsterSummaries().map((m) => (
               <button
                 key={m.name}
                 onClick={() => copyFromBestiary(m.name)}

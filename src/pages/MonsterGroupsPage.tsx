@@ -4,7 +4,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Users, Plus, CloudOff, ChevronRight } from 'lucide-react';
 import { useStorage, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { getGroups } from '@/data/bestiary';
+import { getGroupSummaries, loadGroup } from '@/data/bestiary';
 import type { SavedMonsterGroup } from '@/data/types';
 import {
   Dialog,
@@ -30,7 +30,7 @@ export function MonsterGroupsPage() {
   const [newName, setNewName] = useState('');
   const [copyFrom, setCopyFrom] = useState('');
 
-  const presetGroups = getGroups();
+  const presetGroups = getGroupSummaries();
 
   useEffect(() => {
     if (!isSignedIn) {
@@ -60,7 +60,7 @@ export function MonsterGroupsPage() {
     setCreating(true);
     setDialogOpen(false);
 
-    const preset = copyFrom ? presetGroups.find((g) => g.name === copyFrom) : null;
+    const preset = copyFrom ? await loadGroup(copyFrom) : null;
     const doc: SavedMonsterGroup = {
       version: 2,
       name,
@@ -187,7 +187,7 @@ export function MonsterGroupsPage() {
                   className="w-full bg-surface-container-high text-on-surface text-sm font-body px-3 py-2 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Start empty</option>
-                  {presetGroups.map((g) => (
+                  {presetGroups.filter((g) => g.hasMalice).map((g) => (
                     <option key={g.name} value={g.name}>
                       {g.name}
                     </option>

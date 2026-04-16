@@ -1,33 +1,67 @@
 import type { MonsterGroup, Monster } from './types';
-
-// Vite glob-imports all per-group JSON files eagerly.
-// JSON modules come through as { default: T }.
-const rawModules = import.meta.glob('./bestiary/*.json', { eager: true });
-
-// Sort by the index order
 import indexData from './bestiary/index.json';
-const indexOrder = new Map(
-  indexData.map((entry: { name: string; file: string }, i: number) => [entry.file, i]),
-);
 
-const groups: MonsterGroup[] = Object.entries(rawModules)
-  .filter(([path]) => !path.endsWith('index.json'))
-  .map(([path, mod]) => {
-    const group = (mod as { default: MonsterGroup }).default;
-    const file = path.split('/').pop()!;
-    return { group, file };
-  })
-  .sort((a, b) => (indexOrder.get(a.file) ?? 999) - (indexOrder.get(b.file) ?? 999))
-  .map(({ group }) => group);
+// ── Summary types (from enriched index) ─────────────────────────────────────
 
-export function getGroups(): MonsterGroup[] {
-  return groups;
+export interface MonsterSummary {
+  name: string;
+  level: number;
+  roles: string[];
+  ev: number | null;
 }
 
-export function getAllMonsters(): Monster[] {
-  return groups.flatMap((g) => g.monsters);
+export interface GroupSummary {
+  name: string;
+  file: string;
+  hasMalice: boolean;
+  monsters: MonsterSummary[];
 }
 
-export function getMonsterByName(name: string): Monster | undefined {
-  return getAllMonsters().find((m) => m.name === name);
+// ── Lazy-load modules (returns promises, not eager imports) ─────────────────
+
+const groupModules = import.meta.glob('./bestiary/*.json') as Record<
+  string,
+  () => Promise<{ default: MonsterGroup }>
+>;
+
+// ── Summaries (sync, lightweight) ───────────────────────────────────────────
+
+const summaries: GroupSummary[] = indexData as GroupSummary[];
+
+export function getGroupSummaries(): GroupSummary[] {
+  return summaries;
+}
+
+export function getAllMonsterSummaries(): MonsterSummary[] {
+  return summaries.flatMap((g) => g.monsters);
+}
+
+// ── Full group loading (async, cached) ──────────────────────────────────────
+
+const groupCache = new Map<string, MonsterGroup>();
+
+export async function loadGroup(groupName: string): Promise<MonsterGroup | null> {
+  const cached = groupCache.get(groupName);
+  if (cached) return cached;
+
+  const entry = summaries.find((g) => g.name === groupName);
+  if (!entry) return null;
+
+  const loader = groupModules[`./bestiary/${entry.file}`];
+  if (!loader) return null;
+
+  const mod = await loader();
+  const group = mod.default;
+  groupCache.set(groupName, group);
+  return group;
+}
+
+export async function loadMonsterByName(monsterName: string): Promise<Monster | null> {
+  const entry = summaries.find((g) => g.monsters.some((m) => m.name === monsterName));
+  if (!entry) return null;
+
+  const group = await loadGroup(entry.name);
+  if (!group) return null;
+
+  return group.monsters.find((m) => m.name === monsterName) ?? null;
 }

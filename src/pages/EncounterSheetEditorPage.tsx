@@ -5,13 +5,14 @@ import { ArrowLeft, X, Plus, Download, Minus } from 'lucide-react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
-import { useAllGroups } from '@/hooks/useAllGroups';
+import { useAllGroups, type MonsterSummary } from '@/hooks/useAllGroups';
+import { loadMonsterByName } from '@/data/bestiary';
 import { useStorage } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import type { Monster, Feature, SavedEncounter } from '@/data/types';
+import type { Feature, SavedEncounter } from '@/data/types';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
 
 const TEMPLATE_FILE: VirtualFile = {
@@ -268,11 +269,10 @@ export function EncounterSheetEditorPage() {
   }, []);
 
   // Auto-fill creature from bestiary
-  const { groups: allGroups } = useAllGroups();
-  const allMonsters = useMemo(() => allGroups.flatMap((g) => g.monsters), [allGroups]);
+  const { groups: allGroups, loadGroup } = useAllGroups();
   const fillFromBestiary = useCallback(
-    (gid: number, cid: number, monsterName: string) => {
-      const m = allMonsters.find((mon) => mon.name === monsterName);
+    async (gid: number, cid: number, monsterName: string) => {
+      const m = await loadMonsterByName(monsterName);
       if (!m) return;
       const firstAbility = m.features.find((f: Feature) => f.feature_type === 'ability');
       setGroups((prev) =>
@@ -300,23 +300,23 @@ export function EncounterSheetEditorPage() {
         ),
       );
     },
-    [allMonsters],
+    [],
   );
 
   // Import malice from a monster group
   const importMaliceFromGroup = useCallback(
-    (groupName: string) => {
-      const group = allGroups.find((g) => g.name === groupName);
+    async (groupName: string) => {
+      const group = await loadGroup(groupName);
       if (!group || group.malice.length === 0) return;
       const entries = group.malice.map(maliceFeatureToEntry);
       setMalice((prev) => [...prev, ...entries]);
     },
-    [allGroups],
+    [loadGroup],
   );
 
   // Groups that have malice features
   const groupsWithMalice = useMemo(
-    () => allGroups.filter((g) => g.malice.length > 0),
+    () => allGroups.filter((g) => g.hasMalice),
     [allGroups],
   );
 
@@ -516,7 +516,7 @@ export function EncounterSheetEditorPage() {
                     <option value="">Import from group...</option>
                     {groupsWithMalice.map((group) => (
                       <option key={group.name} value={group.name}>
-                        {group.name}{group.custom ? ' (Custom)' : ''} ({group.malice.length})
+                        {group.name}{group.custom ? ' (Custom)' : ''}
                       </option>
                     ))}
                   </select>
@@ -671,7 +671,7 @@ function CreatureRow({
   onRemove,
 }: {
   creature: CreatureEntry;
-  monsterGroups: { name: string; monsters: Monster[]; custom?: boolean }[];
+  monsterGroups: { name: string; monsters: MonsterSummary[]; custom?: boolean }[];
   onUpdate: (field: keyof CreatureEntry, value: string | number | null) => void;
   onFill: (name: string) => void;
   onRemove: () => void;

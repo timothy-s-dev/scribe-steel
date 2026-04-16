@@ -1,206 +1,3461 @@
 [
   {
     "name": "Ajax the Invincible",
-    "file": "ajax-the-invincible.json"
+    "file": "ajax-the-invincible.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Ajax the Invincible",
+        "level": 11,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 156
+      }
+    ]
   },
   {
     "name": "Angulotls",
-    "file": "angulotls.json"
+    "file": "angulotls.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Angulotl Cleaver",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Angulotl Dart",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Angulotl Daybringer",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Angulotl Needler",
+        "level": 1,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Angulotl Pollywog",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Angulotl Slink",
+        "level": 1,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Angulotl Wave",
+        "level": 1,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Clawfish",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      }
+    ]
   },
   {
     "name": "Animals",
-    "file": "animals.json"
+    "file": "animals.json",
+    "hasMalice": false,
+    "monsters": [
+      {
+        "name": "Animal Swarm",
+        "level": 1,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Animal",
+        "level": 1,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Big Animal A",
+        "level": 1,
+        "roles": [
+          "Elite Mount"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Big Animal B",
+        "level": 2,
+        "roles": [
+          "Elite Mount"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Predator A",
+        "level": 1,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Predator B",
+        "level": 3,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 16
+      }
+    ]
   },
   {
     "name": "Arixx",
-    "file": "arixx.json"
+    "file": "arixx.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Arixx",
+        "level": 1,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 36
+      }
+    ]
   },
   {
     "name": "Ashen Hoarder",
-    "file": "ashen-hoarder.json"
+    "file": "ashen-hoarder.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Ashen Hoarder",
+        "level": 4,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 72
+      }
+    ]
   },
   {
     "name": "Basilisks",
-    "file": "basilisks.json"
+    "file": "basilisks.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Basilisk Tonguesnapper",
+        "level": 1,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Basilisk",
+        "level": 1,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 12
+      }
+    ]
   },
   {
     "name": "Bredbeddle",
-    "file": "bredbeddle.json"
+    "file": "bredbeddle.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Bredbeddle",
+        "level": 3,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 60
+      }
+    ]
   },
   {
     "name": "Bugbears",
-    "file": "bugbears.json"
+    "file": "bugbears.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Bugbear Channeler",
+        "level": 2,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Bugbear Commander",
+        "level": 2,
+        "roles": [
+          "Elite Support"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Bugbear Knightmare",
+        "level": 8,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Bugbear Mob",
+        "level": 5,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Bugbear Roughneck",
+        "level": 2,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Bugbear Snare",
+        "level": 5,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Bugbear Sneak",
+        "level": 2,
+        "roles": [
+          "Elite Ambusher"
+        ],
+        "ev": 16
+      }
+    ]
   },
   {
     "name": "Chimera",
-    "file": "chimera.json"
+    "file": "chimera.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Chimera",
+        "level": 3,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 60
+      }
+    ]
   },
   {
     "name": "Count Rhodar Von Glauer",
-    "file": "count-rhodar-von-glauer.json"
+    "file": "count-rhodar-von-glauer.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Count Rhodar von Glauer",
+        "level": 10,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 144
+      }
+    ]
   },
   {
     "name": "Demons",
-    "file": "demons.json"
+    "file": "demons.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Aurumvas",
+        "level": 10,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 48
+      },
+      {
+        "name": "Bale Eye",
+        "level": 5,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Bendrak",
+        "level": 2,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Blight Phage",
+        "level": 7,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Chimeron",
+        "level": 9,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Chorogaunt",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Ensnarer",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Fangling",
+        "level": 4,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Fiktin",
+        "level": 5,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Frenzied",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Grulqin",
+        "level": 4,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Gunge",
+        "level": 4,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Izyak",
+        "level": 10,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Lumbering Egress",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Muceron",
+        "level": 3,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 5
+      },
+      {
+        "name": "Optacus",
+        "level": 10,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Orliq",
+        "level": 4,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Pitling",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Remasch",
+        "level": 2,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Ruinant",
+        "level": 1,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Soulraker Handmaiden",
+        "level": 8,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Soulraker Hivequeen",
+        "level": 9,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Soulraker Praetorian",
+        "level": 7,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Soulraker Scout",
+        "level": 7,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Soulraker Soldier",
+        "level": 7,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Soulraker Stinger",
+        "level": 7,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Styrich",
+        "level": 8,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Torlas",
+        "level": 1,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Tormenauk",
+        "level": 6,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Tyburaki",
+        "level": 10,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Unguloid",
+        "level": 10,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Vicisitator",
+        "level": 10,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Wobalas",
+        "level": 4,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 6
+      }
+    ]
   },
   {
     "name": "Devils",
-    "file": "devils.json"
+    "file": "devils.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Devil Adjudicator",
+        "level": 6,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Devil Clerk",
+        "level": 5,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Devil High Judge",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Devil Jurist",
+        "level": 5,
+        "roles": [
+          "Elite Artillery"
+        ],
+        "ev": 28
+      },
+      {
+        "name": "Devil Legate",
+        "level": 5,
+        "roles": [
+          "Elite Defender"
+        ],
+        "ev": 28
+      },
+      {
+        "name": "Devil Magistrate",
+        "level": 6,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Devil Notary",
+        "level": 5,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Devil Scrivener",
+        "level": 5,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 7
+      }
+    ]
   },
   {
     "name": "Draconians",
-    "file": "draconians.json"
+    "file": "draconians.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Aeolyxria the Uncanny",
+        "level": 6,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Dorzinuuth the Base",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Locratix the Morningstar",
+        "level": 6,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Lydixavus the Deadeye",
+        "level": 6,
+        "roles": [
+          "Elite Artillery"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Myxovidan the Sintaker",
+        "level": 6,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Phrrygalax the Subduer",
+        "level": 6,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 32
+      }
+    ]
   },
   {
     "name": "Dragons",
-    "file": "dragons.json"
+    "file": "dragons.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Crucible Dragon",
+        "level": 6,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 96
+      },
+      {
+        "name": "Gloom Dragon",
+        "level": 4,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 72
+      },
+      {
+        "name": "Meteor Dragon",
+        "level": 10,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 144
+      },
+      {
+        "name": "Omen Dragon",
+        "level": 8,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 120
+      },
+      {
+        "name": "Thorn Dragon",
+        "level": 2,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 48
+      }
+    ]
   },
   {
     "name": "Dwarves",
-    "file": "dwarves.json"
+    "file": "dwarves.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Dwarf Axethrower",
+        "level": 1,
+        "roles": [
+          "Minion Defender"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Dwarf Catchpole",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Dwarf Driver",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Dwarf Gunner",
+        "level": 1,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Dwarf Hunter",
+        "level": 1,
+        "roles": [
+          "Minion Support"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Dwarf Launcher",
+        "level": 1,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Dwarf Marauder",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Dwarf Reel Winch",
+        "level": 1,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Dwarf Shieldwall",
+        "level": 3,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Dwarf Stone Whisperer",
+        "level": 3,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Dwarf Trapper",
+        "level": 1,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Dwarf Warden",
+        "level": 2,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Servitor War Walker",
+        "level": 1,
+        "roles": [
+          "Elite Mount"
+        ],
+        "ev": 12
+      }
+    ]
   },
   {
     "name": "Elementals",
-    "file": "elementals.json"
+    "file": "elementals.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Crux of Fire",
+        "level": 3,
+        "roles": [
+          "Elite Artillery"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Essence of Storms",
+        "level": 3,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Essence of Tides",
+        "level": 3,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Field of Growth",
+        "level": 3,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 28
+      },
+      {
+        "name": "Force of Earth",
+        "level": 3,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 20
+      }
+    ]
   },
   {
     "name": "Elves High",
-    "file": "elves-high.json"
+    "file": "elves-high.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Brambleguard",
+        "level": 2,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Ceramic Horse",
+        "level": 1,
+        "roles": [
+          "Platoon Mount"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Elemental Mote",
+        "level": 1,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "High Elf Bloodletter",
+        "level": 1,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "High Elf Dawn Mage",
+        "level": 1,
+        "roles": [
+          "Minion Controller"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "High Elf Deathtouch",
+        "level": 2,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "High Elf Orbweaver",
+        "level": 3,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "High Elf Ordinator",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "High Elf Palinode",
+        "level": 1,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "High Elf Quiver",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "High Elf Wyrd",
+        "level": 3,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "High Elf Zephyr",
+        "level": 1,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Soot Crow",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      }
+    ]
   },
   {
     "name": "Elves Shadow",
-    "file": "elves-shadow.json"
+    "file": "elves-shadow.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Brush Stalker",
+        "level": 4,
+        "roles": [
+          "Platoon Mount"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Shadow Elf Assassin",
+        "level": 6,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Shadow Elf Cloak",
+        "level": 4,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Shadow Elf Dusk Mage",
+        "level": 4,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Shadow Elf Duskcaller",
+        "level": 5,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 14
+      },
+      {
+        "name": "Shadow Elf Eclipse",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Shadow Elf Knightfell",
+        "level": 4,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Shadow Elf Luminator",
+        "level": 4,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Shadow Elf Moondancer",
+        "level": 5,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 14
+      },
+      {
+        "name": "Shadow Elf Mournblade",
+        "level": 6,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Shadow Elf Nightstrike",
+        "level": 4,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Shadow Elf Noctis Mage",
+        "level": 6,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Shadow Elf Panther",
+        "level": 4,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Shadow Elf Sniper",
+        "level": 4,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 6
+      }
+    ]
   },
   {
     "name": "Elves Wode",
-    "file": "elves-wode.json"
+    "file": "elves-wode.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Wode Elf Chirurgeon",
+        "level": 2,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Wode Elf Druid",
+        "level": 2,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Wode Elf Green Seer",
+        "level": 1,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Wode Elf Greenskeeper",
+        "level": 1,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Wode Elf Guerrilla",
+        "level": 3,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Wode Elf Gweiadur",
+        "level": 3,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Wode Elf Lookout",
+        "level": 1,
+        "roles": [
+          "Minion Support"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Wode Elf Runner",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Wode Elf Scout",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Wode Elf Sentry",
+        "level": 1,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Wode Elf Warleader",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Wode Elf Yeoman",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Wodenelg",
+        "level": 1,
+        "roles": [
+          "Platoon Mount"
+        ],
+        "ev": 6
+      }
+    ]
   },
   {
     "name": "Fossil Cryptic",
-    "file": "fossil-cryptic.json"
+    "file": "fossil-cryptic.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Fossil Cryptic",
+        "level": 2,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 48
+      }
+    ]
   },
   {
     "name": "Giants",
-    "file": "giants.json"
+    "file": "giants.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Basalt Stone Giant",
+        "level": 8,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 40
+      },
+      {
+        "name": "Fire Giant Chief",
+        "level": 9,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Fire Giant Fireballer",
+        "level": 9,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 11
+      },
+      {
+        "name": "Fire Giant Lightbearer",
+        "level": 9,
+        "roles": [
+          "Elite Support"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Fire Giant Red Fist",
+        "level": 9,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Frost Giant Snowblaster",
+        "level": 8,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Frost Giant Storm Hurler",
+        "level": 8,
+        "roles": [
+          "Elite Artillery"
+        ],
+        "ev": 40
+      },
+      {
+        "name": "Frost Giant Wind Sprinter",
+        "level": 8,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 40
+      },
+      {
+        "name": "Granite Stone Giant",
+        "level": 8,
+        "roles": [
+          "Elite Defender"
+        ],
+        "ev": 40
+      },
+      {
+        "name": "Hill Giant Clobberer",
+        "level": 7,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 36
+      },
+      {
+        "name": "Hill Giant Mosstooth",
+        "level": 7,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Marble Stone Giant",
+        "level": 8,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 40
+      },
+      {
+        "name": "Sand Stone Giant",
+        "level": 8,
+        "roles": [
+          "Minion Controller"
+        ],
+        "ev": 10
+      }
+    ]
   },
   {
     "name": "Gnolls",
-    "file": "gnolls.json"
+    "file": "gnolls.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Abyssal Hyena",
+        "level": 2,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Abyssal Archer",
+        "level": 2,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Abyssal Summoner",
+        "level": 2,
+        "roles": [
+          "Horde Support"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Bonesplitter",
+        "level": 2,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Cackler",
+        "level": 2,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Carnage",
+        "level": 2,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Gnoll Chainflail",
+        "level": 2,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Mage Mauler",
+        "level": 2,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Marauder",
+        "level": 2,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Gnoll Wildling",
+        "level": 2,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Tusker Demon",
+        "level": 2,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 16
+      }
+    ]
   },
   {
     "name": "Goblins",
-    "file": "goblins.json"
+    "file": "goblins.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Goblin Assassin",
+        "level": 1,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Cursespitter",
+        "level": 1,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Monarch",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Goblin Runner",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Sniper",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Spinecleaver",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Stinker",
+        "level": 1,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Underboss",
+        "level": 1,
+        "roles": [
+          "Horde Support"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Goblin Warrior",
+        "level": 1,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Skitterling",
+        "level": 1,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Spider",
+        "level": 1,
+        "roles": [
+          "Elite Mount"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Worg",
+        "level": 1,
+        "roles": [
+          "Horde Mount"
+        ],
+        "ev": 3
+      }
+    ]
   },
   {
     "name": "Griffons",
-    "file": "griffons.json"
+    "file": "griffons.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Griffon",
+        "level": 2,
+        "roles": [
+          "Elite Mount"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Striped Condor Griffon",
+        "level": 2,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 16
+      }
+    ]
   },
   {
     "name": "Hag",
-    "file": "hag.json"
+    "file": "hag.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Wode Hag",
+        "level": 3,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 60
+      }
+    ]
   },
   {
     "name": "Hobgoblins",
-    "file": "hobgoblins.json"
+    "file": "hobgoblins.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Grilp",
+        "level": 4,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Hobgoblin Bloodlord",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Hobgoblin Brandbearer",
+        "level": 4,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Hobgoblin Burning Witch",
+        "level": 4,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Hobgoblin Death Captain",
+        "level": 4,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Hobgoblin Firerunner",
+        "level": 5,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 14
+      },
+      {
+        "name": "Hobgoblin Grandguard",
+        "level": 6,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Hobgoblin Hell Trooper",
+        "level": 4,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Hobgoblin Incendiarist",
+        "level": 5,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 14
+      },
+      {
+        "name": "Hobgoblin Lancer",
+        "level": 4,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Hobgoblin Recruit",
+        "level": 4,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Hobgoblin Redglare",
+        "level": 6,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Hobgoblin Smokebinder",
+        "level": 5,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 14
+      },
+      {
+        "name": "Hobgoblin War Mage",
+        "level": 5,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 28
+      },
+      {
+        "name": "Slaughter Demon",
+        "level": 4,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 24
+      }
+    ]
   },
   {
     "name": "Humans",
-    "file": "humans.json"
+    "file": "humans.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Giant Hawk",
+        "level": 1,
+        "roles": [
+          "Platoon Mount"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Human Apprentice Mage",
+        "level": 2,
+        "roles": [
+          "Minion Controller"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "Human Archer",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Human Bandit Chief",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Human Blackguard",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Human Brawler",
+        "level": 1,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Human Death Acolyte",
+        "level": 1,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Human Death Cultist",
+        "level": 2,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Human Guard",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Human Knave",
+        "level": 2,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Human Raider",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Human Rogue",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Human Scoundrel",
+        "level": 1,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Human Storm Mage",
+        "level": 3,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Human Trickshot",
+        "level": 1,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 6
+      }
+    ]
   },
   {
     "name": "Kingfissure Worm",
-    "file": "kingfissure-worm.json"
+    "file": "kingfissure-worm.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Kingfissure Worm",
+        "level": 7,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 108
+      }
+    ]
   },
   {
     "name": "Kobolds",
-    "file": "kobolds.json"
+    "file": "kobolds.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Kobold Adeptus",
+        "level": 1,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Artifex",
+        "level": 1,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Centurion",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Kobold Legionary",
+        "level": 1,
+        "roles": [
+          "Horde Defender"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Princeps",
+        "level": 1,
+        "roles": [
+          "Minion Support"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Sagittarion",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Signifer",
+        "level": 1,
+        "roles": [
+          "Horde Support"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Tiro",
+        "level": 1,
+        "roles": [
+          "Minion Defender"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Veles",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Kobold Venator",
+        "level": 1,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Shieldscale Drangolin",
+        "level": 1,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Trained Gummy Brick",
+        "level": 1,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 12
+      }
+    ]
   },
   {
     "name": "Lich",
-    "file": "lich.json"
+    "file": "lich.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Lich",
+        "level": 10,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 144
+      }
+    ]
   },
   {
     "name": "Lightbenders",
-    "file": "lightbenders.json"
+    "file": "lightbenders.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Lightbender Pouncer",
+        "level": 3,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Lightbender",
+        "level": 3,
+        "roles": [
+          "Elite Ambusher"
+        ],
+        "ev": 20
+      }
+    ]
   },
   {
     "name": "Lizardfolks",
-    "file": "lizardfolks.json"
+    "file": "lizardfolks.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Lizardfolk Bloodeye",
+        "level": 1,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Lizardfolk Deathrex",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Lizardfolk Grunt",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Lizardfolk Scaletooth",
+        "level": 1,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Lizardfolk Shellguard",
+        "level": 1,
+        "roles": [
+          "Minion Defender"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Lizardfolk Skyterror",
+        "level": 1,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Lizardfolk Tonguer",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      }
+    ]
   },
   {
     "name": "Lord Syuul",
-    "file": "lord-syuul.json"
+    "file": "lord-syuul.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Lord Syuul",
+        "level": 6,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 96
+      }
+    ]
   },
   {
     "name": "Manticores",
-    "file": "manticores.json"
+    "file": "manticores.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Manticore",
+        "level": 4,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 72
+      }
+    ]
   },
   {
     "name": "Medusas",
-    "file": "medusas.json"
+    "file": "medusas.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Medusa",
+        "level": 5,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 84
+      }
+    ]
   },
   {
     "name": "Minotaurs",
-    "file": "minotaurs.json"
+    "file": "minotaurs.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Minotaur Bully",
+        "level": 8,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Minotaur Lackey",
+        "level": 8,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Minotaur Stampede",
+        "level": 10,
+        "roles": [
+          "Minion Defender"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Minotaur Sunderer",
+        "level": 3,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Minotaur",
+        "level": 3,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 20
+      }
+    ]
   },
   {
     "name": "Noncombatant",
-    "file": "noncombatant.json"
+    "file": "noncombatant.json",
+    "hasMalice": false,
+    "monsters": [
+      {
+        "name": "Noncombatant",
+        "level": 0,
+        "roles": [],
+        "ev": null
+      }
+    ]
   },
   {
     "name": "Ogres",
-    "file": "ogres.json"
+    "file": "ogres.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Cyclops",
+        "level": 10,
+        "roles": [
+          "Minion Controller"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Ogre Blue Blood",
+        "level": 7,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Ogre Goon",
+        "level": 2,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Ogre Juggernaut",
+        "level": 2,
+        "roles": [
+          "Elite Harrier"
+        ],
+        "ev": 16
+      },
+      {
+        "name": "Ogre Tantrum",
+        "level": 7,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 9
+      }
+    ]
   },
   {
     "name": "Olothec",
-    "file": "olothec.json"
+    "file": "olothec.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Olothec",
+        "level": 6,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 96
+      }
+    ]
   },
   {
     "name": "Orcs",
-    "file": "orcs.json"
+    "file": "orcs.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Mohler",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Orc Blitzer",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Orc Bloodrunner",
+        "level": 3,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Orc Bloodspark",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Orc Chainlock",
+        "level": 1,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Orc Eye of Grole",
+        "level": 1,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Orc Garotter",
+        "level": 1,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Orc Glorifier",
+        "level": 1,
+        "roles": [
+          "Minion Controller"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Orc Godcaller",
+        "level": 1,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Orc Juggernaut",
+        "level": 3,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Orc Rampart",
+        "level": 2,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Orc Razor",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Orc Terranova",
+        "level": 2,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Orc Warleader",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Scyza",
+        "level": 3,
+        "roles": [
+          "Elite Mount"
+        ],
+        "ev": 20
+      }
+    ]
   },
   {
     "name": "Radenwights",
-    "file": "radenwights.json"
+    "file": "radenwights.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Radenwight Bruxer",
+        "level": 1,
+        "roles": [
+          "Platoon Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Radenwight Maestro",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Radenwight Mischiever",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Radenwight Piper",
+        "level": 1,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Radenwight Ratcrobat",
+        "level": 1,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Radenwight Redeye",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Radenwight Scrapper",
+        "level": 1,
+        "roles": [
+          "Minion Defender"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Radenwight Swiftpaw",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      }
+    ]
   },
   {
     "name": "Shambling Mound",
-    "file": "shambling-mound.json"
+    "file": "shambling-mound.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Shambling Mound",
+        "level": 5,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 84
+      }
+    ]
   },
   {
     "name": "Time Raiders",
-    "file": "time-raiders.json"
+    "file": "time-raiders.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Time Raider Archon",
+        "level": 3,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 5
+      },
+      {
+        "name": "Time Raider Armiger",
+        "level": 3,
+        "roles": [
+          "Platoon Defender"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Time Raider Cannonfall",
+        "level": 3,
+        "roles": [
+          "Platoon Artillery"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Time Raider Helix",
+        "level": 3,
+        "roles": [
+          "Platoon Controller"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Time Raider Hijack",
+        "level": 3,
+        "roles": [
+          "Platoon Ambusher"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Time Raider Mind Punk",
+        "level": 3,
+        "roles": [
+          "Platoon Hexer"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Time Raider Myriad",
+        "level": 3,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 5
+      },
+      {
+        "name": "Time Raider Nemesis",
+        "level": 3,
+        "roles": [
+          "Platoon Harrier"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "Time Raider Tyrannis",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "Time Raider Vertex",
+        "level": 3,
+        "roles": [
+          "Platoon Support"
+        ],
+        "ev": 10
+      }
+    ]
   },
   {
     "name": "Trolls",
-    "file": "trolls.json"
+    "file": "trolls.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Troll Butcher",
+        "level": 5,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 28
+      },
+      {
+        "name": "Troll Crack Trooper",
+        "level": 9,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 11
+      },
+      {
+        "name": "Troll Glutton",
+        "level": 5,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 28
+      },
+      {
+        "name": "Troll Limbjumble",
+        "level": 5,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "Troll Ravager",
+        "level": 9,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 11
+      },
+      {
+        "name": "Troll Whelp",
+        "level": 5,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 7
+      }
+    ]
   },
   {
     "name": "Undead",
-    "file": "undead.json"
+    "file": "undead.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Blood-Starved Vampire",
+        "level": 7,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Bonecage",
+        "level": 10,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Crawling Claw",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Decrepit Skeleton",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Dirt Mournling",
+        "level": 7,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Faded Echo Spirit",
+        "level": 7,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Flesh Mournling",
+        "level": 4,
+        "roles": [
+          "Horde Defender"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Fleshflayed Shambler Zombie",
+        "level": 4,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Ghost",
+        "level": 1,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Ghoul Craver",
+        "level": 4,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Ghoul",
+        "level": 1,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Giant Shambler Zombie",
+        "level": 10,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Giant Zombie",
+        "level": 4,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 24
+      },
+      {
+        "name": "Haunt",
+        "level": 7,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Hollowbone Launcher",
+        "level": 4,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Koptourok",
+        "level": 7,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Lithgekh",
+        "level": 10,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Mummy Lord",
+        "level": 4,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 24
+      },
+      {
+        "name": "Mummy Rotwrap",
+        "level": 7,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Mummy",
+        "level": 4,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Rotting Zombie",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Shade",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Skeleton Knight",
+        "level": 10,
+        "roles": [
+          "Minion Defender"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Skeleton",
+        "level": 1,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Soulwight",
+        "level": 1,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Specter",
+        "level": 1,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Umbral Stalker",
+        "level": 1,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "Vampire Lord",
+        "level": 7,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 36
+      },
+      {
+        "name": "Vampire Spawn",
+        "level": 4,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Vampire",
+        "level": 7,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Waxen",
+        "level": 7,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "Wraith Skulker",
+        "level": 10,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "Wraith",
+        "level": 4,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "Zombie",
+        "level": 1,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 3
+      }
+    ]
   },
   {
     "name": "Valok",
-    "file": "valok.json"
+    "file": "valok.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Multivok Bodyguard",
+        "level": 9,
+        "roles": [
+          "Elite Defender"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Multivok Chief",
+        "level": 9,
+        "roles": [
+          "Elite Support"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Servok Builder",
+        "level": 9,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Servok Miner",
+        "level": 9,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "Servok War Engine",
+        "level": 10,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 48
+      }
+    ]
   },
   {
     "name": "Voiceless Talkers",
-    "file": "voiceless-talkers.json"
+    "file": "voiceless-talkers.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Hulking Brain",
+        "level": 6,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Mindkiller Whelp",
+        "level": 6,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Mindkiller",
+        "level": 6,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Voiceless Talker Artillerist",
+        "level": 6,
+        "roles": [
+          "Elite Artillery"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Voiceless Talker Evolutionist",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "Voiceless Talker Graywarper",
+        "level": 6,
+        "roles": [
+          "Minion Controller"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "Voiceless Talker Invader",
+        "level": 6,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 32
+      }
+    ]
   },
   {
     "name": "War Dogs",
-    "file": "war-dogs.json"
+    "file": "war-dogs.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Castellan Hoplon",
+        "level": 10,
+        "roles": [
+          "Elite Defender"
+        ],
+        "ev": 48
+      },
+      {
+        "name": "Iron Champion Doru",
+        "level": 10,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 48
+      },
+      {
+        "name": "Logostician Vesper",
+        "level": 10,
+        "roles": [
+          "Elite Controller"
+        ],
+        "ev": 48
+      },
+      {
+        "name": "Soulbinder Psyche",
+        "level": 10,
+        "roles": [
+          "Elite Hexer"
+        ],
+        "ev": 48
+      },
+      {
+        "name": "Strategos Alkestis",
+        "level": 10,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 48
+      },
+      {
+        "name": "War Dog Aerocite",
+        "level": 8,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "War Dog Amalgamite",
+        "level": 2,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "War Dog Arachnite",
+        "level": 6,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "War Dog Ballistite",
+        "level": 8,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "War Dog Blackcap",
+        "level": 7,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "War Dog Blood Jumper",
+        "level": 10,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "War Dog Breaker",
+        "level": 7,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 36
+      },
+      {
+        "name": "War Dog Commando",
+        "level": 1,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Conscript",
+        "level": 1,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Crucibite",
+        "level": 1,
+        "roles": [
+          "Horde Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Doomthief",
+        "level": 5,
+        "roles": [
+          "Horde Defender"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "War Dog Draconite",
+        "level": 7,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "War Dog Equivite",
+        "level": 4,
+        "roles": [
+          "Horde Brute"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "War Dog Eviscerite",
+        "level": 1,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Firestarter",
+        "level": 8,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "War Dog Geomancer",
+        "level": 8,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "War Dog Ground Commander",
+        "level": 3,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 20
+      },
+      {
+        "name": "War Dog Hunter-Killer",
+        "level": 10,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "War Dog Hypokrite",
+        "level": 4,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "War Dog Iron Priest",
+        "level": 8,
+        "roles": [
+          "Horde Support"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "War Dog Mischievite",
+        "level": 5,
+        "roles": [
+          "Horde Harrier"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "War Dog Neuronite",
+        "level": 1,
+        "roles": [
+          "Horde Defender"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Pestilite",
+        "level": 3,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 5
+      },
+      {
+        "name": "War Dog Phosphorite",
+        "level": 2,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "War Dog Prismite",
+        "level": 8,
+        "roles": [
+          "Horde Defender"
+        ],
+        "ev": 10
+      },
+      {
+        "name": "War Dog Saboteur",
+        "level": 7,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "War Dog Sharpshooter",
+        "level": 1,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Shriketroop",
+        "level": 7,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 9
+      },
+      {
+        "name": "War Dog Socialite",
+        "level": 10,
+        "roles": [
+          "Minion Hexer"
+        ],
+        "ev": 12
+      },
+      {
+        "name": "War Dog Sparkslinger",
+        "level": 4,
+        "roles": [
+          "Minion Artillery"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "War Dog Subcommander",
+        "level": 2,
+        "roles": [
+          "Horde Support"
+        ],
+        "ev": 4
+      },
+      {
+        "name": "War Dog Sweeper",
+        "level": 4,
+        "roles": [
+          "Minion Harrier"
+        ],
+        "ev": 6
+      },
+      {
+        "name": "War Dog Taxiarch",
+        "level": 9,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 44
+      },
+      {
+        "name": "War Dog Teletalite",
+        "level": 1,
+        "roles": [
+          "Horde Ambusher"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Tetherite",
+        "level": 1,
+        "roles": [
+          "Minion Brute"
+        ],
+        "ev": 3
+      },
+      {
+        "name": "War Dog Tetrarch",
+        "level": 6,
+        "roles": [
+          "Leader"
+        ],
+        "ev": 32
+      },
+      {
+        "name": "War Dog Thanatite",
+        "level": 6,
+        "roles": [
+          "Horde Controller"
+        ],
+        "ev": 8
+      },
+      {
+        "name": "War Dog Tormentite",
+        "level": 5,
+        "roles": [
+          "Horde Hexer"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "War Dog War Doc",
+        "level": 5,
+        "roles": [
+          "Horde Support"
+        ],
+        "ev": 7
+      },
+      {
+        "name": "War Dog War Frog",
+        "level": 4,
+        "roles": [
+          "Minion Ambusher"
+        ],
+        "ev": 6
+      }
+    ]
   },
   {
     "name": "Werewolf",
-    "file": "werewolf.json"
+    "file": "werewolf.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Werewolf",
+        "level": 1,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 36
+      }
+    ]
   },
   {
     "name": "Wyverns",
-    "file": "wyverns.json"
+    "file": "wyverns.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Wyvern Lurker",
+        "level": 4,
+        "roles": [
+          "Elite Ambusher"
+        ],
+        "ev": 24
+      },
+      {
+        "name": "Wyvern Predator",
+        "level": 4,
+        "roles": [
+          "Elite Brute"
+        ],
+        "ev": 24
+      }
+    ]
   },
   {
     "name": "Xorannox the Tyract",
-    "file": "xorannox-the-tyract.json"
+    "file": "xorannox-the-tyract.json",
+    "hasMalice": true,
+    "monsters": [
+      {
+        "name": "Compulsion Eye",
+        "level": 6,
+        "roles": [
+          "Controller"
+        ],
+        "ev": null
+      },
+      {
+        "name": "Demolition",
+        "level": 6,
+        "roles": [
+          "Artillery"
+        ],
+        "ev": null
+      },
+      {
+        "name": "Mover Eye",
+        "level": 6,
+        "roles": [
+          "Controller"
+        ],
+        "ev": null
+      },
+      {
+        "name": "Necrotic Eye",
+        "level": 6,
+        "roles": [
+          "Hexer"
+        ],
+        "ev": null
+      },
+      {
+        "name": "Toxic Eye",
+        "level": 6,
+        "roles": [
+          "Hexer"
+        ],
+        "ev": null
+      },
+      {
+        "name": "Xorannox the Tyract",
+        "level": 6,
+        "roles": [
+          "Solo"
+        ],
+        "ev": 96
+      },
+      {
+        "name": "Zapper Eye",
+        "level": 6,
+        "roles": [
+          "Artillery"
+        ],
+        "ev": null
+      }
+    ]
   }
 ]

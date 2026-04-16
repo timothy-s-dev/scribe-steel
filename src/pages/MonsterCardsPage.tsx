@@ -4,9 +4,10 @@ import { Minus, Plus, ChevronRight, ChevronDown } from 'lucide-react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/useSettings';
-import { useAllGroups, type TaggedGroup } from '@/hooks/useAllGroups';
+import { useAllGroups, type TaggedGroupSummary } from '@/hooks/useAllGroups';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
+import type { Monster } from '@/data/types';
 import monsterCardTyp from '@/typst/templates/monster-card.typ?raw';
 
 const TEMPLATE_FILE: VirtualFile = {
@@ -31,8 +32,9 @@ export function MonsterCardsPage() {
   const [printMode, setPrintMode] = useState(settings.printFriendly);
   const zoom = useZoom(settings.defaultZoom);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+  const [loadedMonsters, setLoadedMonsters] = useState<Monster[]>([]);
 
-  const { groups, loading: groupsLoading } = useAllGroups();
+  const { groups, loading: groupsLoading, loadGroup } = useAllGroups();
 
   const toggleMonster = useCallback((groupName: string, name: string) => {
     const key = monsterKey(groupName, name);
@@ -71,17 +73,46 @@ export function MonsterCardsPage() {
     });
   }, []);
 
-  const selectedMonsters = useMemo(
-    () =>
-      groups.flatMap((g) =>
-        g.monsters.filter((m) => selected.has(monsterKey(g.name, m.name))),
-      ),
-    [selected, groups],
-  );
+  // Derive which groups have selected monsters
+  const selectedByGroup = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const key of selected) {
+      const [groupName, monsterName] = key.split('\0');
+      if (!map.has(groupName)) map.set(groupName, []);
+      map.get(groupName)!.push(monsterName);
+    }
+    return map;
+  }, [selected]);
 
-  const hasSelection = selectedMonsters.length > 0;
+  // Load full group data for selected monsters
+  useEffect(() => {
+    if (selectedByGroup.size === 0) {
+      setLoadedMonsters([]);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      const monsters: Monster[] = [];
+      for (const [groupName, monsterNames] of selectedByGroup) {
+        const group = await loadGroup(groupName);
+        if (cancelled) return;
+        if (group) {
+          for (const name of monsterNames) {
+            const m = group.monsters.find((mon) => mon.name === name);
+            if (m) monsters.push(m);
+          }
+        }
+      }
+      if (!cancelled) setLoadedMonsters(monsters);
+    })();
+    return () => { cancelled = true; };
+  }, [selectedByGroup, loadGroup]);
+
+  const hasSelection = selected.size > 0;
 
   // Reset sheet count when selection is cleared
+  const [sheetCount, setSheetCount] = useState<number | null>(null);
   useEffect(() => {
     if (!hasSelection) setSheetCount(null);
   }, [hasSelection]);
@@ -89,16 +120,16 @@ export function MonsterCardsPage() {
   const files = useMemo<VirtualFile[]>(
     () => [
       TEMPLATE_FILE,
-      ...(hasSelection
+      ...(loadedMonsters.length > 0
         ? [
             {
               path: '/data/selected-monsters.json',
-              content: JSON.stringify(selectedMonsters),
+              content: JSON.stringify(loadedMonsters),
             },
           ]
         : []),
     ],
-    [selectedMonsters, hasSelection],
+    [loadedMonsters],
   );
 
   const source = CARD_SOURCE;
@@ -108,7 +139,6 @@ export function MonsterCardsPage() {
     [printMode],
   );
 
-  const [sheetCount, setSheetCount] = useState<number | null>(null);
   const handlePageCount = useCallback((count: number) => {
     // Each sheet = 2 pages (front + back)
     setSheetCount(Math.ceil(count / 2));
@@ -166,8 +196,8 @@ export function MonsterCardsPage() {
         {/* Selection summary */}
         <div className="px-4 py-3 bg-surface-container flex-shrink-0">
           <div className="text-xs font-label text-on-surface-variant">
-            {selectedMonsters.length} monster
-            {selectedMonsters.length !== 1 ? 's' : ''} selected
+            {selected.size} monster
+            {selected.size !== 1 ? 's' : ''} selected
             {sheetCount != null && (
               <>
                 {' '}
@@ -250,7 +280,7 @@ export function MonsterCardsPage() {
         </div>
 
         <div className="flex-1 min-h-0 overflow-hidden">
-          {hasSelection ? (
+          {hasSelection && loadedMonsters.length > 0 ? (
             <Preview
               content={source}
               template=""
@@ -282,7 +312,7 @@ function GroupPicker({
   onToggleGroup,
   onToggleMonster,
 }: {
-  group: TaggedGroup;
+  group: TaggedGroupSummary;
   selected: Set<string>;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
