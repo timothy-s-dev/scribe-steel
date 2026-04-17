@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, type ComponentType } from 'react';
+import { useState, useMemo, type ComponentType } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
@@ -13,18 +13,14 @@ import {
   type ParamsFormProps,
 } from '@/typst/templateSchema';
 
-export interface DocumentData {
-  params: Record<string, string>;
-  body: string;
-}
-
 interface TypstEditorProps {
   schema: TemplateSchema;
-  initialContent?: string;
-  initialParams?: Record<string, string>;
+  content: string;
+  params: Record<string, string>;
+  onContentChange: (content: string) => void;
+  onParamsChange: (params: Record<string, string>) => void;
   paramsForm?: ComponentType<ParamsFormProps>;
   hideEditor?: boolean;
-  onChange?: (data: DocumentData) => void;
 }
 
 function PreviewToolbar({
@@ -141,22 +137,21 @@ type MobileTab = 'edit' | 'preview';
 
 export function TypstEditor({
   schema,
-  initialContent = '',
-  initialParams = {},
+  content,
+  params,
+  onContentChange,
+  onParamsChange,
   paramsForm: ParamsForm,
   hideEditor = false,
-  onChange,
 }: TypstEditorProps) {
   const { settings } = useSettings();
-  const [content, setContent] = useState(initialContent);
-  const [paramValues, setParamValues] = useState<Record<string, string>>(initialParams);
   const [printMode, setPrintMode] = useState(settings.printFriendly);
   const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
   const zoom = useZoom(settings.defaultZoom);
 
   const preamble = useMemo(
-    () => generatePreamble(schema, paramValues),
-    [schema, paramValues],
+    () => generatePreamble(schema, params),
+    [schema, params],
   );
 
   const fullSource = preamble + content;
@@ -166,22 +161,13 @@ export function TypstEditor({
     [printMode],
   );
 
-  const handleParamChange = useCallback((key: string, value: string) => {
-    setParamValues((prev) => {
-      const next = { ...prev, [key]: value };
-      onChange?.({ params: next, body: content });
-      return next;
-    });
-  }, [content, onChange]);
+  const handleParamChange = (key: string, value: string) => {
+    onParamsChange({ ...params, [key]: value });
+  };
 
-  const handleEditorChange = useCallback(
-    (newFullSource: string) => {
-      const newBody = newFullSource.slice(preamble.length);
-      setContent(newBody);
-      onChange?.({ params: paramValues, body: newBody });
-    },
-    [preamble, paramValues, onChange],
-  );
+  const handleEditorChange = (newFullSource: string) => {
+    onContentChange(newFullSource.slice(preamble.length));
+  };
 
   const hasParams = (schema.params?.length ?? 0) > 0;
   const FormComponent = ParamsForm ?? TemplateParamsForm;
@@ -196,7 +182,7 @@ export function TypstEditor({
       {hasParams && (
         <FormComponent
           params={schema.params!}
-          values={paramValues}
+          values={params}
           onChange={handleParamChange}
         />
       )}

@@ -56,8 +56,9 @@ export function useSaveDocument() {
         args.extraIndexFields,
         args.existingFileId,
       ),
-    onSuccess: (_fileId, args) => {
+    onSuccess: (result, args) => {
       queryClient.invalidateQueries({ queryKey: [args.category, 'index'] });
+      queryClient.setQueryData([args.category, 'document', result.fileId], result.data);
     },
   });
 }

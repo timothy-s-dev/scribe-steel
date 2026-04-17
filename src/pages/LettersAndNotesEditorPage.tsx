@@ -1,13 +1,16 @@
-import { useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { TypstEditor, type DocumentData } from '@/components/TypstEditor';
+import { TypstEditor } from '@/components/TypstEditor';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
+import { useDocumentSync } from '@/hooks/useDocumentSync';
+import { EditorPageShell } from '@/components/EditorPageShell';
+import { ConflictDialog } from '@/components/ConflictDialog';
 import handwrittenTyp from '@/typst/templates/handwritten.typ?raw';
 import type { TemplateSchema } from '@/typst/templateSchema';
+import type { SavedDocMetadata } from '@/data/types';
 
 const schema: TemplateSchema = {
   name: 'Handwritten Note',
@@ -21,109 +24,96 @@ const schema: TemplateSchema = {
   ],
 };
 
-interface SavedDocument {
+interface SavedDocument extends SavedDocMetadata {
   version: number;
   template: string;
   params: Record<string, string>;
   body: string;
 }
 
+function buildSaveData(content: string, params: Record<string, string>): SavedDocument {
+  return { version: 1, template: 'letters-and-notes', params, body: content };
+}
+
 export function LettersAndNotesEditorPage() {
   usePageTitle('Letter / Note');
   const { fileId } = useParams<{ fileId: string }>();
   const isNew = fileId === 'demo';
-  const navigate = useNavigate();
   const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedDocument>(
     'letters-and-notes',
     isNew ? undefined : fileId,
     { enabled: !isNew },
   );
-  const doc = isNew
-    ? { version: 1, template: 'letters-and-notes', params: {}, body: '' }
-    : (loaded ?? null);
   const error = loadError ? 'Failed to load document' : null;
+
+  const [content, setContent] = useState('');
+  const [params, setParams] = useState<Record<string, string>>({});
 
   const { data: index } = useIndex('letters-and-notes');
   const docName = isNew
     ? 'Untitled'
     : (index?.items.find((i) => i.fileId === fileId)?.name ?? '');
 
-  const { triggerSave, saveStatus } = useAutoSave({
+  const { triggerSave, flush, saveStatus } = useAutoSave({
     category: 'letters-and-notes',
     name: docName,
     fileId: isNew ? null : (fileId ?? null),
+    onSaved: (result) => sync.markSaved(result.data),
   });
 
-  const handleChange = useCallback(
-    (data: DocumentData) => {
-      const saveData: SavedDocument = {
-        version: 1,
-        template: 'letters-and-notes',
-        params: data.params,
-        body: data.body,
-      };
-      triggerSave(saveData);
+  const sync = useDocumentSync<SavedDocument>({
+    loaded: isNew ? undefined : loaded,
+    initialize: (saved) => {
+      setContent(saved.body);
+      setParams(saved.params);
     },
-    [triggerSave],
-  );
+    isEqualToLocal: (saved) => {
+      const { updatedAt: _ignored, ...rest } = saved;
+      return JSON.stringify(rest) === JSON.stringify(buildSaveData(content, params));
+    },
+    getUpdatedAt: (saved) => saved.updatedAt,
+  });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-sm font-body text-on-surface-variant">Loading document...</p>
-      </div>
-    );
-  }
+  const handleContentChange = (next: string) => {
+    setContent(next);
+    if (sync.conflict) return;
+    triggerSave(buildSaveData(next, params));
+  };
 
-  if (error || !doc) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full gap-4">
-        <p className="text-sm font-body text-tertiary">{error || 'Document not found'}</p>
-        <button
-          onClick={() => navigate('/letters-and-notes')}
-          className="text-sm font-label text-primary hover:text-primary/80 cursor-pointer"
-        >
-          Back to list
-        </button>
-      </div>
-    );
-  }
+  const handleParamsChange = (next: Record<string, string>) => {
+    setParams(next);
+    if (sync.conflict) return;
+    triggerSave(buildSaveData(content, next));
+  };
+
+  const handleKeepLocal = useCallback(() => {
+    sync.dismissConflict();
+    triggerSave(buildSaveData(content, params));
+    void flush();
+  }, [sync, triggerSave, flush, content, params]);
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Doc header */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
-        <button
-          onClick={() => navigate('/letters-and-notes')}
-          className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-          aria-label="Back to list"
-          title="Back to list"
-        >
-          <ArrowLeft size={18} aria-hidden="true" />
-        </button>
-        <span className="text-sm font-body font-semibold text-on-surface truncate">
-          {docName}
-        </span>
-        <span className="text-xs font-label text-on-surface-variant/50 ml-auto">
-          {saveStatus === 'saving'
-            ? 'Saving...'
-            : saveStatus === 'saved'
-              ? 'Saved'
-              : saveStatus === 'error'
-                ? 'Save failed'
-                : ''}
-        </span>
-      </div>
-
-      {/* Editor */}
-      <div className="flex-1 min-h-0">
-        <TypstEditor
-          schema={schema}
-          initialContent={doc.body}
-          initialParams={doc.params}
-          onChange={handleChange}
-        />
-      </div>
-    </div>
+    <EditorPageShell
+      loading={loading}
+      error={error}
+      backTo="/letters-and-notes"
+      title={docName}
+      saveStatus={saveStatus}
+    >
+      <TypstEditor
+        schema={schema}
+        content={content}
+        params={params}
+        onContentChange={handleContentChange}
+        onParamsChange={handleParamsChange}
+      />
+      <ConflictDialog
+        open={!!sync.conflict}
+        localUpdatedAt={sync.conflict?.local}
+        remoteUpdatedAt={sync.conflict?.remote}
+        onUseRemote={sync.useRemote}
+        onKeepLocal={handleKeepLocal}
+      />
+    </EditorPageShell>
   );
 }

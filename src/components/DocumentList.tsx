@@ -64,8 +64,8 @@ export function DocumentList({
       body: defaultBody,
     };
     try {
-      const fileId = await saveMutation.mutateAsync({ category, name, data: doc });
-      navigate(`${basePath}/${fileId}`);
+      const result = await saveMutation.mutateAsync({ category, name, data: doc });
+      navigate(`${basePath}/${result.fileId}`);
     } finally {
       setCreating(false);
     }

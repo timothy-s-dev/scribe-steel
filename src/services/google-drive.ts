@@ -189,20 +189,25 @@ export async function saveDocument(
   data: unknown,
   extraIndexFields?: Record<string, unknown>,
   existingFileId?: string,
-): Promise<string> {
+): Promise<{ fileId: string; updatedAt: string; data: unknown }> {
   const folderId = (await getLayout()).folders[category];
+
+  const now = new Date().toISOString();
+  const stamped =
+    data && typeof data === 'object' && !Array.isArray(data)
+      ? { ...(data as Record<string, unknown>), updatedAt: now }
+      : data;
 
   let fileId: string;
   const fileName = slugify(name) + '.json';
   if (existingFileId) {
-    await updateFile(existingFileId, data);
+    await updateFile(existingFileId, stamped);
     fileId = existingFileId;
   } else {
-    fileId = await createFile(folderId, fileName, data);
+    fileId = await createFile(folderId, fileName, stamped);
   }
 
   const { index, fileId: indexFileId } = await readIndex(folderId);
-  const now = new Date().toISOString();
   const existing = index.items.findIndex((item) => item.fileId === fileId);
   const entry: IndexItem = { fileId, name, updatedAt: now, ...extraIndexFields };
 
@@ -213,7 +218,7 @@ export async function saveDocument(
   }
 
   await writeIndex(folderId, indexFileId, index);
-  return fileId;
+  return { fileId, updatedAt: now, data: stamped };
 }
 
 export async function removeDocument(category: Category, fileId: string): Promise<void> {

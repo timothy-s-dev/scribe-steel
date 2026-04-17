@@ -53,8 +53,8 @@ export function EncounterSheetsPage() {
     };
 
     try {
-      const fileId = await saveMutation.mutateAsync({ category: 'encounters', name, data: doc });
-      navigate(`/encounter-sheets/${fileId}`);
+      const result = await saveMutation.mutateAsync({ category: 'encounters', name, data: doc });
+      navigate(`/encounter-sheets/${result.fileId}`);
     } finally {
       setCreating(false);
     }

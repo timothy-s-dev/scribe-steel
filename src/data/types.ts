@@ -74,14 +74,18 @@ export interface Bestiary {
   groups: MonsterGroup[];
 }
 
-export interface SavedMonsterGroup {
+export interface SavedDocMetadata {
+  updatedAt?: string;
+}
+
+export interface SavedMonsterGroup extends SavedDocMetadata {
   version: number;
   name: string;
   malice: Feature[];
   monsters: Monster[];
 }
 
-export interface SavedEncounter {
+export interface SavedEncounter extends SavedDocMetadata {
   version: number;
   encounter: string;
   objective: string;

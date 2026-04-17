@@ -54,7 +54,7 @@ export function MonsterGroupsPage() {
     };
 
     try {
-      const fileId = await saveMutation.mutateAsync({
+      const result = await saveMutation.mutateAsync({
         category: 'monsters',
         name,
         data: doc,
@@ -68,7 +68,7 @@ export function MonsterGroupsPage() {
           })),
         },
       });
-      navigate(`/monster-groups/${fileId}`);
+      navigate(`/monster-groups/${result.fileId}`);
     } finally {
       setCreating(false);
     }

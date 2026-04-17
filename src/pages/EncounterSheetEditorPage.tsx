@@ -1,9 +1,10 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 type MobileTab = 'edit' | 'preview';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { ArrowLeft, X, Plus, Download, Minus } from 'lucide-react';
+import { X, Plus, Download, Minus } from 'lucide-react';
+import { toast } from 'sonner';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
@@ -11,6 +12,9 @@ import { loadMonsterByName, type MonsterSummary } from '@/data/bestiary';
 import { useDocument, useFetchDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
+import { useDocumentSync } from '@/hooks/useDocumentSync';
+import { EditorPageShell } from '@/components/EditorPageShell';
+import { ConflictDialog } from '@/components/ConflictDialog';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import type { Feature, MonsterGroup, IndexItem, SavedEncounter } from '@/data/types';
@@ -134,75 +138,25 @@ function maliceFeatureToEntry(f: Feature): MaliceEntry {
   return { id: id(), cost, name: f.name, description };
 }
 
-// ── Main component ───────────────────────────────────────────────────────────
+interface EncounterFormState {
+  encounter: string;
+  objective: string;
+  victory: string;
+  failure: string;
+  malice: MaliceEntry[];
+  groups: GroupEntry[];
+  notes: string;
+}
 
-export function EncounterSheetEditorPage() {
-  usePageTitle('Encounter Sheet');
-  const { fileId } = useParams<{ fileId: string }>();
-  const isDemo = fileId === 'demo';
-  const navigate = useNavigate();
-  const fetchDocument = useFetchDocument();
-  const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedEncounter>(
-    'encounters',
-    isDemo ? undefined : fileId,
-    { enabled: !isDemo },
-  );
-  const error = loadError ? 'Failed to load encounter' : null;
-
-  const { data: indexData } = useIndex('encounters');
-  const [docName, setDocName] = useState(isDemo ? 'Demo' : '');
-
-  const [encounter, setEncounter] = useState('');
-  const [objective, setObjective] = useState('');
-  const [victory, setVictory] = useState('');
-  const [failure, setFailure] = useState('');
-  const [malice, setMalice] = useState<MaliceEntry[]>([]);
-  const [groups, setGroups] = useState<GroupEntry[]>([]);
-  const { settings } = useSettings();
-  const [notes, setNotes] = useState('');
-  const [printMode, setPrintMode] = useState(settings.printFriendly);
-  const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
-  const zoom = useZoom(settings.defaultZoom);
-  const [initialized, setInitialized] = useState(isDemo);
-
-  const { triggerSave, saveStatus } = useAutoSave({
-    category: 'encounters',
-    name: docName,
-    fileId: isDemo ? null : (fileId ?? null),
-  });
-
-  // Initialize form state when data loads
-  useEffect(() => {
-    if (loaded && !initialized) {
-      const state = savedToFormState(loaded);
-      setEncounter(state.encounter);
-      setObjective(state.objective);
-      setVictory(state.victory);
-      setFailure(state.failure);
-      setMalice(state.malice);
-      setGroups(state.groups);
-      setNotes(state.notes);
-      setDocName(loaded.encounter);
-      setInitialized(true);
-    }
-  }, [loaded, initialized]);
-
-  // Get the name from the index when available
-  useEffect(() => {
-    if (isDemo || docName) return;
-    const item = indexData?.items.find((i) => i.fileId === fileId);
-    if (item) setDocName(item.name);
-  }, [indexData, fileId, isDemo, docName]);
-
-  // Auto-save on changes
-  const buildSaveData = useCallback((): SavedEncounter => ({
+function formStateToSaved(s: EncounterFormState): SavedEncounter {
+  return {
     version: 1,
-    encounter,
-    objective,
-    victory,
-    failure,
-    malice: malice.map((m) => ({ cost: m.cost, name: m.name, description: m.description })),
-    groups: groups.map((g) => ({
+    encounter: s.encounter,
+    objective: s.objective,
+    victory: s.victory,
+    failure: s.failure,
+    malice: s.malice.map((m) => ({ cost: m.cost, name: m.name, description: m.description })),
+    groups: s.groups.map((g) => ({
       label: g.label,
       creatures: g.creatures.map((c) => ({
         name: c.name,
@@ -215,50 +169,117 @@ export function EncounterSheetEditorPage() {
         ...(c.count != null && c.count > 0 ? { count: c.count } : {}),
       })),
     })),
-    notes,
-  }), [encounter, objective, victory, failure, malice, groups, notes]);
+    notes: s.notes,
+  };
+}
 
-  useEffect(() => {
-    if (!initialized || isDemo) return;
-    triggerSave(buildSaveData());
-  }, [initialized, isDemo, triggerSave, buildSaveData]);
+function emptyFormState(): EncounterFormState {
+  return {
+    encounter: '',
+    objective: '',
+    victory: '',
+    failure: '',
+    malice: [],
+    groups: [],
+    notes: '',
+  };
+}
+
+// ── Main component ───────────────────────────────────────────────────────────
+
+export function EncounterSheetEditorPage() {
+  usePageTitle('Encounter Sheet');
+  const { fileId } = useParams<{ fileId: string }>();
+  const isDemo = fileId === 'demo';
+  const fetchDocument = useFetchDocument();
+  const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedEncounter>(
+    'encounters',
+    isDemo ? undefined : fileId,
+    { enabled: !isDemo },
+  );
+  const error = loadError ? 'Failed to load encounter' : null;
+
+  const { data: indexData } = useIndex('encounters');
+
+  const [form, setForm] = useState<EncounterFormState>(emptyFormState);
+  const { settings } = useSettings();
+  const [printMode, setPrintMode] = useState(settings.printFriendly);
+  const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
+  const zoom = useZoom(settings.defaultZoom);
+
+  const docName = isDemo
+    ? 'Demo'
+    : (form.encounter || indexData?.items.find((i) => i.fileId === fileId)?.name || '');
+
+  const { triggerSave, flush, saveStatus } = useAutoSave({
+    category: 'encounters',
+    name: docName,
+    fileId: isDemo ? null : (fileId ?? null),
+    onSaved: (result) => sync.markSaved(result.data),
+  });
+
+  const sync = useDocumentSync<SavedEncounter>({
+    loaded: isDemo ? undefined : loaded,
+    initialize: (saved) => setForm(savedToFormState(saved)),
+    isEqualToLocal: (saved) => {
+      const { updatedAt: _ignored, ...rest } = saved;
+      return JSON.stringify(rest) === JSON.stringify(formStateToSaved(form));
+    },
+    getUpdatedAt: (saved) => saved.updatedAt,
+  });
+
+  const updateForm = useCallback(
+    (updater: (prev: EncounterFormState) => EncounterFormState) => {
+      setForm((prev) => {
+        const next = updater(prev);
+        if (!isDemo && !sync.conflict) {
+          triggerSave(formStateToSaved(next));
+        }
+        return next;
+      });
+    },
+    [isDemo, sync.conflict, triggerSave],
+  );
 
   // Malice handlers
-  const addMalice = useCallback(() => setMalice((prev) => [...prev, emptyMalice()]), []);
-  const removeMalice = useCallback((mid: number) => setMalice((prev) => prev.filter((m) => m.id !== mid)), []);
+  const addMalice = useCallback(() => updateForm((p) => ({ ...p, malice: [...p.malice, emptyMalice()] })), [updateForm]);
+  const removeMalice = useCallback((mid: number) => updateForm((p) => ({ ...p, malice: p.malice.filter((m) => m.id !== mid) })), [updateForm]);
   const updateMalice = useCallback((mid: number, field: keyof MaliceEntry, value: string | number) => {
-    setMalice((prev) => prev.map((m) => (m.id === mid ? { ...m, [field]: value } : m)));
-  }, []);
+    updateForm((p) => ({ ...p, malice: p.malice.map((m) => (m.id === mid ? { ...m, [field]: value } : m)) }));
+  }, [updateForm]);
 
   // Group handlers
-  const addGroup = useCallback(() => setGroups((prev) => [...prev, emptyGroup()]), []);
-  const removeGroup = useCallback((gid: number) => setGroups((prev) => prev.filter((g) => g.id !== gid)), []);
+  const addGroup = useCallback(() => updateForm((p) => ({ ...p, groups: [...p.groups, emptyGroup()] })), [updateForm]);
+  const removeGroup = useCallback((gid: number) => updateForm((p) => ({ ...p, groups: p.groups.filter((g) => g.id !== gid) })), [updateForm]);
   const updateGroupLabel = useCallback((gid: number, label: string) => {
-    setGroups((prev) => prev.map((g) => (g.id === gid ? { ...g, label } : g)));
-  }, []);
+    updateForm((p) => ({ ...p, groups: p.groups.map((g) => (g.id === gid ? { ...g, label } : g)) }));
+  }, [updateForm]);
 
   // Creature handlers
   const addCreature = useCallback((gid: number) => {
-    setGroups((prev) =>
-      prev.map((g) => (g.id === gid ? { ...g, creatures: [...g.creatures, emptyCreature()] } : g)),
-    );
-  }, []);
+    updateForm((p) => ({
+      ...p,
+      groups: p.groups.map((g) => (g.id === gid ? { ...g, creatures: [...g.creatures, emptyCreature()] } : g)),
+    }));
+  }, [updateForm]);
   const removeCreature = useCallback((gid: number, cid: number) => {
-    setGroups((prev) =>
-      prev.map((g) =>
+    updateForm((p) => ({
+      ...p,
+      groups: p.groups.map((g) =>
         g.id === gid ? { ...g, creatures: g.creatures.filter((c) => c.id !== cid) } : g,
       ),
-    );
-  }, []);
+    }));
+  }, [updateForm]);
   const updateCreature = useCallback((gid: number, cid: number, field: keyof CreatureEntry, value: string | number | null) => {
-    setGroups((prev) =>
-      prev.map((g) =>
+    updateForm((p) => ({
+      ...p,
+      groups: p.groups.map((g) =>
         g.id === gid
           ? { ...g, creatures: g.creatures.map((c) => (c.id === cid ? { ...c, [field]: value } : c)) }
           : g,
       ),
-    );
-  }, []);
+    }));
+  }, [updateForm]);
 
   const { data: monsterIndex } = useIndex('monsters');
   const allGroups = monsterIndex?.items ?? [];
@@ -267,8 +288,9 @@ export function EncounterSheetEditorPage() {
       const m = await loadMonsterByName(monsterName);
       if (!m) return;
       const firstAbility = m.features.find((f: Feature) => f.feature_type === 'ability');
-      setGroups((prev) =>
-        prev.map((g) =>
+      updateForm((p) => ({
+        ...p,
+        groups: p.groups.map((g) =>
           g.id === gid
             ? {
                 ...g,
@@ -290,9 +312,9 @@ export function EncounterSheetEditorPage() {
               }
             : g,
         ),
-      );
+      }));
     },
-    [],
+    [updateForm],
   );
 
   // Import malice from a monster group
@@ -303,9 +325,9 @@ export function EncounterSheetEditorPage() {
       const group = await fetchDocument<MonsterGroup>('monsters', entry.fileId);
       if (!group || group.malice.length === 0) return;
       const entries = group.malice.map(maliceFeatureToEntry);
-      setMalice((prev) => [...prev, ...entries]);
+      updateForm((p) => ({ ...p, malice: [...p.malice, ...entries] }));
     },
-    [allGroups, fetchDocument],
+    [allGroups, fetchDocument, updateForm],
   );
 
   // Groups that have malice features
@@ -317,12 +339,12 @@ export function EncounterSheetEditorPage() {
   // Build encounter data for JSON
   const encounterData = useMemo<EncounterData>(
     () => ({
-      encounter,
-      objective,
-      victory,
-      failure,
-      malice: malice.map((m) => ({ cost: m.cost, name: m.name, description: m.description })),
-      groups: groups.map((g) => ({
+      encounter: form.encounter,
+      objective: form.objective,
+      victory: form.victory,
+      failure: form.failure,
+      malice: form.malice.map((m) => ({ cost: m.cost, name: m.name, description: m.description })),
+      groups: form.groups.map((g) => ({
         label: g.label,
         creatures: g.creatures.map((c) => ({
           name: c.name,
@@ -336,7 +358,7 @@ export function EncounterSheetEditorPage() {
         })),
       })),
     }),
-    [encounter, objective, victory, failure, malice, groups],
+    [form],
   );
 
   const source = useMemo(() => {
@@ -353,9 +375,9 @@ export function EncounterSheetEditorPage() {
       ')',
       '',
     ];
-    if (notes.trim()) lines.push(notes);
+    if (form.notes.trim()) lines.push(form.notes);
     return lines.join('\n');
-  }, [notes, encounterData]); // encounterData dep ensures source identity changes
+  }, [form.notes, encounterData]); // encounterData dep ensures source identity changes
 
   const files = useMemo<VirtualFile[]>(
     () => [
@@ -380,81 +402,43 @@ export function EncounterSheetEditorPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${encounter || 'encounter-sheet'}.pdf`;
+      a.download = `${form.encounter || 'encounter-sheet'}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
       console.error('PDF export failed:', e);
+      toast.error('PDF export failed', {
+        description: e instanceof Error ? e.message : String(e),
+      });
     } finally {
       setExporting(false);
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-sm font-body text-on-surface-variant">Loading encounter...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen gap-4">
-        <p className="text-sm font-body text-tertiary">{error}</p>
-        <button
-          onClick={() => navigate('/encounter-sheets')}
-          className="text-sm font-label text-primary hover:text-primary/80 cursor-pointer"
-        >
-          Back to list
-        </button>
-      </div>
-    );
-  }
+  const handleKeepLocal = useCallback(() => {
+    sync.dismissConflict();
+    triggerSave(formStateToSaved(form));
+    void flush();
+  }, [sync, triggerSave, flush, form]);
 
   const formPanel = (
     <div className="flex-1 min-w-0 md:w-1/3 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
-        <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0">
-          <button
-            onClick={() => navigate('/encounter-sheets')}
-            className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-            aria-label="Back to list"
-            title="Back to list"
-          >
-            <ArrowLeft size={18} aria-hidden="true" />
-          </button>
-          <span className="text-sm font-semibold font-body text-on-surface truncate flex-1">
-            {docName || 'Encounter Sheet'}
-          </span>
-          {!isDemo && (
-            <span className="text-xs font-label text-on-surface-variant/50">
-              {saveStatus === 'saving'
-                ? 'Saving...'
-                : saveStatus === 'saved'
-                  ? 'Saved'
-                  : saveStatus === 'error'
-                    ? 'Save failed'
-                    : ''}
-            </span>
-          )}
-        </div>
-
         <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-5">
           {/* Encounter Info */}
           <section className="space-y-2">
             <SectionHeader>Encounter Info</SectionHeader>
             <Field label="Name">
-              <input className={inputClass} value={encounter} onChange={(e) => setEncounter(e.target.value)} />
+              <input className={inputClass} value={form.encounter} onChange={(e) => updateForm((p) => ({ ...p, encounter: e.target.value }))} />
             </Field>
             <Field label="Objective">
-              <textarea className={inputClass} rows={2} value={objective} onChange={(e) => setObjective(e.target.value)} />
+              <textarea className={inputClass} rows={2} value={form.objective} onChange={(e) => updateForm((p) => ({ ...p, objective: e.target.value }))} />
             </Field>
             <div className="grid grid-cols-2 gap-2">
               <Field label="Victory">
-                <textarea className={inputClass} rows={2} value={victory} onChange={(e) => setVictory(e.target.value)} />
+                <textarea className={inputClass} rows={2} value={form.victory} onChange={(e) => updateForm((p) => ({ ...p, victory: e.target.value }))} />
               </Field>
               <Field label="Failure">
-                <textarea className={inputClass} rows={2} value={failure} onChange={(e) => setFailure(e.target.value)} />
+                <textarea className={inputClass} rows={2} value={form.failure} onChange={(e) => updateForm((p) => ({ ...p, failure: e.target.value }))} />
               </Field>
             </div>
           </section>
@@ -462,7 +446,7 @@ export function EncounterSheetEditorPage() {
           {/* Malice Features */}
           <section className="space-y-2">
             <SectionHeader>Malice Features</SectionHeader>
-            {malice.map((m) => (
+            {form.malice.map((m) => (
               <div key={m.id} className="flex gap-1.5 items-start">
                 <input
                   type="number"
@@ -520,7 +504,7 @@ export function EncounterSheetEditorPage() {
           {/* Creature Groups */}
           <section className="space-y-3">
             <SectionHeader>Creature Groups</SectionHeader>
-            {groups.map((g) => (
+            {form.groups.map((g) => (
               <div key={g.id} className="space-y-2 rounded-sm bg-surface-container-low/50 p-2.5">
                 <div className="flex gap-1.5 items-center">
                   <input
@@ -562,8 +546,8 @@ export function EncounterSheetEditorPage() {
             <textarea
               className={inputClass}
               rows={4}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              value={form.notes}
+              onChange={(e) => updateForm((p) => ({ ...p, notes: e.target.value }))}
               placeholder="Freeform notes (Typst markup supported)"
             />
           </section>
@@ -624,42 +608,57 @@ export function EncounterSheetEditorPage() {
   );
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      {/* Mobile tab toggle */}
-      <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
-        <button
-          onClick={() => setMobileTab('edit')}
-          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
-            mobileTab === 'edit'
-              ? 'text-primary border-b-2 border-primary'
-              : 'text-on-surface-variant'
-          }`}
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => setMobileTab('preview')}
-          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
-            mobileTab === 'preview'
-              ? 'text-primary border-b-2 border-primary'
-              : 'text-on-surface-variant'
-          }`}
-        >
-          Preview
-        </button>
-      </div>
+    <EditorPageShell
+      loading={loading}
+      error={error}
+      backTo="/encounter-sheets"
+      title={docName || 'Encounter Sheet'}
+      saveStatus={isDemo ? undefined : saveStatus}
+    >
+      <div className="flex flex-col h-full overflow-hidden">
+        {/* Mobile tab toggle */}
+        <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+          <button
+            onClick={() => setMobileTab('edit')}
+            className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+              mobileTab === 'edit'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-on-surface-variant'
+            }`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setMobileTab('preview')}
+            className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+              mobileTab === 'preview'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-on-surface-variant'
+            }`}
+          >
+            Preview
+          </button>
+        </div>
 
-      {/* Desktop: side by side */}
-      <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
-        {formPanel}
-        {previewPanel}
-      </div>
+        {/* Desktop: side by side */}
+        <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
+          {formPanel}
+          {previewPanel}
+        </div>
 
-      {/* Mobile: tab-switched */}
-      <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
-        {mobileTab === 'edit' ? formPanel : previewPanel}
+        {/* Mobile: tab-switched */}
+        <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
+          {mobileTab === 'edit' ? formPanel : previewPanel}
+        </div>
       </div>
-    </div>
+      <ConflictDialog
+        open={!!sync.conflict}
+        localUpdatedAt={sync.conflict?.local}
+        remoteUpdatedAt={sync.conflict?.remote}
+        onUseRemote={sync.useRemote}
+        onKeepLocal={handleKeepLocal}
+      />
+    </EditorPageShell>
   );
 }
 

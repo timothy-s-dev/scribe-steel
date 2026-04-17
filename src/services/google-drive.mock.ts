@@ -98,15 +98,20 @@ export async function saveDocument(
   data: unknown,
   extraIndexFields?: Record<string, unknown>,
   existingFileId?: string,
-): Promise<string> {
+): Promise<{ fileId: string; updatedAt: string; data: unknown }> {
   requireAuth();
   await delay();
   const state = load();
   const fileId = existingFileId ?? newId();
-  state.documents[fileId] = data;
+
+  const now = new Date().toISOString();
+  const stamped =
+    data && typeof data === 'object' && !Array.isArray(data)
+      ? { ...(data as Record<string, unknown>), updatedAt: now }
+      : data;
+  state.documents[fileId] = stamped;
 
   const index = state.indexes[category] ?? emptyIndex();
-  const now = new Date().toISOString();
   const existing = index.items.findIndex((item) => item.fileId === fileId);
   const entry: IndexItem = { fileId, name, updatedAt: now, ...extraIndexFields };
   if (existing >= 0) {
@@ -116,7 +121,7 @@ export async function saveDocument(
   }
   state.indexes[category] = index;
   save(state);
-  return fileId;
+  return { fileId, updatedAt: now, data: stamped };
 }
 
 export async function removeDocument(category: Category, fileId: string): Promise<void> {

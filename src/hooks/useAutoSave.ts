@@ -13,6 +13,7 @@ interface AutoSaveOptions {
   fileId: string | null;
   extraIndexFields?: Record<string, unknown>;
   deriveIndexFields?: (data: unknown) => Record<string, unknown>;
+  onSaved?: (result: { fileId: string; updatedAt: string; data: unknown }) => void;
 }
 
 interface AutoSaveResult {
@@ -34,15 +35,16 @@ export function useAutoSave(options: AutoSaveOptions): AutoSaveResult {
   const doSave = useCallback(
     async (data: unknown) => {
       if (!isSignedIn) return;
-      const { category, name, fileId, extraIndexFields, deriveIndexFields } = optionsRef.current;
+      const { category, name, fileId, extraIndexFields, deriveIndexFields, onSaved } = optionsRef.current;
       const derived = deriveIndexFields ? deriveIndexFields(data) : undefined;
-      await mutateAsync({
+      const result = await mutateAsync({
         category,
         name,
         data,
         extraIndexFields: { ...extraIndexFields, ...derived },
         existingFileId: fileId ?? undefined,
       });
+      onSaved?.(result);
     },
     [isSignedIn, mutateAsync],
   );
