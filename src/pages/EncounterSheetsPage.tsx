@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useNavigate } from 'react-router-dom';
 import { Swords, Plus, CloudOff, ChevronRight } from 'lucide-react';
-import { useStorage, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIndex } from '@/hooks/queries/useIndex';
+import { useSaveDocument } from '@/hooks/queries/useDocument';
 import type { SavedEncounter } from '@/data/types';
 import {
   Dialog,
@@ -20,28 +21,13 @@ import { CreatingOverlay } from '@/components/CreatingOverlay';
 export function EncounterSheetsPage() {
   usePageTitle('Encounter Sheets');
   const { isSignedIn } = useAuth();
-  const { fetchIndex, cachedIndex, save } = useStorage();
+  const saveMutation = useSaveDocument();
+  const { data: index, isLoading: loading } = useIndex('encounters');
+  const items = index?.items ?? [];
   const navigate = useNavigate();
-  const [items, setItems] = useState<IndexItem[]>([]);
-  const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newName, setNewName] = useState('');
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      setItems([]);
-      return;
-    }
-    const cached = cachedIndex('encounters');
-    if (cached) setItems(cached.items);
-
-    setLoading(true);
-    fetchIndex('encounters').then((index) => {
-      if (index) setItems(index.items);
-      setLoading(false);
-    });
-  }, [isSignedIn, fetchIndex, cachedIndex]);
 
   const handleOpenDialog = useCallback(() => {
     setNewName('');
@@ -66,13 +52,13 @@ export function EncounterSheetsPage() {
       notes: '',
     };
 
-    const fileId = await save('encounters', name, doc);
-    setCreating(false);
-
-    if (fileId) {
+    try {
+      const fileId = await saveMutation.mutateAsync({ category: 'encounters', name, data: doc });
       navigate(`/encounter-sheets/${fileId}`);
+    } finally {
+      setCreating(false);
     }
-  }, [newName, save, navigate]);
+  }, [newName, saveMutation, navigate]);
 
   return (
     <div className="h-full flex flex-col">

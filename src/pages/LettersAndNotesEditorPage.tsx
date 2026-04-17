@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { TypstEditor, type DocumentData } from '@/components/TypstEditor';
-import { useStorage } from '@/contexts/StorageContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useDocument } from '@/hooks/queries/useDocument';
+import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import handwrittenTyp from '@/typst/templates/handwritten.typ?raw';
 import type { TemplateSchema } from '@/typst/templateSchema';
@@ -33,52 +33,26 @@ export function LettersAndNotesEditorPage() {
   const { fileId } = useParams<{ fileId: string }>();
   const isNew = fileId === 'demo';
   const navigate = useNavigate();
-  const { load, saveStatus } = useStorage();
-  const { isSignedIn, isLoading: authLoading } = useAuth();
-  const [doc, setDoc] = useState<SavedDocument | null>(
-    isNew ? { version: 1, template: 'letters-and-notes', params: {}, body: '' } : null,
+  const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedDocument>(
+    'letters-and-notes',
+    isNew ? undefined : fileId,
+    { enabled: !isNew },
   );
-  const [docName, setDocName] = useState(isNew ? 'Untitled' : '');
-  const [loading, setLoading] = useState(!isNew);
-  const [error, setError] = useState<string | null>(null);
+  const doc = isNew
+    ? { version: 1, template: 'letters-and-notes', params: {}, body: '' }
+    : (loaded ?? null);
+  const error = loadError ? 'Failed to load document' : null;
 
-  const { triggerSave } = useAutoSave({
+  const { data: index } = useIndex('letters-and-notes');
+  const docName = isNew
+    ? 'Untitled'
+    : (index?.items.find((i) => i.fileId === fileId)?.name ?? '');
+
+  const { triggerSave, saveStatus } = useAutoSave({
     category: 'letters-and-notes',
     name: docName,
     fileId: isNew ? null : (fileId ?? null),
   });
-
-  // Load document from Drive (wait for auth to be ready)
-  useEffect(() => {
-    if (isNew || !fileId || authLoading) return;
-    if (!isSignedIn) {
-      setError('Sign in to load documents');
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    load<SavedDocument>(fileId).then((data) => {
-      if (data) {
-        setDoc(data);
-      } else {
-        setError('Failed to load document');
-      }
-      setLoading(false);
-    });
-  }, [fileId, isNew, load, isSignedIn, authLoading]);
-
-  // Get the name from the index cache
-  useEffect(() => {
-    if (isNew) return;
-    try {
-      const raw = localStorage.getItem('scribe-steel-index-letters-and-notes');
-      if (raw) {
-        const index = JSON.parse(raw);
-        const item = index.items?.find((i: { fileId: string }) => i.fileId === fileId);
-        if (item) setDocName(item.name);
-      }
-    } catch { /* ignore */ }
-  }, [fileId, isNew]);
 
   const handleChange = useCallback(
     (data: DocumentData) => {

@@ -6,15 +6,14 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { ArrowLeft, X, Plus, Download, Minus } from 'lucide-react';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
-import { useSettings } from '@/hooks/useSettings';
-import { useAllGroups, type MonsterSummary } from '@/hooks/useAllGroups';
-import { loadMonsterByName } from '@/data/bestiary';
-import { useStorage } from '@/contexts/StorageContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSettings } from '@/hooks/queries/useSettings';
+import { loadMonsterByName, type MonsterSummary } from '@/data/bestiary';
+import { useDocument, useFetchDocument } from '@/hooks/queries/useDocument';
+import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import type { Feature, SavedEncounter } from '@/data/types';
+import type { Feature, MonsterGroup, IndexItem, SavedEncounter } from '@/data/types';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
 
 const TEMPLATE_FILE: VirtualFile = {
@@ -97,6 +96,10 @@ const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm fon
 const labelClass = 'text-xs font-label text-on-surface-variant';
 const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-1.5 py-1 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 
+function monstersOf(item: IndexItem): MonsterSummary[] {
+  return (item.monsters as MonsterSummary[] | undefined) ?? [];
+}
+
 // ── Helpers to convert between saved and form state ─────────────────────────
 
 function savedToFormState(saved: SavedEncounter) {
@@ -138,11 +141,15 @@ export function EncounterSheetEditorPage() {
   const { fileId } = useParams<{ fileId: string }>();
   const isDemo = fileId === 'demo';
   const navigate = useNavigate();
-  const { load, saveStatus } = useStorage();
-  const { isSignedIn, isLoading: authLoading } = useAuth();
+  const fetchDocument = useFetchDocument();
+  const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedEncounter>(
+    'encounters',
+    isDemo ? undefined : fileId,
+    { enabled: !isDemo },
+  );
+  const error = loadError ? 'Failed to load encounter' : null;
 
-  const [loading, setLoading] = useState(!isDemo);
-  const [error, setError] = useState<string | null>(null);
+  const { data: indexData } = useIndex('encounters');
   const [docName, setDocName] = useState(isDemo ? 'Demo' : '');
 
   const [encounter, setEncounter] = useState('');
@@ -158,52 +165,34 @@ export function EncounterSheetEditorPage() {
   const zoom = useZoom(settings.defaultZoom);
   const [initialized, setInitialized] = useState(isDemo);
 
-  const { triggerSave } = useAutoSave({
+  const { triggerSave, saveStatus } = useAutoSave({
     category: 'encounters',
     name: docName,
     fileId: isDemo ? null : (fileId ?? null),
   });
 
-  // Load document from Drive
+  // Initialize form state when data loads
   useEffect(() => {
-    if (isDemo || !fileId || authLoading) return;
-    if (!isSignedIn) {
-      setError('Sign in to load encounters');
-      setLoading(false);
-      return;
+    if (loaded && !initialized) {
+      const state = savedToFormState(loaded);
+      setEncounter(state.encounter);
+      setObjective(state.objective);
+      setVictory(state.victory);
+      setFailure(state.failure);
+      setMalice(state.malice);
+      setGroups(state.groups);
+      setNotes(state.notes);
+      setDocName(loaded.encounter);
+      setInitialized(true);
     }
-    setLoading(true);
-    load<SavedEncounter>(fileId).then((data) => {
-      if (data) {
-        const state = savedToFormState(data);
-        setEncounter(state.encounter);
-        setObjective(state.objective);
-        setVictory(state.victory);
-        setFailure(state.failure);
-        setMalice(state.malice);
-        setGroups(state.groups);
-        setNotes(state.notes);
-        setDocName(data.encounter);
-        setInitialized(true);
-      } else {
-        setError('Failed to load encounter');
-      }
-      setLoading(false);
-    });
-  }, [fileId, isDemo, load, isSignedIn, authLoading]);
+  }, [loaded, initialized]);
 
-  // Get the name from the index cache
+  // Get the name from the index when available
   useEffect(() => {
-    if (isDemo) return;
-    try {
-      const raw = localStorage.getItem('scribe-steel-index-encounters');
-      if (raw) {
-        const index = JSON.parse(raw);
-        const item = index.items?.find((i: { fileId: string }) => i.fileId === fileId);
-        if (item) setDocName(item.name);
-      }
-    } catch { /* ignore */ }
-  }, [fileId, isDemo]);
+    if (isDemo || docName) return;
+    const item = indexData?.items.find((i) => i.fileId === fileId);
+    if (item) setDocName(item.name);
+  }, [indexData, fileId, isDemo, docName]);
 
   // Auto-save on changes
   const buildSaveData = useCallback((): SavedEncounter => ({
@@ -271,8 +260,8 @@ export function EncounterSheetEditorPage() {
     );
   }, []);
 
-  // Auto-fill creature from bestiary
-  const { groups: allGroups, loadGroup } = useAllGroups();
+  const { data: monsterIndex } = useIndex('monsters');
+  const allGroups = monsterIndex?.items ?? [];
   const fillFromBestiary = useCallback(
     async (gid: number, cid: number, monsterName: string) => {
       const m = await loadMonsterByName(monsterName);
@@ -309,17 +298,19 @@ export function EncounterSheetEditorPage() {
   // Import malice from a monster group
   const importMaliceFromGroup = useCallback(
     async (groupName: string) => {
-      const group = await loadGroup(groupName);
+      const entry = allGroups.find((g) => g.name === groupName);
+      if (!entry) return;
+      const group = await fetchDocument<MonsterGroup>('monsters', entry.fileId);
       if (!group || group.malice.length === 0) return;
       const entries = group.malice.map(maliceFeatureToEntry);
       setMalice((prev) => [...prev, ...entries]);
     },
-    [loadGroup],
+    [allGroups, fetchDocument],
   );
 
   // Groups that have malice features
   const groupsWithMalice = useMemo(
-    () => allGroups.filter((g) => g.hasMalice),
+    () => allGroups.filter((g) => !!g.hasMalice),
     [allGroups],
   );
 
@@ -711,7 +702,7 @@ function CreatureRow({
   onRemove,
 }: {
   creature: CreatureEntry;
-  monsterGroups: { name: string; monsters: MonsterSummary[]; custom?: boolean }[];
+  monsterGroups: IndexItem[];
   onUpdate: (field: keyof CreatureEntry, value: string | number | null) => void;
   onFill: (name: string) => void;
   onRemove: () => void;
@@ -736,7 +727,7 @@ function CreatureRow({
           <option value="">Fill from...</option>
           {monsterGroups.map((group) => (
             <optgroup key={group.name} label={`${group.name}${group.custom ? ' (Custom)' : ''}`}>
-              {group.monsters.map((m) => (
+              {monstersOf(group).map((m) => (
                 <option key={m.name} value={m.name}>
                   {m.name} — L{m.level} {m.roles.join(', ')} (EV {m.ev ?? '-'})
                 </option>

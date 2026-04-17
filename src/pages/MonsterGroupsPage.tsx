@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Users, Plus, CloudOff, ChevronRight } from 'lucide-react';
-import { useStorage, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { getGroupSummaries, loadGroup } from '@/data/bestiary';
-import type { SavedMonsterGroup } from '@/data/types';
+import { useSaveDocument, useFetchDocument } from '@/hooks/queries/useDocument';
+import { useIndex } from '@/hooks/queries/useIndex';
+import type { MonsterGroup, SavedMonsterGroup } from '@/data/types';
 import {
   Dialog,
   DialogContent,
@@ -21,31 +21,16 @@ import { CreatingOverlay } from '@/components/CreatingOverlay';
 export function MonsterGroupsPage() {
   usePageTitle('Monster Groups');
   const { isSignedIn } = useAuth();
-  const { fetchIndex, cachedIndex, save } = useStorage();
+  const saveMutation = useSaveDocument();
+  const { data: monsterIndex, isLoading: loading } = useIndex('monsters');
+  const allGroups = monsterIndex?.items ?? [];
+  const customItems = allGroups.filter((g) => !!g.custom);
+  const fetchDocument = useFetchDocument();
   const navigate = useNavigate();
-  const [items, setItems] = useState<IndexItem[]>([]);
-  const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [copyFrom, setCopyFrom] = useState('');
-
-  const presetGroups = getGroupSummaries();
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      setItems([]);
-      return;
-    }
-    const cached = cachedIndex('monsters');
-    if (cached) setItems(cached.items);
-
-    setLoading(true);
-    fetchIndex('monsters').then((index) => {
-      if (index) setItems(index.items);
-      setLoading(false);
-    });
-  }, [isSignedIn, fetchIndex, cachedIndex]);
 
   const handleOpenDialog = useCallback(() => {
     setNewName('');
@@ -60,21 +45,34 @@ export function MonsterGroupsPage() {
     setCreating(true);
     setDialogOpen(false);
 
-    const preset = copyFrom ? await loadGroup(copyFrom) : null;
+    const source = copyFrom ? await fetchDocument<MonsterGroup>('monsters', copyFrom) : null;
     const doc: SavedMonsterGroup = {
       version: 2,
       name,
-      malice: preset ? structuredClone(preset.malice) : [],
+      malice: source ? structuredClone(source.malice) : [],
       monsters: [],
     };
 
-    const fileId = await save('monsters', name, doc);
-    setCreating(false);
-
-    if (fileId) {
+    try {
+      const fileId = await saveMutation.mutateAsync({
+        category: 'monsters',
+        name,
+        data: doc,
+        extraIndexFields: {
+          hasMalice: doc.malice.length > 0,
+          monsters: doc.monsters.map((m) => ({
+            name: m.name,
+            level: m.level,
+            roles: m.roles,
+            ev: m.ev,
+          })),
+        },
+      });
       navigate(`/monster-groups/${fileId}`);
+    } finally {
+      setCreating(false);
     }
-  }, [newName, copyFrom, presetGroups, save, navigate]);
+  }, [newName, copyFrom, fetchDocument, saveMutation, navigate]);
 
   return (
     <div className="h-full flex flex-col">
@@ -106,11 +104,11 @@ export function MonsterGroupsPage() {
               Sign in with Google to create and manage monster groups.
             </p>
           </div>
-        ) : loading && items.length === 0 ? (
+        ) : loading && customItems.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-sm font-body text-on-surface-variant">Loading...</p>
           </div>
-        ) : items.length === 0 ? (
+        ) : customItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
             <Users size={48} className="text-on-surface-variant/30" aria-hidden="true" />
             <p className="text-sm font-body text-on-surface-variant">
@@ -119,7 +117,7 @@ export function MonsterGroupsPage() {
           </div>
         ) : (
           <div className="grid gap-2 max-w-2xl">
-            {items.map((item) => (
+            {customItems.map((item) => (
               <button
                 key={item.fileId}
                 onClick={() => navigate(`/monster-groups/${item.fileId}`)}
@@ -130,17 +128,6 @@ export function MonsterGroupsPage() {
                   <div className="text-sm font-body font-semibold text-on-surface truncate">
                     {item.name}
                   </div>
-                  {item.updatedAt && (
-                    <div className="text-xs font-label text-on-surface-variant">
-                      {new Date(item.updatedAt as string).toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </div>
-                  )}
                 </div>
                 <ChevronRight size={18} className="text-on-surface-variant/50" aria-hidden="true" />
               </button>
@@ -187,8 +174,8 @@ export function MonsterGroupsPage() {
                   className="w-full bg-surface-container-high text-on-surface text-sm font-body px-3 py-2 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Start empty</option>
-                  {presetGroups.filter((g) => g.hasMalice).map((g) => (
-                    <option key={g.name} value={g.name}>
+                  {allGroups.filter((g) => g.hasMalice).map((g) => (
+                    <option key={g.fileId} value={g.fileId}>
                       {g.name}
                     </option>
                   ))}

@@ -4,7 +4,7 @@ import { Editor } from '@/components/Editor';
 import { Preview } from '@/components/Preview';
 import { TemplateParamsForm } from '@/components/TemplateParamsForm';
 import { useZoom, type ZoomState } from '@/hooks/useZoom';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/queries/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import {

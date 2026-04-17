@@ -5,8 +5,11 @@ import { Minus, Plus, ChevronRight, ChevronDown } from 'lucide-react';
 type MobileTab = 'select' | 'preview';
 import { Preview } from '@/components/Preview';
 import { useZoom } from '@/hooks/useZoom';
-import { useSettings } from '@/hooks/useSettings';
-import { useAllGroups, type TaggedGroupSummary } from '@/hooks/useAllGroups';
+import { useSettings } from '@/hooks/queries/useSettings';
+import { useIndex } from '@/hooks/queries/useIndex';
+import { useDocuments } from '@/hooks/queries/useDocument';
+import type { IndexItem, MonsterGroup } from '@/data/types';
+import type { MonsterSummary } from '@/data/bestiary';
 import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import type { Monster } from '@/data/types';
@@ -27,6 +30,10 @@ function monsterKey(groupName: string, monsterName: string) {
   return `${groupName}\0${monsterName}`;
 }
 
+function monstersOf(item: IndexItem): MonsterSummary[] {
+  return (item.monsters as MonsterSummary[] | undefined) ?? [];
+}
+
 export function MonsterCardsPage() {
   usePageTitle('Monster Cards');
   const { settings } = useSettings();
@@ -34,10 +41,10 @@ export function MonsterCardsPage() {
   const [printMode, setPrintMode] = useState(settings.printFriendly);
   const zoom = useZoom(settings.defaultZoom);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
-  const [loadedMonsters, setLoadedMonsters] = useState<Monster[]>([]);
   const [mobileTab, setMobileTab] = useState<MobileTab>('select');
 
-  const { groups, loading: groupsLoading, loadGroup } = useAllGroups();
+  const { data: index, isLoading: groupsLoading } = useIndex('monsters');
+  const groups = index?.items ?? [];
 
   const toggleMonster = useCallback((groupName: string, name: string) => {
     const key = monsterKey(groupName, name);
@@ -55,8 +62,8 @@ export function MonsterCardsPage() {
       if (!group) return;
       setSelected((prev) => {
         const next = new Set(prev);
-        const allSelected = group.monsters.every((m) => prev.has(monsterKey(groupName, m.name)));
-        for (const m of group.monsters) {
+        const allSelected = monstersOf(group).every((m) => prev.has(monsterKey(groupName, m.name)));
+        for (const m of monstersOf(group)) {
           const key = monsterKey(groupName, m.name);
           if (allSelected) next.delete(key);
           else next.add(key);
@@ -87,30 +94,36 @@ export function MonsterCardsPage() {
     return map;
   }, [selected]);
 
-  // Load full group data for selected monsters
-  useEffect(() => {
-    if (selectedByGroup.size === 0) {
-      setLoadedMonsters([]);
-      return;
+  // Resolve group identifiers (name or fileId) for selected groups
+  const selectedGroupIds = useMemo(() => {
+    const ids: string[] = [];
+    for (const groupName of selectedByGroup.keys()) {
+      const entry = groups.find((g) => g.name === groupName);
+      if (entry) ids.push(entry.fileId);
     }
+    return ids;
+  }, [selectedByGroup, groups]);
 
-    let cancelled = false;
-    (async () => {
-      const monsters: Monster[] = [];
-      for (const [groupName, monsterNames] of selectedByGroup) {
-        const group = await loadGroup(groupName);
-        if (cancelled) return;
-        if (group) {
-          for (const name of monsterNames) {
-            const m = group.monsters.find((mon) => mon.name === name);
-            if (m) monsters.push(m);
-          }
+  const groupQueries = useDocuments<MonsterGroup>('monsters', selectedGroupIds);
+
+  // Derive loaded monsters from query results
+  const loadedMonsters = useMemo(() => {
+    const monsters: Monster[] = [];
+    const groupMap = new Map(
+      selectedGroupIds.map((id, i) => [id, groupQueries[i]?.data]),
+    );
+    for (const [groupName, monsterNames] of selectedByGroup) {
+      const entry = groups.find((g) => g.name === groupName);
+      const group = entry ? groupMap.get(entry.fileId) : null;
+      if (group) {
+        for (const name of monsterNames) {
+          const m = group.monsters.find((mon) => mon.name === name);
+          if (m) monsters.push(m);
         }
       }
-      if (!cancelled) setLoadedMonsters(monsters);
-    })();
-    return () => { cancelled = true; };
-  }, [selectedByGroup, loadGroup]);
+    }
+    return monsters;
+  }, [selectedByGroup, groups, selectedGroupIds, groupQueries]);
 
   const hasSelection = selected.size > 0;
 
@@ -352,15 +365,15 @@ function GroupPicker({
   onToggleGroup,
   onToggleMonster,
 }: {
-  group: TaggedGroupSummary;
+  group: IndexItem;
   selected: Set<string>;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   onToggleGroup: () => void;
   onToggleMonster: (groupName: string, name: string) => void;
 }) {
-  const allChecked = group.monsters.every((m) => selected.has(monsterKey(group.name, m.name)));
-  const someChecked = group.monsters.some((m) => selected.has(monsterKey(group.name, m.name)));
+  const allChecked = monstersOf(group).every((m) => selected.has(monsterKey(group.name, m.name)));
+  const someChecked = monstersOf(group).some((m) => selected.has(monsterKey(group.name, m.name)));
 
   return (
     <div>
@@ -385,7 +398,7 @@ function GroupPicker({
           <span className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
             {group.name}
           </span>
-          {group.custom && (
+          {!!group.custom && (
             <span className="text-[9px] font-label text-primary/70 bg-primary/10 px-1.5 py-0.5 rounded-sm">
               Custom
             </span>
@@ -395,7 +408,7 @@ function GroupPicker({
 
       {!isCollapsed && (
         <div className="space-y-0.5 ml-6">
-          {group.monsters.map((monster) => (
+          {monstersOf(group).map((monster) => (
             <label
               key={monster.name}
               className="flex items-start gap-2 cursor-pointer py-1 px-2 rounded-sm hover:bg-surface-container-low transition-colors"
@@ -416,7 +429,7 @@ function GroupPicker({
               </div>
             </label>
           ))}
-          {group.monsters.length === 0 && (
+          {monstersOf(group).length === 0 && (
             <p className="text-xs font-label text-on-surface-variant/50 px-2 py-1">
               No monsters in this group
             </p>

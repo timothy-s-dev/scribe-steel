@@ -1,24 +1,31 @@
 import { useRef, useCallback } from 'react';
-import { useStorage, type Category } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSaveDocument } from '@/hooks/queries/useDocument';
+import type { Category } from '@/data/types';
 
 const DEBOUNCE_MS = 2000;
+
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 interface AutoSaveOptions {
   category: Category;
   name: string;
   fileId: string | null;
   extraIndexFields?: Record<string, unknown>;
+  deriveIndexFields?: (data: unknown) => Record<string, unknown>;
 }
 
 interface AutoSaveResult {
   triggerSave: (data: unknown) => void;
   flush: () => Promise<void>;
+  saveStatus: SaveStatus;
+  error: string | null;
 }
 
 export function useAutoSave(options: AutoSaveOptions): AutoSaveResult {
-  const { save } = useStorage();
   const { isSignedIn } = useAuth();
+  const mutation = useSaveDocument();
+  const { mutateAsync } = mutation;
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingRef = useRef<unknown>(null);
   const optionsRef = useRef(options);
@@ -27,10 +34,17 @@ export function useAutoSave(options: AutoSaveOptions): AutoSaveResult {
   const doSave = useCallback(
     async (data: unknown) => {
       if (!isSignedIn) return;
-      const { category, name, fileId, extraIndexFields } = optionsRef.current;
-      await save(category, name, data, extraIndexFields, fileId ?? undefined);
+      const { category, name, fileId, extraIndexFields, deriveIndexFields } = optionsRef.current;
+      const derived = deriveIndexFields ? deriveIndexFields(data) : undefined;
+      await mutateAsync({
+        category,
+        name,
+        data,
+        extraIndexFields: { ...extraIndexFields, ...derived },
+        existingFileId: fileId ?? undefined,
+      });
     },
-    [isSignedIn, save],
+    [isSignedIn, mutateAsync],
   );
 
   const triggerSave = useCallback(
@@ -55,5 +69,15 @@ export function useAutoSave(options: AutoSaveOptions): AutoSaveResult {
     }
   }, [doSave]);
 
-  return { triggerSave, flush };
+  const saveStatus: SaveStatus = mutation.isPending
+    ? 'saving'
+    : mutation.isError
+      ? 'error'
+      : mutation.isSuccess
+        ? 'saved'
+        : 'idle';
+
+  const error = mutation.error ? (mutation.error as Error).message : null;
+
+  return { triggerSave, flush, saveStatus, error };
 }

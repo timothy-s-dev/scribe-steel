@@ -3,8 +3,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { StorageProvider } from '@/contexts/StorageContext';
 import { AppLayout } from '@/layouts/AppLayout';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -18,9 +18,12 @@ const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage').then(m 
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 function TestApp({ route }: { route: string }) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   return (
-    <AuthProvider>
-      <StorageProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <MemoryRouter initialEntries={[route]}>
           <Suspense>
             <Routes>
@@ -38,8 +41,8 @@ function TestApp({ route }: { route: string }) {
             </Routes>
           </Suspense>
         </MemoryRouter>
-      </StorageProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

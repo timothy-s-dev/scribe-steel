@@ -14,7 +14,7 @@ import {
   onTokenChange,
   isConfigured,
 } from '@/services/google-auth';
-import { clearCache } from '@/services/storage';
+import { queryClient, clearCache } from '@/lib/queryClient';
 
 interface AuthState {
   isSignedIn: boolean;
@@ -50,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return onTokenChange((token) => {
       setIsSignedIn(!!token);
+      if (token) queryClient.invalidateQueries();
     });
   }, [configured]);
 

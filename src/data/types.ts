@@ -1,3 +1,21 @@
+// ── Storage types ────────────────────────────────────────────────────────────
+
+export type Category = 'monsters' | 'encounters' | 'letters-and-notes' | 'lore-books';
+
+export interface IndexItem {
+  fileId: string;
+  name: string;
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+export interface IndexFile {
+  version: number;
+  items: IndexItem[];
+}
+
+// ── Domain types ─────────────────────────────────────────────────────────────
+
 export interface Effect {
   roll?: number;
   tier1?: string;

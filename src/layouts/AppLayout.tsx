@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { SignInButton } from '@/components/SignInButton';
-import { SaveStatusBanner } from '@/components/SaveStatusBanner';
 import { Menu, X, PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
 
 interface NavItem {
@@ -197,7 +196,6 @@ export function AppLayout() {
       <main id="main-content" className="flex-1 overflow-y-auto custom-scrollbar bg-surface relative pt-12 md:pt-0">
         <Outlet />
       </main>
-      <SaveStatusBanner />
     </div>
   );
 }

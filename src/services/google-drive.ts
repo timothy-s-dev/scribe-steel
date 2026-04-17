@@ -1,4 +1,8 @@
 import { getAccessToken } from './google-auth';
+import { queryClient } from '@/lib/queryClient';
+import type { Category, IndexFile, IndexItem } from '@/data/types';
+
+// ── Drive API internals ─────────────────────────────────────────────────────
 
 const API = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3';
@@ -31,39 +35,24 @@ async function driveRequest(url: string, init?: RequestInit): Promise<Response> 
   return res;
 }
 
-// ── Folders ──────────────────────────────────────────────────────────────────
+// ── Low-level folder/file operations (private) ──────────────────────────────
 
-export async function findFolder(
-  name: string,
-  parentId?: string,
-): Promise<string | null> {
+async function findFolder(name: string, parentId?: string): Promise<string | null> {
   const q = [
     `name='${name}'`,
     `mimeType='application/vnd.google-apps.folder'`,
     'trashed=false',
   ];
   if (parentId) q.push(`'${parentId}' in parents`);
-
-  const params = new URLSearchParams({
-    q: q.join(' and '),
-    fields: 'files(id)',
-    pageSize: '1',
-  });
+  const params = new URLSearchParams({ q: q.join(' and '), fields: 'files(id)', pageSize: '1' });
   const res = await driveRequest(`${API}/files?${params}`);
   const data = await res.json();
   return data.files?.[0]?.id ?? null;
 }
 
-export async function createFolder(
-  name: string,
-  parentId?: string,
-): Promise<string> {
-  const body: Record<string, unknown> = {
-    name,
-    mimeType: 'application/vnd.google-apps.folder',
-  };
+async function createFolder(name: string, parentId?: string): Promise<string> {
+  const body: Record<string, unknown> = { name, mimeType: 'application/vnd.google-apps.folder' };
   if (parentId) body.parents = [parentId];
-
   const res = await driveRequest(`${API}/files`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -73,100 +62,169 @@ export async function createFolder(
   return data.id;
 }
 
-export async function findOrCreateFolder(
-  name: string,
-  parentId?: string,
-): Promise<string> {
+async function findOrCreateFolder(name: string, parentId?: string): Promise<string> {
   const existing = await findFolder(name, parentId);
   if (existing) return existing;
   return createFolder(name, parentId);
 }
 
-// ── Files ────────────────────────────────────────────────────────────────────
-
-export async function createFile(
-  folderId: string,
-  name: string,
-  content: unknown,
-): Promise<string> {
-  const metadata = {
-    name,
-    parents: [folderId],
-    mimeType: 'application/json',
-  };
-
+async function createFile(folderId: string, name: string, content: unknown): Promise<string> {
+  const metadata = { name, parents: [folderId], mimeType: 'application/json' };
   const body = new FormData();
-  body.append(
-    'metadata',
-    new Blob([JSON.stringify(metadata)], { type: 'application/json' }),
-  );
-  body.append(
-    'file',
-    new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' }),
-  );
-
-  const res = await driveRequest(
-    `${UPLOAD_API}/files?uploadType=multipart&fields=id`,
-    { method: 'POST', body },
-  );
+  body.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  body.append('file', new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' }));
+  const res = await driveRequest(`${UPLOAD_API}/files?uploadType=multipart&fields=id`, { method: 'POST', body });
   const data = await res.json();
   return data.id;
 }
 
-export async function updateFile(
-  fileId: string,
-  content: unknown,
-): Promise<void> {
-  await driveRequest(
-    `${UPLOAD_API}/files/${fileId}?uploadType=media`,
-    {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(content, null, 2),
-    },
-  );
+async function updateFile(fileId: string, content: unknown): Promise<void> {
+  await driveRequest(`${UPLOAD_API}/files/${fileId}?uploadType=media`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(content, null, 2),
+  });
 }
 
-export async function readFile<T = unknown>(fileId: string): Promise<T> {
+async function readFile<T = unknown>(fileId: string): Promise<T> {
   const res = await driveRequest(`${API}/files/${fileId}?alt=media`);
   return res.json() as Promise<T>;
 }
 
-export async function findFile(
-  name: string,
-  folderId: string,
-): Promise<string | null> {
-  const q = [
-    `name='${name}'`,
-    `'${folderId}' in parents`,
-    'trashed=false',
-  ];
-  const params = new URLSearchParams({
-    q: q.join(' and '),
-    fields: 'files(id)',
-    pageSize: '1',
-  });
+async function findFile(name: string, folderId: string): Promise<string | null> {
+  const q = [`name='${name}'`, `'${folderId}' in parents`, 'trashed=false'];
+  const params = new URLSearchParams({ q: q.join(' and '), fields: 'files(id)', pageSize: '1' });
   const res = await driveRequest(`${API}/files?${params}`);
   const data = await res.json();
   return data.files?.[0]?.id ?? null;
 }
 
-export async function listFiles(
-  folderId: string,
-): Promise<{ id: string; name: string }[]> {
-  const q = [`'${folderId}' in parents`, 'trashed=false'];
-  const params = new URLSearchParams({
-    q: q.join(' and '),
-    fields: 'files(id,name)',
-    pageSize: '1000',
-  });
-  const res = await driveRequest(`${API}/files?${params}`);
-  const data = await res.json();
-  return data.files ?? [];
+async function deleteFile(fileId: string): Promise<void> {
+  await driveRequest(`${API}/files/${fileId}`, { method: 'DELETE' });
 }
 
-export async function deleteFile(fileId: string): Promise<void> {
-  await driveRequest(`${API}/files/${fileId}`, { method: 'DELETE' });
+// ── Storage layout (dedup-safe via TanStack Query) ──────────────────────────
+
+interface StorageLayout {
+  root: string;
+  folders: Record<Category, string>;
+}
+
+const ALL_CATEGORIES: Category[] = ['monsters', 'encounters', 'letters-and-notes', 'lore-books'];
+
+async function initStorageLayout(): Promise<StorageLayout> {
+  const root = await findOrCreateFolder('Scribe Steel');
+  const entries = await Promise.all(
+    ALL_CATEGORIES.map(async (cat) => [cat, await findOrCreateFolder(cat, root)] as const),
+  );
+  return { root, folders: Object.fromEntries(entries) as Record<Category, string> };
+}
+
+async function getLayout(): Promise<StorageLayout> {
+  return queryClient.ensureQueryData({
+    queryKey: ['internal', 'storage-layout'],
+    queryFn: initStorageLayout,
+    staleTime: Infinity,
+  });
+}
+
+function slugify(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+// ── Index operations (private) ──────────────────────────────────────────────
+
+function emptyIndex(): IndexFile {
+  return { version: 1, items: [] };
+}
+
+async function readIndex(folderId: string): Promise<{ index: IndexFile; fileId: string | null }> {
+  const indexFileId = await findFile('index.json', folderId);
+  if (!indexFileId) return { index: emptyIndex(), fileId: null };
+  const index = await readFile<IndexFile>(indexFileId);
+  return { index, fileId: indexFileId };
+}
+
+async function writeIndex(folderId: string, indexFileId: string | null, index: IndexFile): Promise<string> {
+  if (indexFileId) {
+    await updateFile(indexFileId, index);
+    return indexFileId;
+  }
+  return createFile(folderId, 'index.json', index);
+}
+
+// ── Public API ──────────────────────────────────────────────────────────────
+
+export async function loadSettings<T = unknown>(): Promise<{ data: T; fileId: string | null }> {
+  const { root } = await getLayout();
+  const fid = await findFile('settings.json', root);
+  if (!fid) return { data: null as T, fileId: null };
+  const data = await readFile<T>(fid);
+  return { data, fileId: fid };
+}
+
+export async function saveSettings(data: unknown, existingFileId?: string | null): Promise<string> {
+  const { root } = await getLayout();
+  const fid = existingFileId ?? await findFile('settings.json', root);
+  if (fid) {
+    await updateFile(fid, data);
+    return fid;
+  }
+  return createFile(root, 'settings.json', data);
+}
+
+export async function loadIndex(category: Category): Promise<IndexFile> {
+  const folderId = (await getLayout()).folders[category];
+  const { index } = await readIndex(folderId);
+  return index;
+}
+
+export async function loadDocument<T = unknown>(fileId: string): Promise<T> {
+  return readFile<T>(fileId);
+}
+
+export async function saveDocument(
+  category: Category,
+  name: string,
+  data: unknown,
+  extraIndexFields?: Record<string, unknown>,
+  existingFileId?: string,
+): Promise<string> {
+  const folderId = (await getLayout()).folders[category];
+
+  let fileId: string;
+  const fileName = slugify(name) + '.json';
+  if (existingFileId) {
+    await updateFile(existingFileId, data);
+    fileId = existingFileId;
+  } else {
+    fileId = await createFile(folderId, fileName, data);
+  }
+
+  const { index, fileId: indexFileId } = await readIndex(folderId);
+  const now = new Date().toISOString();
+  const existing = index.items.findIndex((item) => item.fileId === fileId);
+  const entry: IndexItem = { fileId, name, updatedAt: now, ...extraIndexFields };
+
+  if (existing >= 0) {
+    index.items[existing] = entry;
+  } else {
+    index.items.push(entry);
+  }
+
+  await writeIndex(folderId, indexFileId, index);
+  return fileId;
+}
+
+export async function removeDocument(category: Category, fileId: string): Promise<void> {
+  const folderId = (await getLayout()).folders[category];
+  await deleteFile(fileId);
+
+  const { index, fileId: indexFileId } = await readIndex(folderId);
+  index.items = index.items.filter((item) => item.fileId !== fileId);
+  if (indexFileId) {
+    await writeIndex(folderId, indexFileId, index);
+  }
 }
 
 export { DriveError };

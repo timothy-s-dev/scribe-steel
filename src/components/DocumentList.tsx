@@ -1,7 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStorage, type Category, type IndexItem } from '@/contexts/StorageContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIndex } from '@/hooks/queries/useIndex';
+import { useSaveDocument } from '@/hooks/queries/useDocument';
+import type { Category } from '@/data/types';
 import { Plus, CloudOff, FileText, ChevronRight, type LucideIcon } from 'lucide-react';
 import {
   Dialog,
@@ -35,33 +37,14 @@ export function DocumentList({
   defaultBody = '',
 }: DocumentListProps) {
   const { isSignedIn } = useAuth();
-  const { fetchIndex, cachedIndex, save } = useStorage();
+  const saveMutation = useSaveDocument();
+  const { data: index, isLoading: loading } = useIndex(category);
+  const items = index?.items ?? [];
   const navigate = useNavigate();
-  const [items, setItems] = useState<IndexItem[]>([]);
-  const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const nameInputRef = useRef<HTMLInputElement>(null);
-
-  // Load index on mount and when signed in
-  useEffect(() => {
-    if (!isSignedIn) {
-      setItems([]);
-      return;
-    }
-
-    // Show cached data immediately
-    const cached = cachedIndex(category);
-    if (cached) setItems(cached.items);
-
-    // Then refresh from Drive
-    setLoading(true);
-    fetchIndex(category).then((index) => {
-      if (index) setItems(index.items);
-      setLoading(false);
-    });
-  }, [isSignedIn, category, fetchIndex, cachedIndex]);
 
   const handleOpenDialog = useCallback(() => {
     setNewName('');
@@ -80,13 +63,13 @@ export function DocumentList({
       params: defaultParams,
       body: defaultBody,
     };
-    const fileId = await save(category, name, doc);
-    setCreating(false);
-
-    if (fileId) {
+    try {
+      const fileId = await saveMutation.mutateAsync({ category, name, data: doc });
       navigate(`${basePath}/${fileId}`);
+    } finally {
+      setCreating(false);
     }
-  }, [newName, category, templateName, defaultParams, defaultBody, save, navigate, basePath]);
+  }, [newName, category, templateName, defaultParams, defaultBody, saveMutation, navigate, basePath]);
 
   return (
     <div className="h-full flex flex-col">

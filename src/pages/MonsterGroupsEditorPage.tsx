@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { ArrowLeft, X, Plus, Copy } from 'lucide-react';
-import { useStorage } from '@/contexts/StorageContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useDocument } from '@/hooks/queries/useDocument';
+import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { getAllMonsterSummaries, loadMonsterByName } from '@/data/bestiary';
 import { MonsterEditor, emptyMonster } from '@/components/MonsterEditor';
@@ -55,55 +55,42 @@ export function MonsterGroupsEditorPage() {
   usePageTitle('Monster Group');
   const { fileId } = useParams<{ fileId: string }>();
   const navigate = useNavigate();
-  const { load, saveStatus } = useStorage();
-  const { isSignedIn, isLoading: authLoading } = useAuth();
+  const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedMonsterGroup>('monsters', fileId);
   const [doc, setDoc] = useState<SavedMonsterGroup | null>(null);
-  const [docName, setDocName] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [maliceKeys, setMaliceKeys] = useState<number[]>([]);
   const [monsterKeys, setMonsterKeys] = useState<number[]>([]);
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
+  const error = loadError ? 'Failed to load monster group' : null;
 
-  const { triggerSave } = useAutoSave({
+  const { data: monsterIndex } = useIndex('monsters');
+  const docName = doc?.name ?? monsterIndex?.items.find((g) => g.fileId === fileId)?.name ?? '';
+
+  // Initialize local state when data loads
+  useEffect(() => {
+    if (loaded && !doc) {
+      setDoc(loaded);
+      setMaliceKeys(loaded.malice.map(() => uid()));
+      setMonsterKeys(loaded.monsters.map(() => uid()));
+    }
+  }, [loaded, doc]);
+
+  const { triggerSave, saveStatus } = useAutoSave({
     category: 'monsters',
     name: docName,
     fileId: fileId ?? null,
+    deriveIndexFields: (data) => {
+      const group = data as SavedMonsterGroup;
+      return {
+        hasMalice: group.malice.length > 0,
+        monsters: group.monsters.map((m) => ({
+          name: m.name,
+          level: m.level,
+          roles: m.roles,
+          ev: m.ev,
+        })),
+      };
+    },
   });
-
-  // Load document
-  useEffect(() => {
-    if (!fileId || authLoading) return;
-    if (!isSignedIn) {
-      setError('Sign in to load monster groups');
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    load<SavedMonsterGroup>(fileId).then((data) => {
-      if (data) {
-        setDoc(data);
-        setDocName(data.name);
-        setMaliceKeys(data.malice.map(() => uid()));
-        setMonsterKeys(data.monsters.map(() => uid()));
-      } else {
-        setError('Failed to load monster group');
-      }
-      setLoading(false);
-    });
-  }, [fileId, load, isSignedIn, authLoading]);
-
-  // Get name from index cache
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('scribe-steel-index-monsters');
-      if (raw) {
-        const index = JSON.parse(raw);
-        const item = index.items?.find((i: { fileId: string }) => i.fileId === fileId);
-        if (item) setDocName(item.name);
-      }
-    } catch { /* ignore */ }
-  }, [fileId]);
 
   const save = useCallback(
     (updated: SavedMonsterGroup) => {
@@ -228,7 +215,6 @@ export function MonsterGroupsEditorPage() {
           value={doc.name}
           onChange={(e) => {
             const updated = { ...doc, name: e.target.value };
-            setDocName(e.target.value);
             save(updated);
           }}
           placeholder="Group name"

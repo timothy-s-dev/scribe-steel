@@ -1,4 +1,4 @@
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/queries/useSettings';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Switch } from '@/components/ui/switch';
 import type { ZoomMode } from '@/hooks/useZoom';

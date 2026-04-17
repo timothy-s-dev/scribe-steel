@@ -36,14 +36,9 @@ export function getAllMonsterSummaries(): MonsterSummary[] {
   return summaries.flatMap((g) => g.monsters);
 }
 
-// ── Full group loading (async, cached) ──────────────────────────────────────
-
-const groupCache = new Map<string, MonsterGroup>();
+// ── Full group loading (async) ───────────────────────────────────────────────
 
 export async function loadGroup(groupName: string): Promise<MonsterGroup | null> {
-  const cached = groupCache.get(groupName);
-  if (cached) return cached;
-
   const entry = summaries.find((g) => g.name === groupName);
   if (!entry) return null;
 
@@ -51,9 +46,7 @@ export async function loadGroup(groupName: string): Promise<MonsterGroup | null>
   if (!loader) return null;
 
   const mod = await loader();
-  const group = mod.default;
-  groupCache.set(groupName, group);
-  return group;
+  return mod.default;
 }
 
 export async function loadMonsterByName(monsterName: string): Promise<Monster | null> {
