@@ -26,6 +26,7 @@ export function useTypstCompiler(
 
   useEffect(() => {
     const generation = ++generationRef.current;
+    setLoading(true);
 
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(async () => {
