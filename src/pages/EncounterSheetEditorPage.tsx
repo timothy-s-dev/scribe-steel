@@ -3,9 +3,10 @@ import { useState, useMemo, useCallback } from 'react';
 type MobileTab = 'edit' | 'preview';
 import { useParams } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { X, Plus, Download, Minus } from 'lucide-react';
+import { X, Plus, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { Preview } from '@/components/Preview';
+import { PreviewToolbar } from '@/components/PreviewToolbar';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
 import { loadMonsterByName, type MonsterSummary } from '@/data/bestiary';
@@ -15,7 +16,6 @@ import { useAutoSave } from '@/hooks/useAutoSave';
 import { useDocumentSync } from '@/hooks/useDocumentSync';
 import { EditorPageShell } from '@/components/EditorPageShell';
 import { ConflictDialog } from '@/components/ConflictDialog';
-import { Switch } from '@/components/ui/switch';
 import { compilePdf, type VirtualFile } from '@/typst/compiler';
 import type { Feature, MonsterGroup, IndexItem, SavedEncounter } from '@/data/types';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
@@ -557,50 +557,13 @@ export function EncounterSheetEditorPage() {
 
   const previewPanel = (
     <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
-        <div className="flex-1">
-          <label className="flex items-center gap-2 cursor-pointer w-fit">
-            <Switch size="sm" checked={printMode} onCheckedChange={setPrintMode} />
-            <span className="text-xs font-label text-on-surface-variant">Print-Friendly</span>
-          </label>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-1.5">
-          <button onClick={zoom.zoomOut} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom out" title="Zoom out">
-            <Minus size={18} aria-hidden="true" />
-          </button>
-          <span className="text-xs font-label text-on-surface-variant w-10 text-center tabular-nums">
-            {zoom.zoomPercent}%
-          </span>
-          <button onClick={zoom.zoomIn} className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" aria-label="Zoom in" title="Zoom in">
-            <Plus size={18} aria-hidden="true" />
-          </button>
-          <div className="w-px h-4 bg-outline-variant/30 mx-1" />
-          <button
-            onClick={() => zoom.setMode('fit-width')}
-            className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${zoom.mode === 'fit-width' ? 'text-primary bg-surface-container-high' : 'text-on-surface-variant hover:text-primary'}`}
-          >
-            Fit Width
-          </button>
-          <button
-            onClick={() => zoom.setMode('fit-page')}
-            className={`px-2 py-0.5 text-xs font-label rounded-sm transition-colors ${zoom.mode === 'fit-page' ? 'text-primary bg-surface-container-high' : 'text-on-surface-variant hover:text-primary'}`}
-          >
-            Fit Page
-          </button>
-        </div>
-
-        <div className="flex-1 flex justify-end">
-          <button
-            onClick={handleExportPdf}
-            disabled={exporting}
-            className="px-4 py-1.5 text-xs font-label font-bold tracking-wide uppercase bg-surface-container-high text-on-surface-variant rounded-sm hover:bg-surface-bright transition-colors disabled:opacity-50"
-          >
-            {exporting ? 'Exporting...' : 'Export PDF'}
-          </button>
-        </div>
-      </div>
-
+      <PreviewToolbar
+        zoom={zoom}
+        printMode={printMode}
+        onPrintModeChange={setPrintMode}
+        onExportPdf={handleExportPdf}
+        exporting={exporting}
+      />
       <div className="flex-1 min-h-0 overflow-hidden">
         <Preview content={source} template="" files={files} zoom={zoom} inputs={inputs} />
       </div>
