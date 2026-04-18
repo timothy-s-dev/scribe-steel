@@ -12,12 +12,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { isSessionExpired, onSessionExpiryChange } from '@/services/session-expiry';
 
 export function SessionExpiryDialog() {
-  const { isSignedIn, signIn } = useAuth();
+  const { signIn } = useAuth();
   const [expired, setExpired] = useState(isSessionExpired());
 
   useEffect(() => onSessionExpiryChange(setExpired), []);
 
-  const open = expired && !isSignedIn;
+  // Open purely on the expired flag. The flag is cleared on successful sign-in
+  // (by AuthContext) and on manual sign-out, so there's no stale-open case.
+  const open = expired;
 
   return (
     <Dialog open={open}>

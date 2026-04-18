@@ -2,6 +2,7 @@ import { useRef, useCallback, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSaveDocument } from '@/hooks/queries/useDocument';
 import { DriveError } from '@/services/google-drive';
+import { invalidateToken } from '@/services/google-auth';
 import { reportSessionExpired } from '@/services/session-expiry';
 import type { Category } from '@/data/types';
 
@@ -54,6 +55,10 @@ export function useAutoSave(options: AutoSaveOptions): AutoSaveResult {
           // don't clobber newer user input that already landed in pendingRef.
           if (pendingRef.current === null) pendingRef.current = data;
           reportSessionExpired();
+          // Clear our local token since Drive rejected it server-side. This
+          // transitions isSignedIn true→false, and the subsequent sign-in
+          // flips it false→true, which in turn triggers the retry effect.
+          invalidateToken();
         }
         // Otherwise: leave React Query's mutation.error to drive saveStatus.
       }

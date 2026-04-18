@@ -33,6 +33,12 @@ export function signOut(): void {
   notify();
 }
 
+export function invalidateToken(): void {
+  accessToken = null;
+  localStorage.removeItem(STATE_KEY);
+  notify();
+}
+
 export function getAccessToken(): string | null {
   return accessToken;
 }

@@ -125,6 +125,16 @@ export function signOut(): void {
   notify();
 }
 
+// Drop the local token without revoking it — for the case where Drive has
+// rejected our token server-side (e.g. 401 on save). Lets the sign-in flow
+// transition isSignedIn false → true so retries fire.
+export function invalidateToken(): void {
+  clearTimeout(expiryTimer);
+  accessToken = null;
+  clearPersistedToken();
+  notify();
+}
+
 export function getAccessToken(): string | null {
   return accessToken;
 }

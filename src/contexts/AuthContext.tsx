@@ -62,6 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(() => {
     authSignOut();
     clearCache();
+    clearSessionExpired();
   }, []);
 
   return (
