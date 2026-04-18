@@ -20,7 +20,7 @@ export function PreviewToolbar({
   exportDisabled = false,
 }: PreviewToolbarProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
+    <div className="relative z-10 flex items-center justify-between px-4 py-2 bg-surface-container flex-shrink-0">
       <div className="flex-1">
         <label className="flex items-center gap-2 cursor-pointer w-fit">
           <Switch

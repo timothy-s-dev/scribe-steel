@@ -38,7 +38,7 @@ export function HomePage() {
   const { isSignedIn, isConfigured, signIn } = useAuth();
 
   return (
-    <div className="max-w-5xl mx-auto px-8 lg:px-12 pt-8 pb-16">
+    <div className="max-w-5xl mx-auto px-8 lg:px-12 pt-8 pb-16 relative z-10">
       {/* Hero */}
       <header className="mb-16 space-y-6">
         <h2 className="font-headline text-5xl md:text-7xl font-bold tracking-tight text-on-surface leading-[1.1]">

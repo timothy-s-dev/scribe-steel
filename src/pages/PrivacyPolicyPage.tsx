@@ -1,18 +1,12 @@
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Shield } from 'lucide-react';
+import { PageHeader } from '@/components/PageHeader';
 
 export function PrivacyPolicyPage() {
   usePageTitle('Privacy Policy');
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center px-6 py-4 bg-surface-container flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Shield size={20} className="text-on-surface-variant" aria-hidden="true" />
-          <h1 className="text-lg font-headline font-semibold text-on-surface">
-            Privacy Policy
-          </h1>
-        </div>
-      </div>
+      <PageHeader icon={Shield} title="Privacy Policy" />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6">
         <div className="max-w-2xl space-y-6 text-sm font-body text-on-surface-variant leading-relaxed">

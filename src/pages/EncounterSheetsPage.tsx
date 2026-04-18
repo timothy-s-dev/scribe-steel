@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
+import { PageHeader } from '@/components/PageHeader';
 
 export function EncounterSheetsPage() {
   usePageTitle('Encounter Sheets');
@@ -62,14 +63,10 @@ export function EncounterSheetsPage() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between px-6 py-4 bg-surface-container flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Swords size={20} className="text-on-surface-variant" aria-hidden="true" />
-          <h1 className="text-lg font-headline font-semibold text-on-surface">
-            Encounter Sheets
-          </h1>
-        </div>
-        {isSignedIn && (
+      <PageHeader
+        icon={Swords}
+        title="Encounter Sheets"
+        action={isSignedIn && (
           <button
             onClick={handleOpenDialog}
             disabled={creating}
@@ -79,7 +76,7 @@ export function EncounterSheetsPage() {
             {creating ? 'Creating...' : 'New Encounter'}
           </button>
         )}
-      </div>
+      />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 relative">
         {creating && <CreatingOverlay />}

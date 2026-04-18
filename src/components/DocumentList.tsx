@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
+import { PageHeader } from '@/components/PageHeader';
 
 interface DocumentListProps {
   category: Category;
@@ -73,15 +74,10 @@ export function DocumentList({
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-surface-container flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Icon size={20} className="text-on-surface-variant" aria-hidden="true" />
-          <h1 className="text-lg font-headline font-semibold text-on-surface">
-            {title}
-          </h1>
-        </div>
-        {isSignedIn && (
+      <PageHeader
+        icon={Icon}
+        title={title}
+        action={isSignedIn && (
           <button
             onClick={handleOpenDialog}
             disabled={creating}
@@ -91,7 +87,7 @@ export function DocumentList({
             {creating ? 'Creating...' : 'New'}
           </button>
         )}
-      </div>
+      />
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 relative">

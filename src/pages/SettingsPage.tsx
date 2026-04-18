@@ -3,6 +3,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Switch } from '@/components/ui/switch';
 import type { ZoomMode } from '@/hooks/useZoom';
 import { Settings } from 'lucide-react';
+import { PageHeader } from '@/components/PageHeader';
 
 export function SettingsPage() {
   usePageTitle('Settings');
@@ -10,14 +11,7 @@ export function SettingsPage() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center px-6 py-4 bg-surface-container flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Settings size={20} className="text-on-surface-variant" aria-hidden="true" />
-          <h1 className="text-lg font-headline font-semibold text-on-surface">
-            Settings
-          </h1>
-        </div>
-      </div>
+      <PageHeader icon={Settings} title="Settings" />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6">
         <div className="max-w-lg space-y-8">

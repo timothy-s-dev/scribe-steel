@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
+import { PageHeader } from '@/components/PageHeader';
 
 export function MonsterGroupsPage() {
   usePageTitle('Monster Groups');
@@ -76,14 +77,10 @@ export function MonsterGroupsPage() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between px-6 py-4 bg-surface-container flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Users size={20} className="text-on-surface-variant" aria-hidden="true" />
-          <h1 className="text-lg font-headline font-semibold text-on-surface">
-            Monster Groups
-          </h1>
-        </div>
-        {isSignedIn && (
+      <PageHeader
+        icon={Users}
+        title="Monster Groups"
+        action={isSignedIn && (
           <button
             onClick={handleOpenDialog}
             disabled={creating}
@@ -93,7 +90,7 @@ export function MonsterGroupsPage() {
             {creating ? 'Creating...' : 'New Group'}
           </button>
         )}
-      </div>
+      />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 relative">
         {creating && <CreatingOverlay />}

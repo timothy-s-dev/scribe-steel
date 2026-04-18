@@ -64,7 +64,7 @@ export function EditorPageShell({
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+      <div className="relative z-10 flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
         <button
           onClick={() => navigate(backTo)}
           className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
