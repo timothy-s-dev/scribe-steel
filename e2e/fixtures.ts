@@ -17,9 +17,14 @@ type Fixtures = {
 export const test = base.extend<Options & Fixtures>({
   signedIn: [false, { option: true }],
 
-  // Override `context` so the mock auth key is primed before any page code
-  // runs — including for pages that navigate on mount.
+  // Override `context` so we can prime localStorage before any page code runs:
+  // - always suppress the first-visit storage notice toast, which can intercept
+  //   clicks in mobile-sized viewports
+  // - prime the mock auth key when signedIn is true
   context: async ({ context, signedIn }, use) => {
+    await context.addInitScript(() => {
+      window.localStorage.setItem('scribe-steel-storage-notice-dismissed', '1');
+    });
     if (signedIn) {
       await context.addInitScript((key) => {
         window.localStorage.setItem(key, '1');
