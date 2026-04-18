@@ -7,18 +7,24 @@ export function LoreBooksPage() {
   return (
     <DocumentList
       category="lore-books"
-      basePath="/lore-books"
       title="Lore Books"
       icon={BookOpen}
-      templateName="lore-books"
-      defaultParams={{
-        title: '',
-        category: '',
-        epigraph: '',
-        'epigraph-attribution': '',
-        description: '',
-      }}
-      defaultBody=""
+      itemNoun="lore book"
+      demoEnabled
+      createDocument={() => ({
+        data: {
+          version: 1,
+          template: 'lore-books',
+          params: {
+            title: '',
+            category: '',
+            epigraph: '',
+            'epigraph-attribution': '',
+            description: '',
+          },
+          body: '',
+        },
+      })}
     />
   );
 }

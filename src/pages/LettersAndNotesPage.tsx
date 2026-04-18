@@ -7,12 +7,18 @@ export function LettersAndNotesPage() {
   return (
     <DocumentList
       category="letters-and-notes"
-      basePath="/letters-and-notes"
       title="Letters and Notes"
       icon={PenTool}
-      templateName="letters-and-notes"
-      defaultParams={{ title: '' }}
-      defaultBody=""
+      itemNoun="letter"
+      demoEnabled
+      createDocument={() => ({
+        data: {
+          version: 1,
+          template: 'letters-and-notes',
+          params: { title: '' },
+          body: '',
+        },
+      })}
     />
   );
 }
