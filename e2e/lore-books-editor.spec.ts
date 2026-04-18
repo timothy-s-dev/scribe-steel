@@ -1,0 +1,126 @@
+import { test, expect, type Page } from './fixtures';
+
+test.describe('Lore Books editor', () => {
+  test.describe('Signed-out (demo)', () => {
+    test('renders the demo editor with editable fields and toolbar', async ({ page }) => {
+      await page.goto('/lore-books/demo');
+
+      await expect(visibleField(page, 'Title')).toBeVisible();
+      await expect(visibleField(page, 'Category')).toBeVisible();
+      await expect(visibleField(page, 'Epigraph')).toBeVisible();
+      await expect(visibleField(page, 'Description')).toBeVisible();
+
+      await expect(page.getByRole('switch', { name: /print-friendly/i })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Export PDF' })).toBeVisible();
+    });
+
+    test('demo edits do not persist across reload', async ({ page }) => {
+      await page.goto('/lore-books/demo');
+
+      await visibleField(page, 'Title').fill('Ephemeral Lore');
+      await visibleField(page, 'Category').fill('Myth');
+
+      await page.reload();
+
+      await expect(visibleField(page, 'Title')).toHaveValue('');
+      await expect(visibleField(page, 'Category')).toHaveValue('');
+    });
+  });
+
+  test.describe('Signed-in', () => {
+    test.use({ signedIn: true });
+
+    test('edits to multiple fields persist across reload', async ({ page }) => {
+      await createLoreBook(page, 'Multi-Field Test');
+
+      await visibleField(page, 'Title').fill('The Codex Lumens');
+      await visibleField(page, 'Category').fill('Theology');
+      await visibleField(page, 'Epigraph').fill('Light conquers all.');
+      await visibleField(page, 'Description').fill('A treatise on divine illumination.');
+
+      await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+
+      await page.reload();
+
+      await expect(visibleField(page, 'Title')).toHaveValue('The Codex Lumens');
+      await expect(visibleField(page, 'Category')).toHaveValue('Theology');
+      await expect(visibleField(page, 'Epigraph')).toHaveValue('Light conquers all.');
+      await expect(visibleField(page, 'Description')).toHaveValue('A treatise on divine illumination.');
+    });
+
+    test('conflict dialog fires when remote changes clash with local edits', async ({ page }) => {
+      await createLoreBook(page, 'Conflict Lore');
+      const fileId = page.url().split('/').pop()!;
+
+      await visibleField(page, 'Title').fill('baseline');
+      await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+
+      await page.evaluate(() => {
+        localStorage.setItem('scribe-steel-mock-fail-next', 'save:500');
+      });
+
+      await visibleField(page, 'Title').fill('local edit');
+      await expect(page.getByText('Save failed', { exact: true })).toBeVisible();
+
+      await simulateRemoteEdit(page, fileId, 'remote edit');
+
+      await expect(
+        page.getByRole('heading', { name: 'Document changed elsewhere' }),
+      ).toBeVisible();
+    });
+
+    test('auth expiry: 401 on save surfaces modal, reauth fires queued save', async ({ page }) => {
+      await createLoreBook(page, 'Auth Expiry Lore');
+
+      await page.evaluate(() => {
+        localStorage.setItem('scribe-steel-mock-fail-next', 'save:401');
+      });
+
+      await visibleField(page, 'Title').fill('while-expired edit');
+
+      await expect(
+        page.getByRole('heading', { name: 'Your session expired' }),
+      ).toBeVisible();
+
+      await page.getByRole('button', { name: 'Sign in with Google' }).click();
+
+      await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+      await page.reload();
+      await expect(visibleField(page, 'Title')).toHaveValue('while-expired edit');
+    });
+  });
+});
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+
+async function createLoreBook(page: Page, name: string) {
+  await page.goto('/lore-books');
+  await page.getByRole('button', { name: 'Lore Book', exact: true }).click();
+  await page.getByPlaceholder('Lore Book name').fill(name);
+  await page.getByRole('button', { name: 'Create' }).click();
+  await expect(page).toHaveURL(/\/lore-books\/[^/]+$/);
+}
+
+// Desktop and mobile trees both render the template-params form, so a plain
+// placeholder lookup matches two inputs; also use exact so "Epigraph" doesn't
+// also match "Epigraph Attribution".
+function visibleField(page: Page, placeholder: string) {
+  return page.getByPlaceholder(placeholder, { exact: true }).filter({ visible: true });
+}
+
+async function simulateRemoteEdit(page: Page, fileId: string, newTitle: string) {
+  await page.evaluate(
+    ({ id, title }) => {
+      const raw = localStorage.getItem('scribe-steel-mock-drive-state')!;
+      const state = JSON.parse(raw);
+      state.documents[id].params.title = title;
+      state.documents[id].updatedAt = new Date().toISOString();
+      localStorage.setItem('scribe-steel-mock-drive-state', JSON.stringify(state));
+
+      const qc = (window as unknown as { __queryClient: { invalidateQueries: (args: unknown) => Promise<unknown> } })
+        .__queryClient;
+      void qc.invalidateQueries({ queryKey: ['lore-books', 'document', id] });
+    },
+    { id: fileId, title: newTitle },
+  );
+}
