@@ -25,3 +25,8 @@ dist-ssr
 .playwright-mcp
 .firebase
 scripts/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
