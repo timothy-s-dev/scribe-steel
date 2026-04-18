@@ -18,6 +18,21 @@ class DriveError extends Error {
 const STORAGE_KEY = 'scribe-steel-mock-drive-state';
 const LATENCY_MS = 40;
 
+// Test-only escape hatch: set localStorage["scribe-steel-mock-fail-next"] to
+// e.g. "save:500" or "load:404" to make the next matching op reject with that
+// DriveError status. The flag is consumed on use — one failure per set.
+const FAIL_NEXT_KEY = 'scribe-steel-mock-fail-next';
+
+function maybeInjectFailure(op: 'save' | 'load' | 'list'): void {
+  const raw = localStorage.getItem(FAIL_NEXT_KEY);
+  if (!raw) return;
+  const [failOp, statusStr] = raw.split(':');
+  if (failOp !== op) return;
+  localStorage.removeItem(FAIL_NEXT_KEY);
+  const status = Number.parseInt(statusStr, 10) || 500;
+  throw new DriveError(`Simulated ${op} failure (${status})`, status);
+}
+
 interface MockState {
   settings: { data: unknown; fileId: string } | null;
   indexes: Partial<Record<Category, IndexFile>>;
@@ -100,6 +115,7 @@ export async function saveDocument(
   existingFileId?: string,
 ): Promise<{ fileId: string; updatedAt: string; data: unknown }> {
   requireAuth();
+  maybeInjectFailure('save');
   await delay();
   const state = load();
   const fileId = existingFileId ?? newId();

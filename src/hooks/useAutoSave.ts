@@ -91,6 +91,21 @@ export function useAutoSave(options: AutoSaveOptions): AutoSaveResult {
     doSave(data);
   }, [isSignedIn, doSave]);
 
+  // Flush any pending save on unmount so edits aren't lost when the user
+  // navigates away within the debounce window. doSave is read through a ref
+  // to keep the cleanup tied to true unmount, not every re-render.
+  const doSaveRef = useRef(doSave);
+  doSaveRef.current = doSave;
+  useEffect(() => {
+    return () => {
+      clearTimeout(timerRef.current);
+      if (pendingRef.current !== null) {
+        doSaveRef.current(pendingRef.current);
+        pendingRef.current = null;
+      }
+    };
+  }, []);
+
   const saveStatus: SaveStatus = mutation.isPending
     ? 'saving'
     : mutation.isError

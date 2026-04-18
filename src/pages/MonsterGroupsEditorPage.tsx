@@ -325,9 +325,7 @@ export function MonsterGroupsEditorPage() {
                 ))}
               </div>
               <DialogFooter>
-                <DialogClose>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
+                <DialogClose render={<Button variant="outline">Cancel</Button>} />
               </DialogFooter>
             </DialogContent>
           </Dialog>

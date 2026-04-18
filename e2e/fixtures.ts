@@ -4,6 +4,13 @@ import { test as base, expect } from '@playwright/test';
 // treats this localStorage key as "user is signed in" when set to '1'.
 const MOCK_AUTH_KEY = 'scribe-steel-mock-signed-in';
 
+// Third-party console noise that isn't worth failing tests on. Keep this list
+// narrow — a test that trips on its own bug should still fail.
+const IGNORED_CONSOLE_PATTERNS: RegExp[] = [
+  // @myriaddreamin/typst.ts compiler/renderer init — upstream deprecation.
+  /using deprecated parameters for the initialization function/,
+];
+
 type Options = {
   // Flip via `test.use({ signedIn: true })` at the test or describe level to
   // run a test against the mock's signed-in state.
@@ -39,9 +46,9 @@ export const test = base.extend<Options & Fixtures>({
     async ({ page }, use) => {
       const problems: string[] = [];
       page.on('console', (msg) => {
-        if (msg.type() === 'error' || msg.type() === 'warning') {
-          problems.push(`[${msg.type()}] ${msg.text()}`);
-        }
+        if (msg.type() !== 'error' && msg.type() !== 'warning') return;
+        if (IGNORED_CONSOLE_PATTERNS.some((re) => re.test(msg.text()))) return;
+        problems.push(`[${msg.type()}] ${msg.text()}`);
       });
       page.on('pageerror', (err) => {
         problems.push(`[pageerror] ${err.message}`);

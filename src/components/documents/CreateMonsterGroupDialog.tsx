@@ -90,9 +90,7 @@ export function CreateMonsterGroupDialog({
             </div>
           </div>
           <DialogFooter className="mt-4">
-            <DialogClose>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            <DialogClose render={<Button variant="outline">Cancel</Button>} />
             <Button type="submit" disabled={!name.trim()}>
               Create
             </Button>
