@@ -14,6 +14,7 @@ import {
   onTokenChange,
   isConfigured,
 } from '@/services/google-auth';
+import { clearSessionExpired } from '@/services/session-expiry';
 import { queryClient, clearCache } from '@/lib/queryClient';
 
 interface AuthState {
@@ -50,7 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return onTokenChange((token) => {
       setIsSignedIn(!!token);
-      if (token) queryClient.invalidateQueries();
+      if (token) {
+        clearSessionExpired();
+        queryClient.invalidateQueries();
+      }
     });
   }, [configured]);
 

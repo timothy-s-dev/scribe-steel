@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { SignInButton } from '@/components/SignInButton';
 import { BackgroundAccent } from '@/components/BackgroundAccent';
+import { SessionExpiryDialog } from '@/components/SessionExpiryDialog';
 import { Menu, X, PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
 
 interface NavItem {
@@ -198,6 +199,8 @@ export function AppLayout() {
         <BackgroundAccent />
         <Outlet />
       </main>
+
+      <SessionExpiryDialog />
     </div>
   );
 }
