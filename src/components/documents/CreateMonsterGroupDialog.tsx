@@ -1,10 +1,4 @@
 import { useState } from 'react';
-import { usePageTitle } from '@/hooks/usePageTitle';
-import { Users } from 'lucide-react';
-import { useFetchDocument } from '@/hooks/queries/useDocument';
-import { useIndex } from '@/hooks/queries/useIndex';
-import { DocumentList, type CreateDocumentDialogProps } from '@/components/DocumentList';
-import type { IndexItem, MonsterGroup, SavedMonsterGroup } from '@/data/types';
 import {
   Dialog,
   DialogContent,
@@ -15,53 +9,22 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useIndex } from '@/hooks/queries/useIndex';
+import { useFetchDocument } from '@/hooks/queries/useDocument';
+import { monsterGroupsDocument } from '@/documents/monster-groups';
+import type { MonsterGroup, SavedMonsterGroup } from '@/data/types';
+import type { CreateDialogProps } from './NameOnlyCreateDialog';
 
-interface Extras {
-  copyFrom: string;
-}
-
-export function MonsterGroupsPage() {
-  usePageTitle('Monster Groups');
-  const fetchDocument = useFetchDocument();
-  const { data: monsterIndex } = useIndex('monsters');
-  const maliceSources = (monsterIndex?.items ?? []).filter((g) => g.hasMalice);
-
-  return (
-    <DocumentList<Extras>
-      category="monsters"
-      title="Monster Groups"
-      icon={Users}
-      itemNoun="monster group"
-      createDocument={async (name, { copyFrom }) => {
-        const source = copyFrom ? await fetchDocument<MonsterGroup>('monsters', copyFrom) : null;
-        const data: SavedMonsterGroup = {
-          version: 2,
-          name,
-          malice: source ? structuredClone(source.malice) : [],
-          monsters: [],
-        };
-        return {
-          data,
-          extraIndexFields: {
-            hasMalice: data.malice.length > 0,
-            monsters: [],
-          },
-        };
-      }}
-      renderCreateDocumentDialog={(props) => (
-        <NewMonsterGroupDialog {...props} maliceSources={maliceSources} />
-      )}
-    />
-  );
-}
-
-interface NewMonsterGroupDialogProps extends CreateDocumentDialogProps<Extras> {
-  maliceSources: IndexItem[];
-}
-
-function NewMonsterGroupDialog({ open, onOpenChange, onSubmit, maliceSources }: NewMonsterGroupDialogProps) {
+export function CreateMonsterGroupDialog({
+  open,
+  onOpenChange,
+  onSubmit,
+}: CreateDialogProps<SavedMonsterGroup>) {
   const [name, setName] = useState('');
   const [copyFrom, setCopyFrom] = useState('');
+  const { data: index } = useIndex('monsters');
+  const fetchDocument = useFetchDocument();
+  const maliceSources = (index?.items ?? []).filter((g) => g.hasMalice);
 
   const handleOpenChange = (next: boolean) => {
     if (!next) {
@@ -69,6 +32,19 @@ function NewMonsterGroupDialog({ open, onOpenChange, onSubmit, maliceSources }: 
       setCopyFrom('');
     }
     onOpenChange(next);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed) return;
+
+    const data = monsterGroupsDocument.createDefault(trimmed);
+    if (copyFrom) {
+      const source = await fetchDocument<MonsterGroup>('monsters', copyFrom);
+      data.malice = structuredClone(source.malice);
+    }
+    onSubmit(trimmed, data);
   };
 
   return (
@@ -80,12 +56,7 @@ function NewMonsterGroupDialog({ open, onOpenChange, onSubmit, maliceSources }: 
             Create a new group of monsters with shared malice abilities.
           </DialogDescription>
         </DialogHeader>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit(name, { copyFrom });
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <div className="space-y-3">
             <div>
               <label className="text-xs font-label text-on-surface-variant block mb-1">

@@ -110,7 +110,7 @@ interface StorageLayout {
   folders: Record<Category, string>;
 }
 
-const ALL_CATEGORIES: Category[] = ['monsters', 'encounters', 'letters-and-notes', 'lore-books'];
+const ALL_CATEGORIES: Category[] = ['monsters', 'encounters', 'handwritten', 'lore-books'];
 
 async function initStorageLayout(): Promise<StorageLayout> {
   const root = await findOrCreateFolder('Scribe Steel');

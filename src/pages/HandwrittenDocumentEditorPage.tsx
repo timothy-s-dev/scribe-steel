@@ -33,15 +33,15 @@ interface SavedDocument extends SavedDocMetadata {
 }
 
 function buildSaveData(content: string, params: Record<string, string>): SavedDocument {
-  return { version: 1, template: 'letters-and-notes', params, body: content };
+  return { version: 1, template: 'handwritten', params, body: content };
 }
 
-export function LettersAndNotesEditorPage() {
-  usePageTitle('Letter / Note');
+export function HandwrittenDocumentEditorPage() {
+  usePageTitle('Handwritten Document');
   const { fileId } = useParams<{ fileId: string }>();
   const isNew = fileId === 'demo';
   const { data: loaded, isLoading: loading, error: loadError } = useDocument<SavedDocument>(
-    'letters-and-notes',
+    'handwritten',
     isNew ? undefined : fileId,
     { enabled: !isNew },
   );
@@ -50,13 +50,13 @@ export function LettersAndNotesEditorPage() {
   const [content, setContent] = useState('');
   const [params, setParams] = useState<Record<string, string>>({});
 
-  const { data: index } = useIndex('letters-and-notes');
+  const { data: index } = useIndex('handwritten');
   const docName = isNew
     ? 'Untitled'
     : (index?.items.find((i) => i.fileId === fileId)?.name ?? '');
 
   const { triggerSave, flush, saveStatus } = useAutoSave({
-    category: 'letters-and-notes',
+    category: 'handwritten',
     name: docName,
     fileId: isNew ? null : (fileId ?? null),
     onSaved: (result) => sync.markSaved(result.data),
@@ -97,9 +97,9 @@ export function LettersAndNotesEditorPage() {
     <EditorPageShell
       loading={loading}
       error={error}
-      backTo="/letters-and-notes"
+      backTo="/handwritten"
       parentIcon={PenTool}
-      parentTitle="Letters and Notes"
+      parentTitle="Handwritten"
       title={docName}
       saveStatus={saveStatus}
     >

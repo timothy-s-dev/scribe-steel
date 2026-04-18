@@ -5,9 +5,9 @@ import { ToolCard, type Tool } from '@/components/ToolCard';
 
 const documentTools: Tool[] = [
   {
-    label: 'Letters and Notes',
+    label: 'Handwritten',
     icon: PenTool,
-    to: '/letters-and-notes',
+    to: '/handwritten',
     description: 'Create handwritten-style props to hand your players — letters, journal entries, mysterious notes.',
   },
   {

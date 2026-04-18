@@ -6,13 +6,14 @@ import { Routes, Route } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AppLayout } from '@/layouts/AppLayout';
+import { DocumentList } from '@/components/DocumentList';
+import { handwrittenDocument } from '@/documents/handwritten';
+import { loreBooksDocument } from '@/documents/lore-books';
+import { encountersDocument } from '@/documents/encounters';
+import { monsterGroupsDocument } from '@/documents/monster-groups';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const MonsterCardsPage = lazy(() => import('@/pages/MonsterCardsPage').then(m => ({ default: m.MonsterCardsPage })));
-const EncounterSheetsPage = lazy(() => import('@/pages/EncounterSheetsPage').then(m => ({ default: m.EncounterSheetsPage })));
-const MonsterGroupsPage = lazy(() => import('@/pages/MonsterGroupsPage').then(m => ({ default: m.MonsterGroupsPage })));
-const LettersAndNotesPage = lazy(() => import('@/pages/LettersAndNotesPage').then(m => ({ default: m.LettersAndNotesPage })));
-const LoreBooksPage = lazy(() => import('@/pages/LoreBooksPage').then(m => ({ default: m.LoreBooksPage })));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
 const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
@@ -30,10 +31,10 @@ function TestApp({ route }: { route: string }) {
               <Route element={<AppLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="monster-cards" element={<MonsterCardsPage />} />
-                <Route path="encounter-sheets" element={<EncounterSheetsPage />} />
-                <Route path="monster-groups" element={<MonsterGroupsPage />} />
-                <Route path="letters-and-notes" element={<LettersAndNotesPage />} />
-                <Route path="lore-books" element={<LoreBooksPage />} />
+                <Route path="encounter-sheets" element={<DocumentList type={encountersDocument} />} />
+                <Route path="monster-groups" element={<DocumentList type={monsterGroupsDocument} />} />
+                <Route path="handwritten" element={<DocumentList type={handwrittenDocument} />} />
+                <Route path="lore-books" element={<DocumentList type={loreBooksDocument} />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="privacy" element={<PrivacyPolicyPage />} />
                 <Route path="*" element={<NotFoundPage />} />
@@ -72,10 +73,10 @@ describe('App smoke tests', () => {
     expect(await within(main).findByRole('heading', { name: 'Monster Groups' })).toBeInTheDocument();
   });
 
-  it('renders the letters and notes page', async () => {
-    render(<TestApp route="/letters-and-notes" />);
+  it('renders the handwritten page', async () => {
+    render(<TestApp route="/handwritten" />);
     const main = await screen.findByRole('main');
-    expect(await within(main).findByRole('heading', { name: 'Letters and Notes' })).toBeInTheDocument();
+    expect(await within(main).findByRole('heading', { name: 'Handwritten' })).toBeInTheDocument();
   });
 
   it('renders the lore books page', async () => {

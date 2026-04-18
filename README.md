@@ -9,7 +9,7 @@ A GM toolkit for [Draw Steel](https://mcdmproductions.com/draw-steel) that lets 
 - **Monster Cards** — 3x5 index cards with creature stats
 - **Encounter Sheets** — one-page GM reference for running combats
 - **Monster Groups** — manage collections of creatures
-- **Letters & Notes** — handwritten-style props for players
+- **Handwritten** — handwritten-style props for players
 - **Lore Books** — in-world document summaries
 
 ## Tech Stack

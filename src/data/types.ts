@@ -1,6 +1,6 @@
 // ── Storage types ────────────────────────────────────────────────────────────
 
-export type Category = 'monsters' | 'encounters' | 'letters-and-notes' | 'lore-books';
+export type Category = 'monsters' | 'encounters' | 'handwritten' | 'lore-books';
 
 export interface IndexItem {
   fileId: string;
