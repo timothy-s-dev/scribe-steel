@@ -1,8 +1,15 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { CloudCheck, CloudOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function SignInButton() {
   const { isSignedIn, isLoading, isConfigured, signIn, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate('/');
+  };
 
   if (!isConfigured) {
     return (
@@ -23,7 +30,7 @@ export function SignInButton() {
   if (isSignedIn) {
     return (
       <button
-        onClick={signOut}
+        onClick={handleSignOut}
         className="flex items-center gap-2 px-4 py-2 text-xs font-label text-on-surface-variant hover:text-primary transition-colors w-full cursor-pointer"
       >
         <CloudCheck size={18} aria-hidden="true" />
