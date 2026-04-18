@@ -3,7 +3,7 @@ import { useState, useMemo, useCallback } from 'react';
 type MobileTab = 'edit' | 'preview';
 import { useParams } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { X, Plus, Download } from 'lucide-react';
+import { X, Plus, Download, Swords } from 'lucide-react';
 import { toast } from 'sonner';
 import { Preview } from '@/components/Preview';
 import { PreviewToolbar } from '@/components/PreviewToolbar';
@@ -575,6 +575,8 @@ export function EncounterSheetEditorPage() {
       loading={loading}
       error={error}
       backTo="/encounter-sheets"
+      parentIcon={Swords}
+      parentTitle="Encounter Sheets"
       title={docName || 'Encounter Sheet'}
       saveStatus={isDemo ? undefined : saveStatus}
     >

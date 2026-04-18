@@ -7,6 +7,7 @@ import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { useDocumentSync } from '@/hooks/useDocumentSync';
 import { EditorPageShell } from '@/components/EditorPageShell';
+import { BookOpen } from 'lucide-react';
 import { ConflictDialog } from '@/components/ConflictDialog';
 import lorebookTyp from '@/typst/templates/lorebook.typ?raw';
 import type { TemplateSchema } from '@/typst/templateSchema';
@@ -106,6 +107,8 @@ export function LoreBooksEditorPage() {
       loading={loading}
       error={error}
       backTo="/lore-books"
+      parentIcon={BookOpen}
+      parentTitle="Lore Books"
       title={docName}
       saveStatus={saveStatus}
     >

@@ -7,6 +7,7 @@ import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { useDocumentSync } from '@/hooks/useDocumentSync';
 import { EditorPageShell } from '@/components/EditorPageShell';
+import { PenTool } from 'lucide-react';
 import { ConflictDialog } from '@/components/ConflictDialog';
 import handwrittenTyp from '@/typst/templates/handwritten.typ?raw';
 import type { TemplateSchema } from '@/typst/templateSchema';
@@ -97,6 +98,8 @@ export function LettersAndNotesEditorPage() {
       loading={loading}
       error={error}
       backTo="/letters-and-notes"
+      parentIcon={PenTool}
+      parentTitle="Letters and Notes"
       title={docName}
       saveStatus={saveStatus}
     >

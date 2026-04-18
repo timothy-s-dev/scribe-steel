@@ -1,10 +1,11 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, Skull } from 'lucide-react';
 
 type MobileTab = 'select' | 'preview';
 import { Preview } from '@/components/Preview';
 import { PreviewToolbar } from '@/components/PreviewToolbar';
+import { PageHeader } from '@/components/PageHeader';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
 import { useIndex } from '@/hooks/queries/useIndex';
@@ -32,6 +33,24 @@ function monsterKey(groupName: string, monsterName: string) {
 
 function monstersOf(item: IndexItem): MonsterSummary[] {
   return (item.monsters as MonsterSummary[] | undefined) ?? [];
+}
+
+// Role buckets within a level: Minion (0) → Other (1) → Leader (2).
+function roleRank(monster: MonsterSummary): number {
+  const roles = monster.roles.map((r) => r.toLowerCase());
+  if (roles.some((r) => r.startsWith('minion'))) return 0;
+  if (roles.includes('leader')) return 2;
+  return 1;
+}
+
+function sortedMonsters(monsters: MonsterSummary[]): MonsterSummary[] {
+  return [...monsters].sort((a, b) => {
+    if (a.level !== b.level) return a.level - b.level;
+    const ar = roleRank(a);
+    const br = roleRank(b);
+    if (ar !== br) return ar - br;
+    return a.name.localeCompare(b.name);
+  });
 }
 
 export function MonsterCardsPage() {
@@ -182,9 +201,9 @@ export function MonsterCardsPage() {
 
   const pickerPanel = (
     <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
-      <div className="hidden md:flex items-center px-4 py-2 bg-surface-container flex-shrink-0">
+      <div className="hidden md:flex items-center h-11 px-4 py-2 bg-surface-container flex-shrink-0">
         <span className="text-sm font-semibold font-body text-on-surface">
-          Monster Cards
+          Monsters
         </span>
       </div>
 
@@ -256,6 +275,7 @@ export function MonsterCardsPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
+      <PageHeader icon={Skull} title="Monster Cards" />
       {/* Mobile tab toggle */}
       <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
         <button
@@ -311,8 +331,9 @@ function GroupPicker({
   onToggleGroup: () => void;
   onToggleMonster: (groupName: string, name: string) => void;
 }) {
-  const allChecked = monstersOf(group).every((m) => selected.has(monsterKey(group.name, m.name)));
-  const someChecked = monstersOf(group).some((m) => selected.has(monsterKey(group.name, m.name)));
+  const monsters = useMemo(() => sortedMonsters(monstersOf(group)), [group]);
+  const allChecked = monsters.every((m) => selected.has(monsterKey(group.name, m.name)));
+  const someChecked = monsters.some((m) => selected.has(monsterKey(group.name, m.name)));
 
   return (
     <div>
@@ -347,7 +368,7 @@ function GroupPicker({
 
       {!isCollapsed && (
         <div className="space-y-0.5 ml-6">
-          {monstersOf(group).map((monster) => (
+          {monsters.map((monster) => (
             <label
               key={monster.name}
               className="flex items-start gap-2 cursor-pointer py-1 px-2 rounded-sm hover:bg-surface-container-low transition-colors"
@@ -368,7 +389,7 @@ function GroupPicker({
               </div>
             </label>
           ))}
-          {monstersOf(group).length === 0 && (
+          {monsters.length === 0 && (
             <p className="text-xs font-label text-on-surface-variant/50 px-2 py-1">
               No monsters in this group
             </p>

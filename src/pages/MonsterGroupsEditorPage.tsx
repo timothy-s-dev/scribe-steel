@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { X, Plus, Copy } from 'lucide-react';
+import { X, Plus, Copy, Users } from 'lucide-react';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useAutoSave } from '@/hooks/useAutoSave';
 import { useDocumentSync } from '@/hooks/useDocumentSync';
@@ -207,6 +207,8 @@ export function MonsterGroupsEditorPage() {
       loading={loading}
       error={error || (!loaded && !loading ? 'Group not found' : null)}
       backTo="/monster-groups"
+      parentIcon={Users}
+      parentTitle="Monster Groups"
       title={title}
       saveStatus={saveStatus}
     >
