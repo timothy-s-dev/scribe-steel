@@ -13,10 +13,20 @@ test.describe('Auth', () => {
     test('redirects to home from a non-home page', async ({ page }) => {
       await page.goto('/settings');
       await expect(page).toHaveURL('/settings');
+      await expect(
+        page.locator('#main-content').getByRole('heading', { name: 'Settings' }),
+      ).toBeVisible();
 
       await signOut(page);
 
       await expect(page).toHaveURL('/');
+      // The URL update alone isn't enough — confirm the home page actually rendered.
+      await expect(
+        page.locator('#main-content').getByRole('heading', { name: 'Scribe Steel' }),
+      ).toBeVisible();
+      await expect(
+        page.locator('#main-content').getByRole('heading', { name: 'Settings' }),
+      ).toHaveCount(0);
     });
 
     test('redirects to home from an open editor', async ({ page }) => {
@@ -29,6 +39,11 @@ test.describe('Auth', () => {
       await signOut(page);
 
       await expect(page).toHaveURL('/');
+      // Confirm the home body is actually rendered, not the stale editor.
+      await expect(
+        page.locator('#main-content').getByRole('heading', { name: 'Scribe Steel' }),
+      ).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Back to list' })).toHaveCount(0);
     });
 
     test('list pages show the signed-out UI after sign-out', async ({ page }) => {
