@@ -46,6 +46,18 @@ test.describe('Handwritten editor', () => {
 
       await expect(visibleTitleInput(page)).toHaveValue('');
     });
+
+    test('title is compiled into the preview', async ({ page }) => {
+      await page.goto('/handwritten/demo');
+
+      const marker = 'Preview Title Marker';
+      await visibleTitleInput(page).fill(marker);
+
+      // Typst's SVG overlays selectable text in a .tsel layer — the preview
+      // renders the filled title there once compile finishes. First compile
+      // includes a WASM load, so the timeout is generous.
+      await expect(previewText(page, marker)).toBeVisible({ timeout: 15_000 });
+    });
   });
 
   test.describe('Signed-in', () => {
@@ -190,6 +202,14 @@ async function createDoc(page: Page, name: string) {
 
 function visibleTitleInput(page: Page) {
   return page.getByPlaceholder('Title').filter({ visible: true });
+}
+
+// The Typst preview renders each text run as glyph paths and overlays the
+// original string in a selectable `.tsel` layer. Matching against `.tsel`
+// specifically avoids accidental hits inside the CodeMirror source editor
+// (which also contains the literal string).
+function previewText(page: Page, text: string) {
+  return page.locator('.tsel').filter({ hasText: text });
 }
 
 // Mutate the mock Drive state to simulate a concurrent edit from another

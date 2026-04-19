@@ -25,6 +25,22 @@ test.describe('Lore Books editor', () => {
       await expect(visibleField(page, 'Title')).toHaveValue('');
       await expect(visibleField(page, 'Category')).toHaveValue('');
     });
+
+    test('filled fields are compiled into the preview', async ({ page }) => {
+      await page.goto('/lore-books/demo');
+
+      // Use distinctive markers so we can spot them unambiguously in the
+      // Typst .tsel overlay.
+      await visibleField(page, 'Title').fill('CODEX OF ZARANTH');
+      await visibleField(page, 'Category').fill('Grimoire Entry');
+      await visibleField(page, 'Epigraph').fill('The world listens to those who whisper.');
+      await visibleField(page, 'Description').fill('A forbidden treatise bound in drakeskin.');
+
+      await expect(previewText(page, 'CODEX OF ZARANTH')).toBeVisible({ timeout: 15_000 });
+      await expect(previewText(page, 'Grimoire Entry')).toBeVisible();
+      await expect(previewText(page, 'The world listens to those who whisper.')).toBeVisible();
+      await expect(previewText(page, 'A forbidden treatise bound in drakeskin.')).toBeVisible();
+    });
   });
 
   test.describe('Signed-in', () => {
@@ -106,6 +122,11 @@ async function createLoreBook(page: Page, name: string) {
 // also match "Epigraph Attribution".
 function visibleField(page: Page, placeholder: string) {
   return page.getByPlaceholder(placeholder, { exact: true }).filter({ visible: true });
+}
+
+// Matches text rendered into the Typst preview via its selectable overlay.
+function previewText(page: Page, text: string) {
+  return page.locator('.tsel').filter({ hasText: text });
 }
 
 async function simulateRemoteEdit(page: Page, fileId: string, newTitle: string) {

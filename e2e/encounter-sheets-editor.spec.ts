@@ -18,6 +18,22 @@ test.describe('Encounter Sheets editor', () => {
       await expect(page.getByRole('switch', { name: /print-friendly/i })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Export PDF' })).toBeVisible();
     });
+
+    test('encounter name, group label, and creature name appear in the preview', async ({ page }) => {
+      await page.goto('/encounter-sheets/demo');
+
+      await visible(page.getByRole('textbox', { name: 'Name', exact: true })).fill('BATTLE_OF_CINDER');
+
+      // Add Group creates a group that already contains a blank creature row,
+      // so we can fill both in one pass without clicking Add Creature.
+      await visible(page.getByRole('button', { name: 'Add Group' })).click();
+      await visible(page.getByPlaceholder('Group label')).fill('VANGUARD_SQUAD');
+      await visible(page.getByPlaceholder('Creature name')).fill('GOBLIN_SCOUT');
+
+      await expect(previewText(page, 'BATTLE_OF_CINDER')).toBeVisible({ timeout: 15_000 });
+      await expect(previewText(page, 'VANGUARD_SQUAD')).toBeVisible();
+      await expect(previewText(page, 'GOBLIN_SCOUT')).toBeVisible();
+    });
   });
 
   test.describe('Signed-in', () => {
@@ -111,19 +127,24 @@ test.describe('Encounter Sheets editor', () => {
     test('add a creature to a group and persist', async ({ page }) => {
       await createEncounter(page, 'Creature Test');
 
+      // Add Group seeds the new group with a single blank creature, so one
+      // Remove-creature button already exists after this click.
       await visible(page.getByRole('button', { name: 'Add Group' })).click();
       await visible(page.getByPlaceholder('Group label')).fill('Skirmishers');
+      await expect(
+        visible(page.getByRole('button', { name: 'Remove creature' })),
+      ).toHaveCount(1);
 
+      // Add Creature pushes the total to two.
       await visible(page.getByRole('button', { name: 'Add Creature' })).click();
       await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
       await page.reload();
 
-      // After reload, the group + its (blank) creature should be back. The
-      // creature row contributes a "Remove creature" button.
+      // Both the seeded and the explicitly-added creature survive the reload.
       await expect(
-        visible(page.getByRole('button', { name: 'Remove creature' })).first(),
-      ).toBeVisible();
+        visible(page.getByRole('button', { name: 'Remove creature' })),
+      ).toHaveCount(2);
     });
   });
 });
@@ -140,4 +161,9 @@ async function createEncounter(page: Page, name: string) {
 
 function visible(locator: Locator): Locator {
   return locator.filter({ visible: true });
+}
+
+// Matches text rendered into the Typst preview via its selectable overlay.
+function previewText(page: Page, text: string) {
+  return page.locator('.tsel').filter({ hasText: text });
 }
