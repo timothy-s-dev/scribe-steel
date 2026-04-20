@@ -7,7 +7,7 @@ import { DocumentPreview } from '@/components/DocumentPreview';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave, type SaveStatus } from '@/hooks/useAutoSave';
-import { useDocumentSync, type DocumentSyncResult } from '@/hooks/useDocumentSync';
+import { useDocumentSync } from '@/hooks/useDocumentSync';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { errorLabel, listTitle, notFoundLabel, pageTitle } from '@/documents/titles';
 import type { DocumentMetadata } from '@/documents';
@@ -45,6 +45,7 @@ export function EditorPage<T extends DocumentMetaFields & { name: string }>({
   type,
 }: EditorPageProps<T>) {
   usePageTitle(pageTitle(type));
+  const navigate = useNavigate();
   const { fileId } = useParams<{ fileId: string }>();
   const isDemo = fileId === 'demo';
   const { data: loaded, isLoading: loading, error: loadError } = useDocument<T>(
@@ -52,7 +53,6 @@ export function EditorPage<T extends DocumentMetaFields & { name: string }>({
     isDemo ? undefined : fileId,
     { enabled: !isDemo },
   );
-  const error = loadError ? errorLabel(type) : null;
 
   const { data: indexData } = useIndex(type.category);
 
@@ -102,6 +102,11 @@ export function EditorPage<T extends DocumentMetaFields & { name: string }>({
   );
 
   const hasPreview = !!type.buildSource;
+  const error = loadError
+    ? errorLabel(type)
+    : !isDemo && !loaded && !loading
+      ? notFoundLabel(type)
+      : null;
 
   const formPanel = saved ? (
     <type.FormComponent key={resetKey} initialSaved={saved} onChange={handleChange} />
@@ -111,102 +116,65 @@ export function EditorPage<T extends DocumentMetaFields & { name: string }>({
     <DocumentPreview document={{ metadata: type, data: saved, fileId: fileId ?? '' }} />
   ) : null;
 
-  return (
-    <EditorShell
-      metadata={type}
-      loading={loading}
-      error={error || (!isDemo && !loaded && !loading ? notFoundLabel(type) : null)}
-      title={docName || pageTitle(type)}
-      saveStatus={isDemo ? undefined : saveStatus}
-      sync={isDemo ? undefined : sync}
-    >
-      {hasPreview ? (
-        <div className="flex flex-col h-full overflow-hidden">
-          <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
-            <TabButton active={mobileTab === 'edit'} onClick={() => setMobileTab('edit')}>Edit</TabButton>
-            <TabButton active={mobileTab === 'preview'} onClick={() => setMobileTab('preview')}>Preview</TabButton>
-          </div>
-          <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
-            {formPanel}
-            {previewPanel}
-          </div>
-          <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
-            {mobileTab === 'edit' ? formPanel : previewPanel}
-          </div>
-        </div>
-      ) : (
-        formPanel
-      )}
-    </EditorShell>
-  );
-}
-
-// ── Shell ───────────────────────────────────────────────────────────────────
-
-interface EditorShellProps {
-  metadata: { noun: string; icon: DocumentMetadata<unknown>['icon'] };
-  loading: boolean;
-  error: string | null;
-  title: ReactNode;
-  saveStatus?: SaveStatus;
-  sync?: DocumentSyncResult;
-  children: ReactNode;
-}
-
-function EditorShell({
-  metadata,
-  loading,
-  error,
-  title,
-  saveStatus,
-  sync,
-  children,
-}: EditorShellProps) {
-  const navigate = useNavigate();
-
-  const body = loading ? (
-    <div className="flex-1 flex items-center justify-center">
-      <p className="text-sm font-body text-on-surface-variant">Loading...</p>
-    </div>
-  ) : error ? (
-    <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <p className="text-sm font-body text-tertiary">{error}</p>
-      <button
-        onClick={() => navigate('..', { relative: 'path' })}
-        className="text-sm font-label text-primary hover:text-primary/80 cursor-pointer"
-      >
-        Back to list
-      </button>
+  const editorBody = hasPreview ? (
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+        <TabButton active={mobileTab === 'edit'} onClick={() => setMobileTab('edit')}>Edit</TabButton>
+        <TabButton active={mobileTab === 'preview'} onClick={() => setMobileTab('preview')}>Preview</TabButton>
+      </div>
+      <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
+        {formPanel}
+        {previewPanel}
+      </div>
+      <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
+        {mobileTab === 'edit' ? formPanel : previewPanel}
+      </div>
     </div>
   ) : (
-    <>
-      <div className="relative z-10 flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
-        <button
-          onClick={() => navigate('..', { relative: 'path' })}
-          className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-          aria-label="Back to list"
-          title="Back to list"
-        >
-          <ArrowLeft size={18} aria-hidden="true" />
-        </button>
-        <div className="text-sm font-semibold font-body text-on-surface truncate flex-1 min-w-0">
-          {title}
-        </div>
-        {saveStatus && (
-          <span className="text-xs font-label text-on-surface-variant/50">
-            {saveStatusLabel(saveStatus)}
-          </span>
-        )}
-      </div>
-      <div className="flex-1 min-h-0 overflow-hidden">{children}</div>
-    </>
+    formPanel
   );
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <PageHeader icon={metadata.icon} title={listTitle(metadata)} />
-      {body}
-      {sync && (
+      <PageHeader icon={type.icon} title={listTitle(type)} />
+      {loading ? (
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-sm font-body text-on-surface-variant">Loading...</p>
+        </div>
+      ) : error ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+          <p className="text-sm font-body text-tertiary">{error}</p>
+          <button
+            onClick={() => navigate('..', { relative: 'path' })}
+            className="text-sm font-label text-primary hover:text-primary/80 cursor-pointer"
+          >
+            Back to list
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="relative z-10 flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+            <button
+              onClick={() => navigate('..', { relative: 'path' })}
+              className="p-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              aria-label="Back to list"
+              title="Back to list"
+            >
+              <ArrowLeft size={18} aria-hidden="true" />
+            </button>
+            <div className="text-sm font-semibold font-body text-on-surface truncate flex-1 min-w-0">
+              {docName || pageTitle(type)}
+            </div>
+            {!isDemo && saveStatus && (
+              <span className="text-xs font-label text-on-surface-variant/50">
+                {saveStatusLabel(saveStatus)}
+              </span>
+            )}
+          </div>
+          <div className="flex-1 min-h-0 overflow-hidden">{editorBody}</div>
+        </>
+      )}
+      {!isDemo && (
         <ConflictDialog
           open={!!sync.conflict}
           localUpdatedAt={sync.conflict?.local}
