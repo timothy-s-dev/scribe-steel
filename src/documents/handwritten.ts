@@ -1,22 +1,13 @@
 import { PenTool } from 'lucide-react';
 import handwrittenTyp from '@/typst/templates/handwritten.typ?raw';
-import { generatePreamble, type TemplateSchema } from '@/typst/templateSchema';
 import { HandwrittenForm } from '@/components/forms/HandwrittenForm';
+import { importLine, quoteString, showWith } from '@/typst/preamble';
 import type { DocumentMetadata, TemplateDocument } from './types';
 
 export type HandwrittenDocument = TemplateDocument;
 
-export const handwrittenSchema: TemplateSchema = {
-  name: 'Handwritten Note',
-  importPath: '/templates/handwritten.typ',
-  functionName: 'handwritten',
-  params: [
-    { key: 'title', label: 'Title', type: 'string', optional: true },
-  ],
-  files: [
-    { path: '/templates/handwritten.typ', content: handwrittenTyp },
-  ],
-};
+const IMPORT_PATH = '/templates/handwritten.typ';
+const TEMPLATE_FILES = [{ path: IMPORT_PATH, content: handwrittenTyp }];
 
 export const handwrittenMetadata: DocumentMetadata<HandwrittenDocument> = {
   category: 'handwritten',
@@ -31,8 +22,12 @@ export const handwrittenMetadata: DocumentMetadata<HandwrittenDocument> = {
     params: { title: '' },
     body: '',
   }),
-  buildSource: (data) => ({
-    source: generatePreamble(handwrittenSchema, data.params) + data.body,
-    files: handwrittenSchema.files,
-  }),
+  buildSource: (data) => {
+    const args: string[] = [];
+    if (data.params.title) args.push(`  title: ${quoteString(data.params.title)}`);
+    return {
+      source: [importLine(IMPORT_PATH), showWith('handwritten', args), '', data.body].join('\n'),
+      files: TEMPLATE_FILES,
+    };
+  },
 };

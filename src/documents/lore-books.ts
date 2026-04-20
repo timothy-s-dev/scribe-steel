@@ -1,31 +1,13 @@
 import { BookOpen } from 'lucide-react';
 import lorebookTyp from '@/typst/templates/lorebook.typ?raw';
-import { generatePreamble, type TemplateSchema } from '@/typst/templateSchema';
 import { LoreBookForm } from '@/components/forms/LoreBookForm';
+import { contentBlock, importLine, quoteString, showWith } from '@/typst/preamble';
 import type { DocumentMetadata, TemplateDocument } from './types';
 
 export type LoreBookDocument = TemplateDocument;
 
-export const loreBookSchema: TemplateSchema = {
-  name: 'Lore Book',
-  importPath: '/templates/lorebook.typ',
-  functionName: 'lorebook',
-  params: [
-    { key: 'title', label: 'Title', type: 'string' },
-    { key: 'category', label: 'Category', type: 'string', optional: true },
-    { key: 'epigraph', label: 'Epigraph', type: 'content', optional: true },
-    {
-      key: 'epigraph-attribution',
-      label: 'Epigraph Attribution',
-      type: 'string',
-      optional: true,
-    },
-    { key: 'description', label: 'Description', type: 'content', optional: true },
-  ],
-  files: [
-    { path: '/templates/lorebook.typ', content: lorebookTyp },
-  ],
-};
+const IMPORT_PATH = '/templates/lorebook.typ';
+const TEMPLATE_FILES = [{ path: IMPORT_PATH, content: lorebookTyp }];
 
 export const loreBooksMetadata: DocumentMetadata<LoreBookDocument> = {
   category: 'lore-books',
@@ -46,8 +28,17 @@ export const loreBooksMetadata: DocumentMetadata<LoreBookDocument> = {
     },
     body: '',
   }),
-  buildSource: (data) => ({
-    source: generatePreamble(loreBookSchema, data.params) + data.body,
-    files: loreBookSchema.files,
-  }),
+  buildSource: (data) => {
+    const p = data.params;
+    const args: string[] = [];
+    if (p.title) args.push(`  title: ${quoteString(p.title)}`);
+    if (p.category) args.push(`  category: ${quoteString(p.category)}`);
+    if (p.epigraph) args.push(`  epigraph: ${contentBlock(p.epigraph)}`);
+    if (p['epigraph-attribution']) args.push(`  epigraph-attribution: ${quoteString(p['epigraph-attribution'])}`);
+    if (p.description) args.push(`  description: ${contentBlock(p.description)}`);
+    return {
+      source: [importLine(IMPORT_PATH), showWith('lorebook', args), '', data.body].join('\n'),
+      files: TEMPLATE_FILES,
+    };
+  },
 };

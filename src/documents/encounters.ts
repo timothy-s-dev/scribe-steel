@@ -1,14 +1,12 @@
 import { Swords } from 'lucide-react';
 import encounterTyp from '@/typst/templates/encounter.typ?raw';
 import { EncounterForm } from '@/components/forms/EncounterForm';
-import type { VirtualFile } from '@/typst/compiler';
+import { importLine, showWith } from '@/typst/preamble';
 import type { DocumentMetaFields } from '@/data/types';
 import type { DocumentMetadata } from './types';
 
-const TEMPLATE_FILE: VirtualFile = {
-  path: '/templates/encounter.typ',
-  content: encounterTyp,
-};
+const IMPORT_PATH = '/templates/encounter.typ';
+const PAYLOAD_PATH = '/data/encounter.json';
 
 export interface EncounterDocument extends DocumentMetaFields {
   version: number;
@@ -56,25 +54,26 @@ export const encountersMetadata: DocumentMetadata<EncounterDocument> = {
   FormComponent: EncounterForm,
   buildSource: (data) => {
     const payload = stripMetadata(data);
-    const lines = [
-      '#import "/templates/encounter.typ": *',
-      '#let _data = json("/data/encounter.json")',
-      '#show: encounter-sheet.with(',
-      '  encounter: _data.name,',
-      '  objective: _data.objective,',
-      '  victory: _data.victory,',
-      '  failure: _data.failure,',
-      '  malice: _data.malice,',
-      '  groups: _data.groups,',
-      ')',
-      '',
+    const args = [
+      '  encounter: _data.name',
+      '  objective: _data.objective',
+      '  victory: _data.victory',
+      '  failure: _data.failure',
+      '  malice: _data.malice',
+      '  groups: _data.groups',
     ];
-    if (data.notes.trim()) lines.push(data.notes);
+    const source = [
+      importLine(IMPORT_PATH),
+      `#let _data = json("${PAYLOAD_PATH}")`,
+      showWith('encounter-sheet', args),
+      '',
+      data.notes.trim() ? data.notes : '',
+    ].join('\n');
     return {
-      source: lines.join('\n'),
+      source,
       files: [
-        TEMPLATE_FILE,
-        { path: '/data/encounter.json', content: JSON.stringify(payload) },
+        { path: IMPORT_PATH, content: encounterTyp },
+        { path: PAYLOAD_PATH, content: JSON.stringify(payload) },
       ],
     };
   },
