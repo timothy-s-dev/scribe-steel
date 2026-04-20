@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { SignInButton } from '@/components/SignInButton';
-import { BackgroundAccent } from '@/components/BackgroundAccent';
 import { SessionExpiryDialog } from '@/components/SessionExpiryDialog';
 import { Menu, X, PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
 
@@ -136,6 +135,15 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <SignInButton />
       </div>
     </>
+  );
+}
+
+function BackgroundAccent() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary rounded-full blur-[120px]" />
+      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-secondary-container rounded-full blur-[160px] opacity-10" />
+    </div>
   );
 }
 
