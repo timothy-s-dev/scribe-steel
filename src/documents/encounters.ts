@@ -8,8 +8,6 @@ import type { DocumentMetadata } from './types';
 const IMPORT_PATH = '/templates/encounter.typ';
 
 export interface EncounterDocument extends DocumentMetaFields {
-  version: number;
-  name: string;
   title: string;
   objective: string;
   victory: string;

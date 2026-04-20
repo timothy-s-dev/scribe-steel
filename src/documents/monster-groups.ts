@@ -4,8 +4,6 @@ import type { DocumentMetaFields, Feature, Monster } from '@/data/types';
 import type { DocumentMetadata } from './types';
 
 export interface MonsterGroupDocument extends DocumentMetaFields {
-  version: number;
-  name: string;
   malice: Feature[];
   monsters: Monster[];
 }

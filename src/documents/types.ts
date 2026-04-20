@@ -30,8 +30,6 @@ export interface Document<Data> {
 }
 
 export interface TemplateDocument extends DocumentMetaFields {
-  version: number;
-  name: string;
   title: string;
   content: string;
 }
