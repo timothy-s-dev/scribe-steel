@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { TypstEditor } from '@/components/TypstEditor';
-import { TemplateParamsForm } from '@/components/TemplateParamsForm';
-import { handwrittenSchema, type HandwrittenDocument } from '@/documents/handwritten';
+import { type HandwrittenDocument } from '@/documents/handwritten';
 
 const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 const labelClass = 'text-xs font-label text-on-surface-variant';
+const optionalClass = 'text-outline/50 ml-1';
 
 interface HandwrittenFormProps {
   initialSaved: HandwrittenDocument;
@@ -33,7 +33,7 @@ export function HandwrittenForm({ initialSaved, onChange }: HandwrittenFormProps
 
   return (
     <div className="flex-1 min-w-0 md:w-1/2 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
-      <div className="px-4 py-3 bg-surface-container flex-shrink-0">
+      <div className="flex-shrink-0 bg-surface-container px-4 py-3 space-y-2">
         <label className="block space-y-1">
           <span className={labelClass}>Name</span>
           <input
@@ -43,12 +43,18 @@ export function HandwrittenForm({ initialSaved, onChange }: HandwrittenFormProps
             placeholder="Handwritten document name"
           />
         </label>
+        <label className="block space-y-1">
+          <span className={labelClass}>
+            Title<span className={optionalClass}>(optional)</span>
+          </span>
+          <input
+            className={inputClass}
+            value={saved.params.title ?? ''}
+            onChange={(e) => setParam('title', e.target.value)}
+            placeholder="Title"
+          />
+        </label>
       </div>
-      <TemplateParamsForm
-        params={handwrittenSchema.params ?? []}
-        values={saved.params}
-        onChange={setParam}
-      />
       <TypstEditor value={saved.body} onChange={setBody} />
     </div>
   );

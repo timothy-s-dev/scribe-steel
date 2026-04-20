@@ -16,13 +16,6 @@ export interface TemplateSchema {
   files: VirtualFile[];
 }
 
-/** Props passed to any params form component (default or custom). */
-export interface ParamsFormProps {
-  params: TemplateParam[];
-  values: Record<string, string>;
-  onChange: (key: string, value: string) => void;
-}
-
 /**
  * Generate the preamble (#import + #show) from a schema and param values.
  */
