@@ -1,24 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TypstEditor } from '@/components/TypstEditor';
-import handwrittenTyp from '@/typst/templates/handwritten.typ?raw';
-import type { TemplateSchema } from '@/typst/templateSchema';
-import type { HandwrittenDocument } from '@/documents/handwritten';
+import { TemplateParamsForm } from '@/components/TemplateParamsForm';
+import { handwrittenSchema, type HandwrittenDocument } from '@/documents/handwritten';
 
-const schema: TemplateSchema = {
-  name: 'Handwritten Note',
-  importPath: '/templates/handwritten.typ',
-  functionName: 'handwritten',
-  params: [
-    { key: 'title', label: 'Title', type: 'string', optional: true },
-  ],
-  files: [
-    { path: '/templates/handwritten.typ', content: handwrittenTyp },
-  ],
-};
-
-function buildSaveData(content: string, params: Record<string, string>): HandwrittenDocument {
-  return { version: 1, template: 'handwritten', params, body: content };
-}
+const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
+const labelClass = 'text-xs font-label text-on-surface-variant';
 
 interface HandwrittenFormProps {
   initialSaved: HandwrittenDocument;
@@ -26,29 +12,44 @@ interface HandwrittenFormProps {
 }
 
 export function HandwrittenForm({ initialSaved, onChange }: HandwrittenFormProps) {
-  const [content, setContent] = useState(initialSaved.body);
-  const [params, setParams] = useState<Record<string, string>>(initialSaved.params);
+  const [saved, setSaved] = useState<HandwrittenDocument>(initialSaved);
 
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+  const firstEmitRef = useRef(true);
 
-  const handleContentChange = (next: string) => {
-    setContent(next);
-    onChangeRef.current(buildSaveData(next, params));
-  };
+  useEffect(() => {
+    if (firstEmitRef.current) {
+      firstEmitRef.current = false;
+      return;
+    }
+    onChangeRef.current(saved);
+  }, [saved]);
 
-  const handleParamsChange = (next: Record<string, string>) => {
-    setParams(next);
-    onChangeRef.current(buildSaveData(content, next));
-  };
+  const setName = (name: string) => setSaved((prev) => ({ ...prev, name }));
+  const setBody = (body: string) => setSaved((prev) => ({ ...prev, body }));
+  const setParam = (key: string, value: string) =>
+    setSaved((prev) => ({ ...prev, params: { ...prev.params, [key]: value } }));
 
   return (
-    <TypstEditor
-      schema={schema}
-      content={content}
-      params={params}
-      onContentChange={handleContentChange}
-      onParamsChange={handleParamsChange}
-    />
+    <div className="flex-1 min-w-0 md:w-1/2 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
+      <div className="px-4 py-3 bg-surface-container flex-shrink-0">
+        <label className="block space-y-1">
+          <span className={labelClass}>Name</span>
+          <input
+            className={inputClass}
+            value={saved.name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Handwritten document name"
+          />
+        </label>
+      </div>
+      <TemplateParamsForm
+        params={handwrittenSchema.params ?? []}
+        values={saved.params}
+        onChange={setParam}
+      />
+      <TypstEditor value={saved.body} onChange={setBody} />
+    </div>
   );
 }

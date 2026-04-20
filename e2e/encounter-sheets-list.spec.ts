@@ -9,7 +9,7 @@ test.describe('Encounter Sheets list page', () => {
         page.getByRole('heading', { name: 'Encounter Sheets', level: 1 }),
       ).toBeVisible();
       await expect(
-        page.getByText('Sign in with Google to save and manage encounters.'),
+        page.getByText('Sign in with Google to save and manage encounter sheets.'),
       ).toBeVisible();
       await expect(page.getByRole('button', { name: 'Try without saving' })).toBeVisible();
     });
@@ -27,20 +27,20 @@ test.describe('Encounter Sheets list page', () => {
     test('empty state shows the create prompt', async ({ page }) => {
       await page.goto('/encounter-sheets');
 
-      await expect(page.getByText(/No encounters yet\. Click/)).toBeVisible();
-      await expect(page.getByRole('button', { name: 'Encounter', exact: true })).toBeVisible();
+      await expect(page.getByText(/No encounter sheets yet\. Click/)).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Encounter Sheet', exact: true })).toBeVisible();
     });
 
     test('create flow: dialog → name → redirects to editor', async ({ page }) => {
       await page.goto('/encounter-sheets');
-      await page.getByRole('button', { name: 'Encounter', exact: true }).click();
+      await page.getByRole('button', { name: 'Encounter Sheet', exact: true }).click();
 
-      await expect(page.getByRole('heading', { name: 'New Encounter' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'New Encounter Sheet' })).toBeVisible();
 
       const createButton = page.getByRole('button', { name: 'Create' });
       await expect(createButton).toBeDisabled();
 
-      await page.getByPlaceholder('Encounter name').fill('Battle of the Ford');
+      await page.getByPlaceholder('Encounter Sheet name').fill('Battle of the Ford');
       await expect(createButton).toBeEnabled();
       await createButton.click();
 
@@ -49,8 +49,8 @@ test.describe('Encounter Sheets list page', () => {
 
     test('created encounter appears in the list and opens on click', async ({ page }) => {
       await page.goto('/encounter-sheets');
-      await page.getByRole('button', { name: 'Encounter', exact: true }).click();
-      await page.getByPlaceholder('Encounter name').fill('Round Trip Encounter');
+      await page.getByRole('button', { name: 'Encounter Sheet', exact: true }).click();
+      await page.getByPlaceholder('Encounter Sheet name').fill('Round Trip Encounter');
       await page.getByRole('button', { name: 'Create' }).click();
       await expect(page).toHaveURL(/\/encounter-sheets\/[^/]+$/);
 

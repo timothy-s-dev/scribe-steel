@@ -5,7 +5,7 @@ test.describe('Handwritten list page', () => {
     test('renders with sign-in prompt and Try-without-saving button', async ({ page }) => {
       await page.goto('/handwritten');
 
-      await expect(page.getByRole('heading', { name: 'Handwritten', level: 1 })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Handwritten Documents', level: 1 })).toBeVisible();
       await expect(
         page.getByText('Sign in with Google to save and manage handwritten documents.'),
       ).toBeVisible();

@@ -1,33 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TypstEditor } from '@/components/TypstEditor';
-import lorebookTyp from '@/typst/templates/lorebook.typ?raw';
-import type { TemplateSchema } from '@/typst/templateSchema';
-import type { LoreBookDocument } from '@/documents/lore-books';
+import { TemplateParamsForm } from '@/components/TemplateParamsForm';
+import { loreBookSchema, type LoreBookDocument } from '@/documents/lore-books';
 
-const schema: TemplateSchema = {
-  name: 'Lore Book',
-  importPath: '/templates/lorebook.typ',
-  functionName: 'lorebook',
-  params: [
-    { key: 'title', label: 'Title', type: 'string' },
-    { key: 'category', label: 'Category', type: 'string', optional: true },
-    { key: 'epigraph', label: 'Epigraph', type: 'content', optional: true },
-    {
-      key: 'epigraph-attribution',
-      label: 'Epigraph Attribution',
-      type: 'string',
-      optional: true,
-    },
-    { key: 'description', label: 'Description', type: 'content', optional: true },
-  ],
-  files: [
-    { path: '/templates/lorebook.typ', content: lorebookTyp },
-  ],
-};
-
-function buildSaveData(content: string, params: Record<string, string>): LoreBookDocument {
-  return { version: 1, template: 'lore-books', params, body: content };
-}
+const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
+const labelClass = 'text-xs font-label text-on-surface-variant';
 
 interface LoreBookFormProps {
   initialSaved: LoreBookDocument;
@@ -35,29 +12,44 @@ interface LoreBookFormProps {
 }
 
 export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
-  const [content, setContent] = useState(initialSaved.body);
-  const [params, setParams] = useState<Record<string, string>>(initialSaved.params);
+  const [saved, setSaved] = useState<LoreBookDocument>(initialSaved);
 
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+  const firstEmitRef = useRef(true);
 
-  const handleContentChange = (next: string) => {
-    setContent(next);
-    onChangeRef.current(buildSaveData(next, params));
-  };
+  useEffect(() => {
+    if (firstEmitRef.current) {
+      firstEmitRef.current = false;
+      return;
+    }
+    onChangeRef.current(saved);
+  }, [saved]);
 
-  const handleParamsChange = (next: Record<string, string>) => {
-    setParams(next);
-    onChangeRef.current(buildSaveData(content, next));
-  };
+  const setName = (name: string) => setSaved((prev) => ({ ...prev, name }));
+  const setBody = (body: string) => setSaved((prev) => ({ ...prev, body }));
+  const setParam = (key: string, value: string) =>
+    setSaved((prev) => ({ ...prev, params: { ...prev.params, [key]: value } }));
 
   return (
-    <TypstEditor
-      schema={schema}
-      content={content}
-      params={params}
-      onContentChange={handleContentChange}
-      onParamsChange={handleParamsChange}
-    />
+    <div className="flex-1 min-w-0 md:w-1/2 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
+      <div className="px-4 py-3 bg-surface-container flex-shrink-0">
+        <label className="block space-y-1">
+          <span className={labelClass}>Name</span>
+          <input
+            className={inputClass}
+            value={saved.name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Lore book name"
+          />
+        </label>
+      </div>
+      <TemplateParamsForm
+        params={loreBookSchema.params ?? []}
+        values={saved.params}
+        onChange={setParam}
+      />
+      <TypstEditor value={saved.body} onChange={setBody} />
+    </div>
   );
 }

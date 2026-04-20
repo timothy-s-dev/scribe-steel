@@ -28,7 +28,7 @@ const mainNav: NavEntry[] = [
   {
     label: 'Documents',
     items: [
-      { label: 'Handwritten', icon: PenTool, to: '/handwritten' },
+      { label: 'Handwritten Documents', icon: PenTool, to: '/handwritten' },
       { label: 'Lore Books', icon: BookOpen, to: '/lore-books' },
     ],
   },

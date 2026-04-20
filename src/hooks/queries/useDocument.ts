@@ -1,7 +1,7 @@
-import { useQuery, useQueries, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueries, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { loadDocument as loadDriveDocument, saveDocument, removeDocument } from '@/services/google-drive';
 import { loadStaticDocument } from './staticData';
-import type { Category } from '@/data/types';
+import type { Category, IndexFile } from '@/data/types';
 
 async function loadDocument<T>(category: Category, id: string): Promise<T> {
   const staticResult = loadStaticDocument(category, id);
@@ -9,21 +9,45 @@ async function loadDocument<T>(category: Category, id: string): Promise<T> {
   return loadDriveDocument<T>(id);
 }
 
+// Ensures loaded docs have a canonical `name` field even if they were saved
+// before the schema rename. Falls back in order: existing name, legacy
+// `encounter` field, the index entry's name. Missing name becomes ''.
+function backfillName<T>(data: T, queryClient: QueryClient, category: Category, id: string): T {
+  if (!data || typeof data !== 'object') return data;
+  const obj = data as Record<string, unknown>;
+  if (typeof obj.name === 'string' && obj.name.length > 0) return data;
+  const legacy = obj.encounter;
+  if (typeof legacy === 'string' && legacy.length > 0) {
+    return { ...obj, name: legacy } as T;
+  }
+  const index = queryClient.getQueryData<IndexFile>([category, 'index']);
+  const item = index?.items.find((i) => i.fileId === id);
+  return { ...obj, name: item?.name ?? '' } as T;
+}
+
 export function useDocument<T = unknown>(category: Category, id: string | undefined, options?: { enabled?: boolean }) {
+  const queryClient = useQueryClient();
   const enabled = options?.enabled ?? true;
   return useQuery<T>({
     queryKey: [category, 'document', id],
-    queryFn: () => loadDocument<T>(category, id!),
+    queryFn: async () => {
+      const data = await loadDocument<T>(category, id!);
+      return backfillName(data, queryClient, category, id!);
+    },
     enabled: enabled && !!id,
     staleTime: 30 * 1000,
   });
 }
 
 export function useDocuments<T = unknown>(category: Category, ids: string[]) {
+  const queryClient = useQueryClient();
   return useQueries({
     queries: ids.map((id) => ({
       queryKey: [category, 'document', id] as const,
-      queryFn: () => loadDocument<T>(category, id),
+      queryFn: async () => {
+        const data = await loadDocument<T>(category, id);
+        return backfillName(data, queryClient, category, id);
+      },
       staleTime: 30 * 1000,
     })),
   });
@@ -34,7 +58,10 @@ export function useFetchDocument() {
   return <T = unknown>(category: Category, id: string) =>
     queryClient.fetchQuery<T>({
       queryKey: [category, 'document', id],
-      queryFn: () => loadDocument<T>(category, id),
+      queryFn: async () => {
+        const data = await loadDocument<T>(category, id);
+        return backfillName(data, queryClient, category, id);
+      },
       staleTime: 30 * 1000,
     });
 }

@@ -153,8 +153,8 @@ test.describe('Encounter Sheets editor', () => {
 
 async function createEncounter(page: Page, name: string) {
   await page.goto('/encounter-sheets');
-  await page.getByRole('button', { name: 'Encounter', exact: true }).click();
-  await page.getByPlaceholder('Encounter name').fill(name);
+  await page.getByRole('button', { name: 'Encounter Sheet', exact: true }).click();
+  await page.getByPlaceholder('Encounter Sheet name').fill(name);
   await page.getByRole('button', { name: 'Create' }).click();
   await expect(page).toHaveURL(/\/encounter-sheets\/[^/]+$/);
 }

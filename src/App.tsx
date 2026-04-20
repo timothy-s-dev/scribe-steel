@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { DocumentList } from '@/components/DocumentList';
+import { EditorPage } from '@/components/EditorPage';
 import { handwrittenMetadata } from '@/documents/handwritten';
 import { loreBooksMetadata } from '@/documents/lore-books';
 import { encountersMetadata } from '@/documents/encounters';
@@ -9,11 +11,6 @@ import { monsterGroupsMetadata } from '@/documents/monster-groups';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const MonsterCardsPage = lazy(() => import('@/pages/MonsterCardsPage').then(m => ({ default: m.MonsterCardsPage })));
-const DocumentList = lazy(() => import('@/components/DocumentList').then(m => ({ default: m.DocumentList })));
-const EncounterSheetEditorPage = lazy(() => import('@/pages/EncounterSheetEditorPage').then(m => ({ default: m.EncounterSheetEditorPage })));
-const MonsterGroupsEditorPage = lazy(() => import('@/pages/MonsterGroupsEditorPage').then(m => ({ default: m.MonsterGroupsEditorPage })));
-const HandwrittenDocumentEditorPage = lazy(() => import('@/pages/HandwrittenDocumentEditorPage').then(m => ({ default: m.HandwrittenDocumentEditorPage })));
-const LoreBooksEditorPage = lazy(() => import('@/pages/LoreBooksEditorPage').then(m => ({ default: m.LoreBooksEditorPage })));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
 const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
@@ -28,13 +25,13 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="monster-cards" element={<MonsterCardsPage />} />
               <Route path="encounter-sheets" element={<DocumentList type={encountersMetadata} />} />
-              <Route path="encounter-sheets/:fileId" element={<EncounterSheetEditorPage />} />
+              <Route path="encounter-sheets/:fileId" element={<EditorPage type={encountersMetadata} />} />
               <Route path="monster-groups" element={<DocumentList type={monsterGroupsMetadata} />} />
-              <Route path="monster-groups/:fileId" element={<MonsterGroupsEditorPage />} />
+              <Route path="monster-groups/:fileId" element={<EditorPage type={monsterGroupsMetadata} />} />
               <Route path="handwritten" element={<DocumentList type={handwrittenMetadata} />} />
-              <Route path="handwritten/:fileId" element={<HandwrittenDocumentEditorPage />} />
+              <Route path="handwritten/:fileId" element={<EditorPage type={handwrittenMetadata} />} />
               <Route path="lore-books" element={<DocumentList type={loreBooksMetadata} />} />
-              <Route path="lore-books/:fileId" element={<LoreBooksEditorPage />} />
+              <Route path="lore-books/:fileId" element={<EditorPage type={loreBooksMetadata} />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="privacy" element={<PrivacyPolicyPage />} />
               <Route path="*" element={<NotFoundPage />} />

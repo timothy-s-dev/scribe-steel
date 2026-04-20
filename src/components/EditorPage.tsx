@@ -1,10 +1,17 @@
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, type LucideIcon } from 'lucide-react';
-import type { SaveStatus } from '@/hooks/useAutoSave';
-import type { ReactNode } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ConflictDialog } from '@/components/ConflictDialog';
-import type { DocumentSyncResult } from '@/hooks/useDocumentSync';
+import { DocumentPreview } from '@/components/DocumentPreview';
+import { useDocument } from '@/hooks/queries/useDocument';
+import { useIndex } from '@/hooks/queries/useIndex';
+import { useAutoSave, type SaveStatus } from '@/hooks/useAutoSave';
+import { useDocumentSync, type DocumentSyncResult } from '@/hooks/useDocumentSync';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { errorLabel, listTitle, notFoundLabel, pageTitle } from '@/documents/titles';
+import type { DocumentMetadata } from '@/documents';
+import type { DocumentMetaFields } from '@/data/types';
 
 function saveStatusLabel(status: SaveStatus): string {
   switch (status) {
@@ -19,35 +26,142 @@ function saveStatusLabel(status: SaveStatus): string {
   }
 }
 
-interface MetadataChrome {
-  icon: LucideIcon;
-  listTitle: string;
+function stripMeta<T extends DocumentMetaFields>(d: T): Omit<T, 'updatedAt'> {
+  const { updatedAt: _u, ...rest } = d;
+  return rest;
 }
 
-interface EditorPageProps {
+type MobileTab = 'edit' | 'preview';
+
+interface EditorPageProps<T extends DocumentMetaFields & { name: string }> {
+  type: DocumentMetadata<T>;
+}
+
+// Generic orchestrator for every editor page. Handles param parsing, document
+// loading, save orchestration, conflict detection, and split form/preview
+// layout with mobile tabs. Per-type behavior is entirely driven by the
+// metadata descriptor.
+export function EditorPage<T extends DocumentMetaFields & { name: string }>({
+  type,
+}: EditorPageProps<T>) {
+  usePageTitle(pageTitle(type));
+  const { fileId } = useParams<{ fileId: string }>();
+  const isDemo = fileId === 'demo';
+  const { data: loaded, isLoading: loading, error: loadError } = useDocument<T>(
+    type.category,
+    isDemo ? undefined : fileId,
+    { enabled: !isDemo },
+  );
+  const error = loadError ? errorLabel(type) : null;
+
+  const { data: indexData } = useIndex(type.category);
+
+  const [saved, setSaved] = useState<T | null>(() =>
+    isDemo ? type.createDefault('') : null,
+  );
+  const [resetKey, setResetKey] = useState(0);
+  const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
+
+  const docName = isDemo
+    ? 'Demo'
+    : (saved?.name || indexData?.items.find((i) => i.fileId === fileId)?.name || '');
+
+  const { triggerSave, flush, saveStatus } = useAutoSave({
+    category: type.category,
+    name: docName,
+    fileId: isDemo ? null : (fileId ?? null),
+    deriveIndexFields: type.indexFields
+      ? (data) => type.indexFields!(data as T)
+      : undefined,
+    onSaved: (result) => sync.markSaved(result.data),
+  });
+
+  const sync = useDocumentSync<T>({
+    loaded: isDemo ? undefined : loaded,
+    currentLocal: saved,
+    initialize: (next) => {
+      setSaved(next);
+      setResetKey((k) => k + 1);
+    },
+    isEqualToLocal: (next) => {
+      if (!saved) return false;
+      return JSON.stringify(stripMeta(next)) === JSON.stringify(stripMeta(saved));
+    },
+    getUpdatedAt: (s) => s.updatedAt,
+    triggerSave,
+    flush,
+  });
+
+  const handleChange = useCallback(
+    (next: T) => {
+      setSaved(next);
+      if (isDemo || sync.conflict) return;
+      triggerSave(next);
+    },
+    [isDemo, sync.conflict, triggerSave],
+  );
+
+  const hasPreview = !!type.buildSource;
+
+  const formPanel = saved ? (
+    <type.FormComponent key={resetKey} initialSaved={saved} onChange={handleChange} />
+  ) : null;
+
+  const previewPanel = hasPreview && saved ? (
+    <DocumentPreview document={{ metadata: type, data: saved, fileId: fileId ?? '' }} />
+  ) : null;
+
+  return (
+    <EditorShell
+      metadata={type}
+      loading={loading}
+      error={error || (!isDemo && !loaded && !loading ? notFoundLabel(type) : null)}
+      title={docName || pageTitle(type)}
+      saveStatus={isDemo ? undefined : saveStatus}
+      sync={isDemo ? undefined : sync}
+    >
+      {hasPreview ? (
+        <div className="flex flex-col h-full overflow-hidden">
+          <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
+            <TabButton active={mobileTab === 'edit'} onClick={() => setMobileTab('edit')}>Edit</TabButton>
+            <TabButton active={mobileTab === 'preview'} onClick={() => setMobileTab('preview')}>Preview</TabButton>
+          </div>
+          <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
+            {formPanel}
+            {previewPanel}
+          </div>
+          <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
+            {mobileTab === 'edit' ? formPanel : previewPanel}
+          </div>
+        </div>
+      ) : (
+        formPanel
+      )}
+    </EditorShell>
+  );
+}
+
+// ── Shell ───────────────────────────────────────────────────────────────────
+
+interface EditorShellProps {
+  metadata: { noun: string; icon: DocumentMetadata<unknown>['icon'] };
   loading: boolean;
   error: string | null;
-  notFoundLabel?: string;
-  metadata: MetadataChrome;
   title: ReactNode;
   saveStatus?: SaveStatus;
   sync?: DocumentSyncResult;
   children: ReactNode;
 }
 
-// Shared chrome for document editor pages: parent-page breadcrumb, loading /
-// error states, back button, document title, save status, and conflict
-// resolution. Keeps the 4 editor pages from re-implementing the same layout.
-export function EditorPage({
+function EditorShell({
+  metadata,
   loading,
   error,
-  notFoundLabel = 'Document not found',
-  metadata,
   title,
   saveStatus,
   sync,
   children,
-}: EditorPageProps) {
+}: EditorShellProps) {
   const navigate = useNavigate();
 
   const body = loading ? (
@@ -56,7 +170,7 @@ export function EditorPage({
     </div>
   ) : error ? (
     <div className="flex-1 flex flex-col items-center justify-center gap-4">
-      <p className="text-sm font-body text-tertiary">{error || notFoundLabel}</p>
+      <p className="text-sm font-body text-tertiary">{error}</p>
       <button
         onClick={() => navigate('..', { relative: 'path' })}
         className="text-sm font-label text-primary hover:text-primary/80 cursor-pointer"
@@ -90,7 +204,7 @@ export function EditorPage({
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <PageHeader icon={metadata.icon} title={metadata.listTitle} />
+      <PageHeader icon={metadata.icon} title={listTitle(metadata)} />
       {body}
       {sync && (
         <ConflictDialog
@@ -102,5 +216,26 @@ export function EditorPage({
         />
       )}
     </div>
+  );
+}
+
+function TabButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
+        active ? 'text-primary border-b-2 border-primary' : 'text-on-surface-variant'
+      }`}
+    >
+      {children}
+    </button>
   );
 }

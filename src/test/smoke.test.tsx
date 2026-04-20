@@ -76,7 +76,7 @@ describe('App smoke tests', () => {
   it('renders the handwritten page', async () => {
     render(<TestApp route="/handwritten" />);
     const main = await screen.findByRole('main');
-    expect(await within(main).findByRole('heading', { name: 'Handwritten' })).toBeInTheDocument();
+    expect(await within(main).findByRole('heading', { name: 'Handwritten Documents' })).toBeInTheDocument();
   });
 
   it('renders the lore books page', async () => {

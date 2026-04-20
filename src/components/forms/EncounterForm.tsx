@@ -32,7 +32,7 @@ interface GroupEntry {
 }
 
 interface EncounterFormState {
-  encounter: string;
+  name: string;
   objective: string;
   victory: string;
   failure: string;
@@ -60,7 +60,7 @@ function emptyMalice(): MaliceEntry {
 
 function savedToFormState(saved: EncounterDocument): EncounterFormState {
   return {
-    encounter: saved.encounter,
+    name: saved.name,
     objective: saved.objective,
     victory: saved.victory,
     failure: saved.failure,
@@ -87,7 +87,7 @@ function savedToFormState(saved: EncounterDocument): EncounterFormState {
 function formStateToSaved(s: EncounterFormState): EncounterDocument {
   return {
     version: 1,
-    encounter: s.encounter,
+    name: s.name,
     objective: s.objective,
     victory: s.victory,
     failure: s.failure,
@@ -247,7 +247,7 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
         <section className="space-y-2">
           <SectionHeader>Encounter Info</SectionHeader>
           <Field label="Name">
-            <input className={inputClass} value={form.encounter} onChange={(e) => updateForm((p) => ({ ...p, encounter: e.target.value }))} />
+            <input className={inputClass} value={form.name} onChange={(e) => updateForm((p) => ({ ...p, name: e.target.value }))} />
           </Field>
           <Field label="Objective">
             <textarea className={inputClass} rows={2} value={form.objective} onChange={(e) => updateForm((p) => ({ ...p, objective: e.target.value }))} />

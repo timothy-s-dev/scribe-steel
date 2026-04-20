@@ -3,7 +3,7 @@ import { test, expect } from './fixtures';
 // Sidebar nav entries that route inside the app (bug-report and release-notes
 // go to external URLs, so they aren't covered here).
 const sidebarLinks = [
-  { name: 'Handwritten', path: '/handwritten' },
+  { name: 'Handwritten Documents', path: '/handwritten' },
   { name: 'Lore Books', path: '/lore-books' },
   { name: 'Monster Groups', path: '/monster-groups' },
   { name: 'Monster Cards', path: '/monster-cards' },
@@ -13,7 +13,7 @@ const sidebarLinks = [
 ] as const;
 
 const homeTiles = [
-  { name: 'Handwritten', path: '/handwritten' },
+  { name: 'Handwritten Documents', path: '/handwritten' },
   { name: 'Lore Books', path: '/lore-books' },
   { name: 'Monster Cards', path: '/monster-cards' },
   { name: 'Encounter Sheets', path: '/encounter-sheets' },

@@ -9,16 +9,14 @@ import { CreatingOverlay } from '@/components/CreatingOverlay';
 import { PageHeader } from '@/components/PageHeader';
 import { getCreateDialog } from '@/components/documents/registry';
 import type { DocumentMetadata } from '@/documents';
+import { listTitle, pluralize, titleCase } from '@/documents/titles';
 
 interface DocumentListProps<Data> {
   type: DocumentMetadata<Data>;
 }
 
-const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
-const pluralize = (s: string) => `${s}s`;
-
 export function DocumentList<Data>({ type }: DocumentListProps<Data>) {
-  usePageTitle(type.listTitle);
+  usePageTitle(listTitle(type));
   const { isSignedIn } = useAuth();
   const saveMutation = useSaveDocument();
   const { data: index, isLoading: loading } = useIndex(type.category);
@@ -56,7 +54,7 @@ export function DocumentList<Data>({ type }: DocumentListProps<Data>) {
     <div className="h-full flex flex-col">
       <PageHeader
         icon={Icon}
-        title={type.listTitle}
+        title={listTitle(type)}
         action={isSignedIn && (
           <button
             onClick={() => setDialogOpen(true)}

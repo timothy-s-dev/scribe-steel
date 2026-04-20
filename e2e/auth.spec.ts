@@ -58,7 +58,7 @@ test.describe('Auth', () => {
       await expect(page).toHaveURL('/');
 
       // Navigate back to the list manually.
-      await page.getByRole('complementary').getByRole('link', { name: 'Handwritten' }).click();
+      await page.getByRole('complementary').getByRole('link', { name: 'Handwritten Documents' }).click();
       await expect(page).toHaveURL('/handwritten');
 
       await expect(
