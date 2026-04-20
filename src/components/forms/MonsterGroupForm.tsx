@@ -14,9 +14,7 @@ import { Button } from '@/components/ui/button';
 import type { Monster, Feature } from '@/data/types';
 import type { MonsterGroupDocument } from '@/documents/monster-groups';
 
-const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-1.5 py-1 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
-const labelClass = 'text-xs font-label text-on-surface-variant';
 
 let _nextId = 1;
 function uid() {
@@ -63,10 +61,6 @@ export function MonsterGroupForm({ initialSaved, onChange }: MonsterGroupFormPro
     }
     onChangeRef.current(saved);
   }, [saved]);
-
-  const setName = useCallback((name: string) => {
-    setSaved((prev) => ({ ...prev, name }));
-  }, []);
 
   const addMalice = useCallback(() => {
     setSaved((prev) => ({ ...prev, malice: [...prev.malice, emptyMaliceFeature()] }));
@@ -120,18 +114,6 @@ export function MonsterGroupForm({ initialSaved, onChange }: MonsterGroupFormPro
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-6 max-w-4xl">
-        <section className="space-y-2">
-          <label className="block space-y-1">
-            <span className={labelClass}>Group Name</span>
-            <input
-              className={inputClass}
-              value={saved.name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Group name"
-            />
-          </label>
-        </section>
-
         <section className="space-y-4 md:space-y-2">
           <h3 className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
             Malice Features

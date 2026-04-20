@@ -3,6 +3,8 @@ import type { LucideIcon } from 'lucide-react';
 import type { Category, DocumentMetaFields } from '@/data/types';
 import type { VirtualFile } from '@/typst/compiler';
 import type { EncounterDocument } from './encounters';
+import type { HandwrittenDocument } from './handwritten';
+import type { LoreBookDocument } from './lore-books';
 import type { MonsterGroupDocument } from './monster-groups';
 
 export interface DocumentFormProps<Data> {
@@ -30,14 +32,13 @@ export interface Document<Data> {
 export interface TemplateDocument extends DocumentMetaFields {
   version: number;
   name: string;
-  template: string;
-  params: Record<string, string>;
-  body: string;
+  title: string;
+  content: string;
 }
 
 export interface DocumentDataByCategory {
-  handwritten: TemplateDocument;
-  'lore-books': TemplateDocument;
+  handwritten: HandwrittenDocument;
+  'lore-books': LoreBookDocument;
   encounters: EncounterDocument;
   monsters: MonsterGroupDocument;
 }

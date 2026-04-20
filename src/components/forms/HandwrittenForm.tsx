@@ -26,36 +26,25 @@ export function HandwrittenForm({ initialSaved, onChange }: HandwrittenFormProps
     onChangeRef.current(saved);
   }, [saved]);
 
-  const setName = (name: string) => setSaved((prev) => ({ ...prev, name }));
-  const setBody = (body: string) => setSaved((prev) => ({ ...prev, body }));
-  const setParam = (key: string, value: string) =>
-    setSaved((prev) => ({ ...prev, params: { ...prev.params, [key]: value } }));
+  const set = <K extends keyof HandwrittenDocument>(key: K, value: HandwrittenDocument[K]) =>
+    setSaved((prev) => ({ ...prev, [key]: value }));
 
   return (
     <div className="flex-1 min-w-0 md:w-1/2 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
       <div className="flex-shrink-0 bg-surface-container px-4 py-3 space-y-2">
-        <label className="block space-y-1">
-          <span className={labelClass}>Name</span>
-          <input
-            className={inputClass}
-            value={saved.name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Handwritten document name"
-          />
-        </label>
         <label className="block space-y-1">
           <span className={labelClass}>
             Title<span className={optionalClass}>(optional)</span>
           </span>
           <input
             className={inputClass}
-            value={saved.params.title ?? ''}
-            onChange={(e) => setParam('title', e.target.value)}
+            value={saved.title}
+            onChange={(e) => set('title', e.target.value)}
             placeholder="Title"
           />
         </label>
       </div>
-      <TypstEditor value={saved.body} onChange={setBody} />
+      <TypstEditor value={saved.content} onChange={(content) => set('content', content)} />
     </div>
   );
 }

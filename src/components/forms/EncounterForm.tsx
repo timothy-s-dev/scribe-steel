@@ -32,13 +32,13 @@ interface GroupEntry {
 }
 
 interface EncounterFormState {
-  name: string;
+  title: string;
   objective: string;
   victory: string;
   failure: string;
   malice: MaliceEntry[];
   groups: GroupEntry[];
-  notes: string;
+  content: string;
 }
 
 let nextId = 1;
@@ -60,7 +60,7 @@ function emptyMalice(): MaliceEntry {
 
 function savedToFormState(saved: EncounterDocument): EncounterFormState {
   return {
-    name: saved.name,
+    title: saved.title,
     objective: saved.objective,
     victory: saved.victory,
     failure: saved.failure,
@@ -80,14 +80,15 @@ function savedToFormState(saved: EncounterDocument): EncounterFormState {
         count: c.count ?? null,
       })),
     })),
-    notes: saved.notes,
+    content: saved.content,
   };
 }
 
-function formStateToSaved(s: EncounterFormState): EncounterDocument {
+function formStateToSaved(s: EncounterFormState, name: string): EncounterDocument {
   return {
     version: 1,
-    name: s.name,
+    name,
+    title: s.title,
     objective: s.objective,
     victory: s.victory,
     failure: s.failure,
@@ -105,7 +106,7 @@ function formStateToSaved(s: EncounterFormState): EncounterDocument {
         ...(c.count != null && c.count > 0 ? { count: c.count } : {}),
       })),
     })),
-    notes: s.notes,
+    content: s.content,
   };
 }
 
@@ -136,6 +137,7 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
 
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+  const nameRef = useRef(initialSaved.name);
   const firstEmitRef = useRef(true);
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
       firstEmitRef.current = false;
       return;
     }
-    onChangeRef.current(formStateToSaved(form));
+    onChangeRef.current(formStateToSaved(form, nameRef.current));
   }, [form]);
 
   const updateForm = useCallback(
@@ -246,8 +248,8 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-5">
         <section className="space-y-2">
           <SectionHeader>Encounter Info</SectionHeader>
-          <Field label="Name">
-            <input className={inputClass} value={form.name} onChange={(e) => updateForm((p) => ({ ...p, name: e.target.value }))} />
+          <Field label="Title">
+            <input className={inputClass} value={form.title} onChange={(e) => updateForm((p) => ({ ...p, title: e.target.value }))} />
           </Field>
           <Field label="Objective">
             <textarea className={inputClass} rows={2} value={form.objective} onChange={(e) => updateForm((p) => ({ ...p, objective: e.target.value }))} />
@@ -358,13 +360,13 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
         </section>
 
         <section className="space-y-2">
-          <SectionHeader>Notes</SectionHeader>
+          <SectionHeader>Content</SectionHeader>
           <textarea
             className={inputClass}
             rows={4}
-            value={form.notes}
-            onChange={(e) => updateForm((p) => ({ ...p, notes: e.target.value }))}
-            placeholder="Freeform notes (Typst markup supported)"
+            value={form.content}
+            onChange={(e) => updateForm((p) => ({ ...p, content: e.target.value }))}
+            placeholder="Freeform Typst content (markup supported)"
           />
         </section>
       </div>

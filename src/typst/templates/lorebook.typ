@@ -7,7 +7,7 @@
 //     title: "Lore of the Demon Court",
 //     category: "Chaos Lorebook",           // optional
 //     epigraph: "In the beginning...",      // optional in-character quote
-//     epigraph-attribution: "— The Author", // optional
+//     epigraphAttribution: "— The Author", // optional
 //     description: [                        // optional physical/reading framing
 //       This slim volume, bound in cracked leather...
 //     ],
@@ -54,7 +54,7 @@
   title: "",
   category: none,
   epigraph: none,
-  epigraph-attribution: none,
+  epigraphAttribution: none,
   description: none,
   body
 ) = {
@@ -113,9 +113,9 @@
         #set text(style: "italic", size: 10.5pt)
         #set par(justify: false, leading: 0.7em)
         #epigraph
-        #if epigraph-attribution != none {
+        #if epigraphAttribution != none {
           linebreak()
-          text(style: "normal", size: 9.5pt)[#epigraph-attribution]
+          text(style: "normal", size: 9.5pt)[#epigraphAttribution]
         }
       ]
     ]

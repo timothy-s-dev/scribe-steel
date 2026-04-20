@@ -3,26 +3,12 @@ import { test, expect, type Page } from './fixtures';
 test.describe('Monster Groups editor', () => {
   test.use({ signedIn: true });
 
-  test('opening an existing group loads its name', async ({ page }) => {
+  test('opening an existing group shows its name in the title bar', async ({ page }) => {
     const groupName = 'Loaded Group';
     await createGroup(page, groupName);
 
-    await expect(page.getByPlaceholder('Group name').filter({ visible: true })).toHaveValue(
-      groupName,
-    );
-  });
-
-  test('renaming the group persists', async ({ page }) => {
-    await createGroup(page, 'First Name');
-
-    const titleInput = page.getByPlaceholder('Group name').filter({ visible: true });
-    await titleInput.fill('Second Name');
-    await expect(page.getByText('Saved', { exact: true })).toBeVisible();
-
-    await page.reload();
-    await expect(page.getByPlaceholder('Group name').filter({ visible: true })).toHaveValue(
-      'Second Name',
-    );
+    await expect(page.getByRole('button', { name: 'Back to list' })).toBeVisible();
+    await expect(page.locator('#main-content').getByText(groupName)).toBeVisible();
   });
 
   test('add + edit + persist a malice feature', async ({ page }) => {

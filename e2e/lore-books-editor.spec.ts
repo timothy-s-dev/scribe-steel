@@ -134,7 +134,7 @@ async function simulateRemoteEdit(page: Page, fileId: string, newTitle: string) 
     ({ id, title }) => {
       const raw = localStorage.getItem('scribe-steel-mock-drive-state')!;
       const state = JSON.parse(raw);
-      state.documents[id].params.title = title;
+      state.documents[id].title = title;
       state.documents[id].updatedAt = new Date().toISOString();
       localStorage.setItem('scribe-steel-mock-drive-state', JSON.stringify(state));
 

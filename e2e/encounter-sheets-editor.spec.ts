@@ -12,7 +12,7 @@ test.describe('Encounter Sheets editor', () => {
       await expect(visible(page.getByText('Encounter Info'))).toBeVisible();
       await expect(visible(page.getByText('Malice Features'))).toBeVisible();
       await expect(visible(page.getByText('Creature Groups'))).toBeVisible();
-      await expect(visible(page.getByText('Notes', { exact: true }))).toBeVisible();
+      await expect(visible(page.getByText('Content', { exact: true }))).toBeVisible();
 
       // Toolbar bits are rendered too.
       await expect(page.getByRole('switch', { name: /print-friendly/i })).toBeVisible();
@@ -22,7 +22,7 @@ test.describe('Encounter Sheets editor', () => {
     test('encounter name, group label, and creature name appear in the preview', async ({ page }) => {
       await page.goto('/encounter-sheets/demo');
 
-      await visible(page.getByRole('textbox', { name: 'Name', exact: true })).fill('BATTLE_OF_CINDER');
+      await visible(page.getByRole('textbox', { name: 'Title', exact: true })).fill('BATTLE_OF_CINDER');
 
       // Add Group creates a group that already contains a blank creature row,
       // so we can fill both in one pass without clicking Add Creature.
@@ -42,7 +42,7 @@ test.describe('Encounter Sheets editor', () => {
     test('editing encounter fields persists across reload', async ({ page }) => {
       await createEncounter(page, 'Persistence Encounter');
 
-      await visible(page.getByRole('textbox', { name: 'Name', exact: true })).fill('The Ambush');
+      await visible(page.getByRole('textbox', { name: 'Title', exact: true })).fill('The Ambush');
       await visible(page.getByRole('textbox', { name: 'Objective', exact: true })).fill(
         'Survive five rounds.',
       );
@@ -53,7 +53,7 @@ test.describe('Encounter Sheets editor', () => {
       await page.reload();
 
       await expect(
-        visible(page.getByRole('textbox', { name: 'Name', exact: true })),
+        visible(page.getByRole('textbox', { name: 'Title', exact: true })),
       ).toHaveValue('The Ambush');
       await expect(
         visible(page.getByRole('textbox', { name: 'Objective', exact: true })),

@@ -26,29 +26,18 @@ export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
     onChangeRef.current(saved);
   }, [saved]);
 
-  const setName = (name: string) => setSaved((prev) => ({ ...prev, name }));
-  const setBody = (body: string) => setSaved((prev) => ({ ...prev, body }));
-  const setParam = (key: string, value: string) =>
-    setSaved((prev) => ({ ...prev, params: { ...prev.params, [key]: value } }));
+  const set = <K extends keyof LoreBookDocument>(key: K, value: LoreBookDocument[K]) =>
+    setSaved((prev) => ({ ...prev, [key]: value }));
 
   return (
     <div className="flex-1 min-w-0 md:w-1/2 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
       <div className="flex-shrink-0 bg-surface-container px-4 py-3 space-y-2 overflow-y-auto custom-scrollbar max-h-[50%]">
         <label className="block space-y-1">
-          <span className={labelClass}>Name</span>
-          <input
-            className={inputClass}
-            value={saved.name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Lore book name"
-          />
-        </label>
-        <label className="block space-y-1">
           <span className={labelClass}>Title</span>
           <input
             className={inputClass}
-            value={saved.params.title ?? ''}
-            onChange={(e) => setParam('title', e.target.value)}
+            value={saved.title}
+            onChange={(e) => set('title', e.target.value)}
             placeholder="Title"
           />
         </label>
@@ -58,8 +47,8 @@ export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
           </span>
           <input
             className={inputClass}
-            value={saved.params.category ?? ''}
-            onChange={(e) => setParam('category', e.target.value)}
+            value={saved.category}
+            onChange={(e) => set('category', e.target.value)}
             placeholder="Category"
           />
         </label>
@@ -70,8 +59,8 @@ export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
           <textarea
             className={inputClass}
             rows={2}
-            value={saved.params.epigraph ?? ''}
-            onChange={(e) => setParam('epigraph', e.target.value)}
+            value={saved.epigraph}
+            onChange={(e) => set('epigraph', e.target.value)}
             placeholder="Epigraph"
           />
         </label>
@@ -81,8 +70,8 @@ export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
           </span>
           <input
             className={inputClass}
-            value={saved.params['epigraph-attribution'] ?? ''}
-            onChange={(e) => setParam('epigraph-attribution', e.target.value)}
+            value={saved.epigraphAttribution}
+            onChange={(e) => set('epigraphAttribution', e.target.value)}
             placeholder="Epigraph Attribution"
           />
         </label>
@@ -93,13 +82,13 @@ export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
           <textarea
             className={inputClass}
             rows={2}
-            value={saved.params.description ?? ''}
-            onChange={(e) => setParam('description', e.target.value)}
+            value={saved.description}
+            onChange={(e) => set('description', e.target.value)}
             placeholder="Description"
           />
         </label>
       </div>
-      <TypstEditor value={saved.body} onChange={setBody} />
+      <TypstEditor value={saved.content} onChange={(content) => set('content', content)} />
     </div>
   );
 }

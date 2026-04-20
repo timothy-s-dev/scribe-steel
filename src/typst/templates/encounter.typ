@@ -114,7 +114,7 @@
 
 // Main template
 #let encounter-sheet(
-  encounter: "Unnamed Encounter",
+  title: "Unnamed Encounter",
   objective: "",
   victory: "",
   failure: "",
@@ -122,7 +122,7 @@
   groups: (),
   body
 ) = {
-  set document(title: encounter)
+  set document(title: title)
 
   set page(
     paper: "a4",
@@ -140,7 +140,7 @@
     inset: (x: 10pt, y: 8pt),
     radius: 3pt,
   )[
-    #text(size: 16pt, weight: "bold", fill: _header-fg)[#encounter]
+    #text(size: 16pt, weight: "bold", fill: _header-fg)[#title]
     #h(1fr)
     #text(size: 8pt, fill: rgb("#94a3b8"), tracking: 1pt)[ENCOUNTER SHEET]
   ]
