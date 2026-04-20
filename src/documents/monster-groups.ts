@@ -1,8 +1,15 @@
 import { Users } from 'lucide-react';
-import type { SavedMonsterGroup } from '@/data/types';
-import type { DocumentType } from './types';
+import type { DocumentMetaFields, Feature, Monster } from '@/data/types';
+import type { DocumentMetadata } from './types';
 
-export const monsterGroupsDocument: DocumentType<SavedMonsterGroup> = {
+export interface MonsterGroupDocument extends DocumentMetaFields {
+  version: number;
+  name: string;
+  malice: Feature[];
+  monsters: Monster[];
+}
+
+export const monsterGroupsMetadata: DocumentMetadata<MonsterGroupDocument> = {
   category: 'monsters',
   noun: 'monster group',
   listTitle: 'Monster Groups',

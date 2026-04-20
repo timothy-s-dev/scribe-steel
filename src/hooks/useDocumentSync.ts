@@ -2,9 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseDocumentSyncOptions<T> {
   loaded: T | undefined;
+  currentLocal: T | null;
   initialize: (saved: T) => void;
   isEqualToLocal: (saved: T) => boolean;
   getUpdatedAt: (saved: T) => string | undefined;
+  triggerSave: (data: T) => void;
+  flush: () => Promise<void>;
 }
 
 interface ConflictState<T> {
@@ -18,6 +21,7 @@ export interface DocumentSyncResult {
   conflict: { local: string | undefined; remote: string | undefined } | null;
   useRemote: () => void;
   dismissConflict: () => void;
+  keepLocal: () => void;
   markSaved: (saved: unknown) => void;
 }
 
@@ -26,9 +30,12 @@ export interface DocumentSyncResult {
 // the new remote. If they do, surfaces a conflict state for the UI to resolve.
 export function useDocumentSync<T>({
   loaded,
+  currentLocal,
   initialize,
   isEqualToLocal,
   getUpdatedAt,
+  triggerSave,
+  flush,
 }: UseDocumentSyncOptions<T>): DocumentSyncResult {
   const baselineRef = useRef<T | null>(null);
   const [initialized, setInitialized] = useState(false);
@@ -40,6 +47,12 @@ export function useDocumentSync<T>({
   isEqualRef.current = isEqualToLocal;
   const getUpdatedAtRef = useRef(getUpdatedAt);
   getUpdatedAtRef.current = getUpdatedAt;
+  const currentLocalRef = useRef(currentLocal);
+  currentLocalRef.current = currentLocal;
+  const triggerSaveRef = useRef(triggerSave);
+  triggerSaveRef.current = triggerSave;
+  const flushRef = useRef(flush);
+  flushRef.current = flush;
 
   useEffect(() => {
     if (!loaded) return;
@@ -84,6 +97,14 @@ export function useDocumentSync<T>({
 
   const dismissConflict = useCallback(() => setConflict(null), []);
 
+  const keepLocal = useCallback(() => {
+    const local = currentLocalRef.current;
+    if (!local) return;
+    setConflict(null);
+    triggerSaveRef.current(local);
+    void flushRef.current();
+  }, []);
+
   const markSaved = useCallback((saved: unknown) => {
     baselineRef.current = saved as T;
   }, []);
@@ -95,6 +116,7 @@ export function useDocumentSync<T>({
       : null,
     useRemote,
     dismissConflict,
+    keepLocal,
     markSaved,
   };
 }

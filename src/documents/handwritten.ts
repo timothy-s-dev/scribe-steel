@@ -1,7 +1,9 @@
 import { PenTool } from 'lucide-react';
-import type { DocumentType, SavedTemplateDocument } from './types';
+import type { DocumentMetadata, TemplateDocument } from './types';
 
-export const handwrittenDocument: DocumentType<SavedTemplateDocument> = {
+export type HandwrittenDocument = TemplateDocument;
+
+export const handwrittenMetadata: DocumentMetadata<HandwrittenDocument> = {
   category: 'handwritten',
   noun: 'handwritten document',
   listTitle: 'Handwritten',

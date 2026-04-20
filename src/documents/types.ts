@@ -1,7 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
-import type { Category, SavedEncounter, SavedMonsterGroup } from '@/data/types';
+import type { Category, DocumentMetaFields } from '@/data/types';
+import type { EncounterDocument } from './encounters';
+import type { MonsterGroupDocument } from './monster-groups';
 
-export interface DocumentType<Data> {
+export interface DocumentMetadata<Data> {
   category: Category;
   noun: string;
   listTitle: string;
@@ -9,20 +11,25 @@ export interface DocumentType<Data> {
   demoEnabled?: boolean;
   template?: string;
   createDefault: (name: string) => Data;
-  indexFields?: (data: Data) => Record<string, unknown>;
+  indexFields?(data: Data): Record<string, unknown>;
 }
 
-export interface SavedTemplateDocument {
+export interface Document<Data> {
+  metadata: DocumentMetadata<Data>;
+  data: Data;
+  fileId: string;
+}
+
+export interface TemplateDocument extends DocumentMetaFields {
   version: number;
   template: string;
   params: Record<string, string>;
   body: string;
-  updatedAt?: string;
 }
 
 export interface DocumentDataByCategory {
-  handwritten: SavedTemplateDocument;
-  'lore-books': SavedTemplateDocument;
-  encounters: SavedEncounter;
-  monsters: SavedMonsterGroup;
+  handwritten: TemplateDocument;
+  'lore-books': TemplateDocument;
+  encounters: EncounterDocument;
+  monsters: MonsterGroupDocument;
 }

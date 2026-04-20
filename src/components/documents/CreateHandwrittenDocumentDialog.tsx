@@ -1,13 +1,12 @@
-import { handwrittenDocument } from '@/documents/handwritten';
-import type { SavedTemplateDocument } from '@/documents';
+import { handwrittenMetadata, type HandwrittenDocument } from '@/documents/handwritten';
 import { NameOnlyCreateDialog, type CreateDialogProps } from './NameOnlyCreateDialog';
 
-export function CreateHandwrittenDocumentDialog(props: CreateDialogProps<SavedTemplateDocument>) {
+export function CreateHandwrittenDocumentDialog(props: CreateDialogProps<HandwrittenDocument>) {
   return (
     <NameOnlyCreateDialog
       {...props}
-      noun={handwrittenDocument.noun}
-      createDefault={handwrittenDocument.createDefault}
+      noun={handwrittenMetadata.noun}
+      createDefault={handwrittenMetadata.createDefault}
     />
   );
 }

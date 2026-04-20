@@ -1,13 +1,12 @@
-import { loreBooksDocument } from '@/documents/lore-books';
-import type { SavedTemplateDocument } from '@/documents';
+import { loreBooksMetadata, type LoreBookDocument } from '@/documents/lore-books';
 import { NameOnlyCreateDialog, type CreateDialogProps } from './NameOnlyCreateDialog';
 
-export function CreateLoreBookDialog(props: CreateDialogProps<SavedTemplateDocument>) {
+export function CreateLoreBookDialog(props: CreateDialogProps<LoreBookDocument>) {
   return (
     <NameOnlyCreateDialog
       {...props}
-      noun={loreBooksDocument.noun}
-      createDefault={loreBooksDocument.createDefault}
+      noun={loreBooksMetadata.noun}
+      createDefault={loreBooksMetadata.createDefault}
     />
   );
 }

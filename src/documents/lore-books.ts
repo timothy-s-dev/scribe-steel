@@ -1,7 +1,9 @@
 import { BookOpen } from 'lucide-react';
-import type { DocumentType, SavedTemplateDocument } from './types';
+import type { DocumentMetadata, TemplateDocument } from './types';
 
-export const loreBooksDocument: DocumentType<SavedTemplateDocument> = {
+export type LoreBookDocument = TemplateDocument;
+
+export const loreBooksMetadata: DocumentMetadata<LoreBookDocument> = {
   category: 'lore-books',
   noun: 'lore book',
   listTitle: 'Lore Books',

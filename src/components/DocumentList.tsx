@@ -8,10 +8,10 @@ import { Plus, CloudOff, FileText, ChevronRight } from 'lucide-react';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
 import { PageHeader } from '@/components/PageHeader';
 import { getCreateDialog } from '@/components/documents/registry';
-import type { DocumentType } from '@/documents';
+import type { DocumentMetadata } from '@/documents';
 
 interface DocumentListProps<Data> {
-  type: DocumentType<Data>;
+  type: DocumentMetadata<Data>;
 }
 
 const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());

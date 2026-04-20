@@ -2,10 +2,10 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AppLayout } from '@/layouts/AppLayout';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { handwrittenDocument } from '@/documents/handwritten';
-import { loreBooksDocument } from '@/documents/lore-books';
-import { encountersDocument } from '@/documents/encounters';
-import { monsterGroupsDocument } from '@/documents/monster-groups';
+import { handwrittenMetadata } from '@/documents/handwritten';
+import { loreBooksMetadata } from '@/documents/lore-books';
+import { encountersMetadata } from '@/documents/encounters';
+import { monsterGroupsMetadata } from '@/documents/monster-groups';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const MonsterCardsPage = lazy(() => import('@/pages/MonsterCardsPage').then(m => ({ default: m.MonsterCardsPage })));
@@ -27,13 +27,13 @@ function App() {
             <Route element={<AppLayout />}>
               <Route index element={<HomePage />} />
               <Route path="monster-cards" element={<MonsterCardsPage />} />
-              <Route path="encounter-sheets" element={<DocumentList type={encountersDocument} />} />
+              <Route path="encounter-sheets" element={<DocumentList type={encountersMetadata} />} />
               <Route path="encounter-sheets/:fileId" element={<EncounterSheetEditorPage />} />
-              <Route path="monster-groups" element={<DocumentList type={monsterGroupsDocument} />} />
+              <Route path="monster-groups" element={<DocumentList type={monsterGroupsMetadata} />} />
               <Route path="monster-groups/:fileId" element={<MonsterGroupsEditorPage />} />
-              <Route path="handwritten" element={<DocumentList type={handwrittenDocument} />} />
+              <Route path="handwritten" element={<DocumentList type={handwrittenMetadata} />} />
               <Route path="handwritten/:fileId" element={<HandwrittenDocumentEditorPage />} />
-              <Route path="lore-books" element={<DocumentList type={loreBooksDocument} />} />
+              <Route path="lore-books" element={<DocumentList type={loreBooksMetadata} />} />
               <Route path="lore-books/:fileId" element={<LoreBooksEditorPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="privacy" element={<PrivacyPolicyPage />} />

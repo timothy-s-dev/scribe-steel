@@ -7,10 +7,10 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AppLayout } from '@/layouts/AppLayout';
 import { DocumentList } from '@/components/DocumentList';
-import { handwrittenDocument } from '@/documents/handwritten';
-import { loreBooksDocument } from '@/documents/lore-books';
-import { encountersDocument } from '@/documents/encounters';
-import { monsterGroupsDocument } from '@/documents/monster-groups';
+import { handwrittenMetadata } from '@/documents/handwritten';
+import { loreBooksMetadata } from '@/documents/lore-books';
+import { encountersMetadata } from '@/documents/encounters';
+import { monsterGroupsMetadata } from '@/documents/monster-groups';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const MonsterCardsPage = lazy(() => import('@/pages/MonsterCardsPage').then(m => ({ default: m.MonsterCardsPage })));
@@ -31,10 +31,10 @@ function TestApp({ route }: { route: string }) {
               <Route element={<AppLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="monster-cards" element={<MonsterCardsPage />} />
-                <Route path="encounter-sheets" element={<DocumentList type={encountersDocument} />} />
-                <Route path="monster-groups" element={<DocumentList type={monsterGroupsDocument} />} />
-                <Route path="handwritten" element={<DocumentList type={handwrittenDocument} />} />
-                <Route path="lore-books" element={<DocumentList type={loreBooksDocument} />} />
+                <Route path="encounter-sheets" element={<DocumentList type={encountersMetadata} />} />
+                <Route path="monster-groups" element={<DocumentList type={monsterGroupsMetadata} />} />
+                <Route path="handwritten" element={<DocumentList type={handwrittenMetadata} />} />
+                <Route path="lore-books" element={<DocumentList type={loreBooksMetadata} />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="privacy" element={<PrivacyPolicyPage />} />
                 <Route path="*" element={<NotFoundPage />} />

@@ -11,15 +11,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
-import { monsterGroupsDocument } from '@/documents/monster-groups';
-import type { MonsterGroup, SavedMonsterGroup } from '@/data/types';
+import { monsterGroupsMetadata, type MonsterGroupDocument } from '@/documents/monster-groups';
+import type { MonsterGroup } from '@/data/types';
 import type { CreateDialogProps } from './NameOnlyCreateDialog';
 
 export function CreateMonsterGroupDialog({
   open,
   onOpenChange,
   onSubmit,
-}: CreateDialogProps<SavedMonsterGroup>) {
+}: CreateDialogProps<MonsterGroupDocument>) {
   const [name, setName] = useState('');
   const [copyFrom, setCopyFrom] = useState('');
   const { data: index } = useIndex('monsters');
@@ -39,7 +39,7 @@ export function CreateMonsterGroupDialog({
     const trimmed = name.trim();
     if (!trimmed) return;
 
-    const data = monsterGroupsDocument.createDefault(trimmed);
+    const data = monsterGroupsMetadata.createDefault(trimmed);
     if (copyFrom) {
       const source = await fetchDocument<MonsterGroup>('monsters', copyFrom);
       data.malice = structuredClone(source.malice);

@@ -14,6 +14,10 @@ export interface IndexFile {
   items: IndexItem[];
 }
 
+export interface DocumentMetaFields {
+  updatedAt?: string;
+}
+
 // ── Domain types ─────────────────────────────────────────────────────────────
 
 export interface Effect {
@@ -72,38 +76,4 @@ export interface MonsterGroup {
 
 export interface Bestiary {
   groups: MonsterGroup[];
-}
-
-export interface SavedDocMetadata {
-  updatedAt?: string;
-}
-
-export interface SavedMonsterGroup extends SavedDocMetadata {
-  version: number;
-  name: string;
-  malice: Feature[];
-  monsters: Monster[];
-}
-
-export interface SavedEncounter extends SavedDocMetadata {
-  version: number;
-  encounter: string;
-  objective: string;
-  victory: string;
-  failure: string;
-  malice: { cost: number; name: string; description: string }[];
-  groups: {
-    label: string;
-    creatures: {
-      name: string;
-      stamina: string;
-      stability: number;
-      speed: number;
-      freeStrike: string;
-      distance: string;
-      notes: string;
-      count?: number;
-    }[];
-  }[];
-  notes: string;
 }
