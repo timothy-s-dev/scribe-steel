@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const useMockDrive = env.VITE_USE_MOCK_DRIVE === '1' || env.VITE_USE_MOCK_DRIVE === 'true'
 
   // Mock aliases must come before the '@' catch-all — Vite uses first match.
-  const mockAliases = useMockDrive
+  const mockAliases: Record<string, string> = useMockDrive
     ? {
         '@/services/google-auth': path.resolve(__dirname, './src/services/google-auth.mock.ts'),
         '@/services/google-drive': path.resolve(__dirname, './src/services/google-drive.mock.ts'),
