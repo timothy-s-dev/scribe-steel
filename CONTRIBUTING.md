@@ -44,7 +44,30 @@ Thanks for your interest in contributing to Scribe Steel!
 2. Make your changes
 3. Run the linter: `npm run lint`
 4. Verify the build: `npm run build`
-5. Open a pull request
+5. Run the e2e tests: `npm run test:e2e`
+6. Open a pull request
+
+## CI E2E Tests
+
+The `Deploy to Firebase Hosting` workflows run the Playwright e2e suite (`npm run test:e2e`) against the mock-Drive dev server before deploying. If the suite fails, the deploy is skipped.
+
+### Debugging a failed e2e run
+
+When e2e tests fail in CI, the workflow uploads a `playwright-report` artifact containing the HTML report plus any traces, screenshots, and videos captured on failure. Retention is 14 days.
+
+To use it:
+
+1. Open the failed run on the [Actions tab](https://github.com/timothy-s-dev/scribe-steel/actions).
+2. Scroll to the **Artifacts** section at the bottom of the run summary and download `playwright-report.zip`.
+3. Unzip it, then serve the report locally:
+
+   ```bash
+   npx playwright show-report path/to/unzipped/playwright-report
+   ```
+
+   This opens an interactive report in your browser. Click into any failed test to see the failure step, screenshots, and a recorded trace (Playwright's time-travel debugger) when available.
+
+4. The `test-results/` subfolder contains raw per-test artifacts (traces as `.zip`, videos, screenshots) if you'd rather inspect them directly — open a trace with `npx playwright show-trace path/to/trace.zip`.
 
 ## Reporting Bugs
 
