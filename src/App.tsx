@@ -8,9 +8,9 @@ import { handwrittenMetadata } from '@/documents/handwritten';
 import { loreBooksMetadata } from '@/documents/lore-books';
 import { encountersMetadata } from '@/documents/encounters';
 import { monsterGroupsMetadata } from '@/documents/monster-groups';
+import { monsterCardsMetadata } from '@/documents/monster-cards';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
-const MonsterCardsPage = lazy(() => import('@/pages/MonsterCardsPage').then(m => ({ default: m.MonsterCardsPage })));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
 const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
@@ -23,7 +23,7 @@ function App() {
           <Routes>
             <Route element={<AppLayout />}>
               <Route index element={<HomePage />} />
-              <Route path="monster-cards" element={<MonsterCardsPage />} />
+              <Route path="monster-cards" element={<EditorPage type={monsterCardsMetadata} forceDemo hideBackButton />} />
               <Route path="encounter-sheets" element={<DocumentList type={encountersMetadata} />} />
               <Route path="encounter-sheets/:fileId" element={<EditorPage type={encountersMetadata} />} />
               <Route path="monster-groups" element={<DocumentList type={monsterGroupsMetadata} />} />

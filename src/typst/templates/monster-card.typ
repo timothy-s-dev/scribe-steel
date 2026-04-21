@@ -296,10 +296,11 @@
 // sheet; a monster that needs more than 2 sides simply occupies extra slots.
 
 #let monster-card-sheet(
+  title: "Monster Cards",
   monsters: (),
   body,
 ) = context {
-  set document(title: "Monster Cards")
+  set document(title: title)
   set page(
     paper: "us-letter",
     flipped: true,
@@ -308,6 +309,12 @@
   )
   set text(size: 10pt, fill: _ink)
   set par(leading: 0.4em, spacing: 0.5em)
+
+  if monsters.len() == 0 {
+    align(center + horizon, text(size: 14pt, fill: _lbl)[
+      Select monsters to generate cards
+    ])
+  } else {
 
   // Build a flat list of card sides: (monster, features, full-header?)
   // Each monster gets ceil(pages/2)*2 sides (padded to even for front/back pairing).
@@ -369,5 +376,6 @@
         else { _card-side(s.m, s.features, full-header: s.full, flipped: true) }
       })
     )
+  }
   }
 }

@@ -5,13 +5,10 @@ import { test, expect, type Page } from './fixtures';
 
 test.describe('Monster Cards page', () => {
   test.describe('Signed-out', () => {
-    test('renders with picker and empty-preview placeholder', async ({ page }) => {
+    test('renders with picker and empty selection count', async ({ page }) => {
       await page.goto('/monster-cards');
 
       await expect(page.getByRole('heading', { name: 'Monster Cards', level: 1 })).toBeVisible();
-      await expect(
-        page.getByText('Select monsters to generate cards').filter({ visible: true }),
-      ).toBeVisible();
       await expect(
         page.getByText(/0 monsters selected/).filter({ visible: true }),
       ).toBeVisible();
@@ -63,9 +60,6 @@ test.describe('Monster Cards page', () => {
       await expect(
         page.getByText(/1 monster selected/).filter({ visible: true }),
       ).toBeVisible();
-      await expect(
-        page.getByText('Select monsters to generate cards').filter({ visible: true }),
-      ).toHaveCount(0);
     });
 
     test('selecting the group checkbox selects every monster in it', async ({ page }) => {

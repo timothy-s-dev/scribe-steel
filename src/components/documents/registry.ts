@@ -16,6 +16,7 @@ const registry: CreateDialogRegistry = {
   'lore-books': CreateLoreBookDialog,
   encounters: CreateEncounterDialog,
   monsters: CreateMonsterGroupDialog,
+  'monster-cards': () => null,
 };
 
 export function getCreateDialog<Data>(category: Category): ComponentType<CreateDialogProps<Data>> {

@@ -1,31 +1,15 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { usePageTitle } from '@/hooks/usePageTitle';
-import { ChevronRight, ChevronDown, Skull } from 'lucide-react';
-
-type MobileTab = 'select' | 'preview';
-import { Preview } from '@/components/Preview';
-import { PreviewToolbar } from '@/components/PreviewToolbar';
-import { PageHeader } from '@/components/PageHeader';
-import { useZoom } from '@/hooks/useZoom';
-import { useSettings } from '@/hooks/queries/useSettings';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
-import type { IndexItem, MonsterGroup } from '@/data/types';
+import type { IndexItem, MonsterGroup, Monster } from '@/data/types';
 import type { MonsterSummary } from '@/data/bestiary';
-import { compilePdf, type VirtualFile } from '@/typst/compiler';
-import type { Monster } from '@/data/types';
-import monsterCardTyp from '@/typst/templates/monster-card.typ?raw';
+import type { MonsterCardsDocument } from '@/documents/monster-cards';
 
-const TEMPLATE_FILE: VirtualFile = {
-  path: '/templates/monster-card.typ',
-  content: monsterCardTyp,
-};
-
-const CARD_SOURCE = [
-  '#import "/templates/monster-card.typ": *',
-  '#let _monsters = json("/data/selected-monsters.json")',
-  '#show: monster-card-sheet.with(monsters: _monsters)',
-].join('\n');
+interface MonsterCardFormProps {
+  initialSaved: MonsterCardsDocument;
+  onChange: (saved: MonsterCardsDocument) => void;
+}
 
 function monsterKey(groupName: string, monsterName: string) {
   return `${groupName}\0${monsterName}`;
@@ -35,7 +19,6 @@ function monstersOf(item: IndexItem): MonsterSummary[] {
   return (item.monsters as MonsterSummary[] | undefined) ?? [];
 }
 
-// Role buckets within a level: Minion (0) → Other (1) → Leader (2).
 function roleRank(monster: MonsterSummary): number {
   const roles = monster.roles.map((r) => r.toLowerCase());
   if (roles.some((r) => r.startsWith('minion'))) return 0;
@@ -53,14 +36,9 @@ function sortedMonsters(monsters: MonsterSummary[]): MonsterSummary[] {
   });
 }
 
-export function MonsterCardsPage() {
-  usePageTitle('Monster Cards');
-  const { settings } = useSettings();
+export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [printMode, setPrintMode] = useState(settings.printFriendly);
-  const zoom = useZoom(settings.defaultZoom);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
-  const [mobileTab, setMobileTab] = useState<MobileTab>('select');
 
   const { data: index, isLoading: groupsLoading } = useIndex('monsters');
   const groups = index?.items ?? [];
@@ -102,7 +80,6 @@ export function MonsterCardsPage() {
     });
   }, []);
 
-  // Derive which groups have selected monsters
   const selectedByGroup = useMemo(() => {
     const map = new Map<string, string[]>();
     for (const key of selected) {
@@ -113,7 +90,6 @@ export function MonsterCardsPage() {
     return map;
   }, [selected]);
 
-  // Resolve group identifiers (name or fileId) for selected groups
   const selectedGroupIds = useMemo(() => {
     const ids: string[] = [];
     for (const groupName of selectedByGroup.keys()) {
@@ -125,7 +101,6 @@ export function MonsterCardsPage() {
 
   const groupQueries = useDocuments<MonsterGroup>('monsters', selectedGroupIds);
 
-  // Derive loaded monsters from query results
   const loadedMonsters = useMemo(() => {
     const monsters: Monster[] = [];
     const groupMap = new Map(
@@ -144,67 +119,22 @@ export function MonsterCardsPage() {
     return monsters;
   }, [selectedByGroup, groups, selectedGroupIds, groupQueries]);
 
-  const hasSelection = selected.size > 0;
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const initialSavedRef = useRef(initialSaved);
+  const lastEmittedKeyRef = useRef<string | null>(null);
 
-  // Reset sheet count when selection is cleared
-  const [sheetCount, setSheetCount] = useState<number | null>(null);
   useEffect(() => {
-    if (!hasSelection) setSheetCount(null);
-  }, [hasSelection]);
+    const key = JSON.stringify(loadedMonsters);
+    if (key === lastEmittedKeyRef.current) return;
+    lastEmittedKeyRef.current = key;
+    onChangeRef.current({ ...initialSavedRef.current, monsters: loadedMonsters });
+  }, [loadedMonsters]);
 
-  const files = useMemo<VirtualFile[]>(
-    () => [
-      TEMPLATE_FILE,
-      ...(loadedMonsters.length > 0
-        ? [
-            {
-              path: '/data/selected-monsters.json',
-              content: JSON.stringify(loadedMonsters),
-            },
-          ]
-        : []),
-    ],
-    [loadedMonsters],
-  );
-
-  const source = CARD_SOURCE;
-
-  const inputs = useMemo(
-    () => ({ print: printMode ? 'true' : 'false' }),
-    [printMode],
-  );
-
-  const handlePageCount = useCallback((count: number) => {
-    // Each sheet = 2 pages (front + back)
-    setSheetCount(Math.ceil(count / 2));
-  }, []);
-
-  const [exporting, setExporting] = useState(false);
-  async function handleExportPdf() {
-    setExporting(true);
-    try {
-      const pdfBytes = await compilePdf(source, files, inputs);
-      if (!pdfBytes) return;
-      const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'monster-cards.pdf';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error('PDF export failed:', e);
-    } finally {
-      setExporting(false);
-    }
-  }
-
-  const pickerPanel = (
+  return (
     <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
       <div className="hidden md:flex items-center h-11 px-4 py-2 bg-surface-container flex-shrink-0">
-        <span className="text-sm font-semibold font-body text-on-surface">
-          Monsters
-        </span>
+        <span className="text-sm font-semibold font-body text-on-surface">Monsters</span>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-4">
@@ -226,95 +156,14 @@ export function MonsterCardsPage() {
         )}
       </div>
 
-      {/* Selection summary */}
       <div className="px-4 py-3 bg-surface-container flex-shrink-0">
         <div className="text-xs font-label text-on-surface-variant">
-          {selected.size} monster
-          {selected.size !== 1 ? 's' : ''} selected
-          {sheetCount != null && (
-            <>
-              {' '}
-              · {sheetCount} sheet{sheetCount !== 1 ? 's' : ''}
-            </>
-          )}
+          {selected.size} monster{selected.size !== 1 ? 's' : ''} selected
         </div>
       </div>
     </div>
   );
-
-  const previewPanel = (
-    <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-      <PreviewToolbar
-        zoom={zoom}
-        printMode={printMode}
-        onPrintModeChange={setPrintMode}
-        onExportPdf={handleExportPdf}
-        exporting={exporting}
-        exportDisabled={!hasSelection}
-      />
-      <div className="flex-1 min-h-0 overflow-hidden">
-        {hasSelection && loadedMonsters.length > 0 ? (
-          <Preview
-            content={source}
-            template=""
-            files={files}
-            zoom={zoom}
-            inputs={inputs}
-            onPageCount={handlePageCount}
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full bg-surface-container-low">
-            <p className="text-2xl font-body text-on-surface-variant/70">
-              Select monsters to generate cards
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <PageHeader icon={Skull} title="Monster Cards" />
-      {/* Mobile tab toggle */}
-      <div className="md:hidden flex bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
-        <button
-          onClick={() => setMobileTab('select')}
-          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
-            mobileTab === 'select'
-              ? 'text-primary border-b-2 border-primary'
-              : 'text-on-surface-variant'
-          }`}
-        >
-          Select Monsters
-        </button>
-        <button
-          onClick={() => setMobileTab('preview')}
-          className={`flex-1 py-2 text-xs font-label font-bold tracking-wide text-center transition-colors ${
-            mobileTab === 'preview'
-              ? 'text-primary border-b-2 border-primary'
-              : 'text-on-surface-variant'
-          }`}
-        >
-          Preview
-        </button>
-      </div>
-
-      {/* Desktop: side by side */}
-      <div className="hidden md:flex flex-1 min-h-0 overflow-hidden">
-        {pickerPanel}
-        {previewPanel}
-      </div>
-
-      {/* Mobile: tab-switched */}
-      <div className="md:hidden flex-1 min-h-0 overflow-hidden flex flex-col">
-        {mobileTab === 'select' ? pickerPanel : previewPanel}
-      </div>
-    </div>
-  );
 }
-
-// ── Group picker sub-component ───────────────────────────────────────────────
 
 function GroupPicker({
   group,
