@@ -3,9 +3,9 @@ import { X, Plus, Download } from 'lucide-react';
 import { loadMonsterByName, type Feature, type MonsterGroup, type MonsterSummary } from '@/data/bestiary';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
-import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import type { IndexItem } from '@/data/types';
 import type { EncounterDocument } from '@/documents/encounters';
+import type { DocumentFormProps } from '@/documents/types';
 
 interface MaliceEntry {
   id: number;
@@ -125,28 +125,25 @@ const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm fon
 const labelClass = 'text-xs font-label text-on-surface-variant';
 const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-1.5 py-1 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 
-interface EncounterFormProps {
-  initialSaved: EncounterDocument;
-  onChange: (saved: EncounterDocument) => void;
-}
-
-export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
-  const [form, setForm] = useState<EncounterFormState>(() => savedToFormState(initialSaved));
+export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDocument>) {
+  // Form state carries per-row UI ids (used as stable React keys) that
+  // don't live in the canonical document. The form initializes from
+  // `value` once; subsequent external changes (e.g. resolveUseRemote) are
+  // handled by the parent via a remount key.
+  const [form, setForm] = useState<EncounterFormState>(() => savedToFormState(value));
   const fetchDocument = useFetchDocument();
   const { data: monsterIndex } = useIndex('monsters');
   const allGroups = useMemo(() => monsterIndex?.items ?? [], [monsterIndex?.items]);
 
-  const emitValue = useMemo(
-    () => formStateToSaved(form, initialSaved.name),
-    [form, initialSaved.name],
-  );
-  useEmitOnChange(emitValue, onChange);
-
   const updateForm = useCallback(
     (updater: (prev: EncounterFormState) => EncounterFormState) => {
-      setForm(updater);
+      setForm((prev) => {
+        const next = updater(prev);
+        onChange(formStateToSaved(next, value.name));
+        return next;
+      });
     },
-    [],
+    [onChange, value.name],
   );
 
   const addMalice = useCallback(() => updateForm((p) => ({ ...p, malice: [...p.malice, emptyMalice()] })), [updateForm]);

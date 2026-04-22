@@ -9,8 +9,8 @@ import type { MonsterCardsDocument } from './monster-cards';
 import type { MonsterGroupDocument } from './monster-groups';
 
 export interface DocumentFormProps<Data> {
-  initialSaved: Data;
-  onChange: (saved: Data) => void;
+  value: Data;
+  onChange: (next: Data) => void;
 }
 
 export interface DocumentMetadata<Data> {

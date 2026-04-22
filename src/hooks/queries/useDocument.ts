@@ -5,18 +5,20 @@ import {
   updateDocument,
   removeDocument,
 } from '@/services/google-drive';
-import { loadStaticDocument } from './staticData';
-import type { Category } from '@/data/types';
+import { isVirtualId, loadStaticDocument, loadVirtualDocument } from './staticData';
+import type { Category, IndexFile, IndexItem } from '@/data/types';
 
 // The cache stores { data, version } for every document query. Version is
 // used for optimistic concurrency on save; callers that only want the data
 // unwrap as needed (see useDocuments / useFetchDocument below).
-interface DocumentEnvelope<T> {
+export interface DocumentEnvelope<T> {
   data: T;
   version: number;
 }
 
 async function loadDocument<T>(category: Category, id: string): Promise<DocumentEnvelope<T>> {
+  const virtualResult = loadVirtualDocument(category, id);
+  if (virtualResult) return virtualResult as Promise<DocumentEnvelope<T>>;
   const staticResult = loadStaticDocument(category, id);
   if (staticResult) return staticResult as Promise<DocumentEnvelope<T>>;
   return loadDriveDocument<T>(id);
@@ -29,6 +31,12 @@ export function useDocument<T = unknown>(category: Category, id: string | undefi
     queryFn: () => loadDocument<T>(category, id!),
     enabled: enabled && !!id,
     staleTime: 30 * 1000,
+    // Virtual ids (demo docs) have no backing Drive file and are synthesized
+    // on read. Evicting the cache entry on last unsubscribe gives each new
+    // mount a fresh createDefault, matching the pre-refactor "reset on
+    // navigate" behavior. Real docs use the default gcTime for cross-nav
+    // caching.
+    gcTime: id && isVirtualId(id) ? 0 : undefined,
   });
 }
 
@@ -91,7 +99,27 @@ export function useSaveDocument() {
         ? createDocument(args)
         : updateDocument(args),
     onSuccess: (result, args) => {
-      queryClient.invalidateQueries({ queryKey: [args.category, 'index'] });
+      // Patch the index cache in place instead of invalidating — we have
+      // the authoritative entry in hand, and the server-side write in
+      // updateDocument has already persisted it. Refetching would mean two
+      // extra Drive calls (findFile + readFile) per save.
+      const entry: IndexItem = {
+        fileId: result.fileId,
+        name: args.name,
+        updatedAt: result.updatedAt,
+        ...(args.extraIndexFields ?? {}),
+        // useIndex tags Drive-backed items; preserve that shape so the UI
+        // doesn't treat a freshly-saved entry as static.
+        custom: true,
+      };
+      queryClient.setQueriesData<IndexFile>({ queryKey: [args.category, 'index'] }, (prev) => {
+        if (!prev) return prev;
+        const idx = prev.items.findIndex((i) => i.fileId === result.fileId);
+        const items = idx >= 0
+          ? prev.items.map((i, j) => (j === idx ? entry : i))
+          : [...prev.items, entry];
+        return { ...prev, items };
+      });
       queryClient.setQueryData([args.category, 'document', result.fileId], {
         data: result.data,
         version: result.version,

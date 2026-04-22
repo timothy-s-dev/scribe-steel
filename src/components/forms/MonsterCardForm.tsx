@@ -1,16 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
-import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import type { IndexItem } from '@/data/types';
 import type { MonsterGroup, Monster, MonsterSummary } from '@/data/bestiary';
 import type { MonsterCardsDocument } from '@/documents/monster-cards';
-
-interface MonsterCardFormProps {
-  initialSaved: MonsterCardsDocument;
-  onChange: (saved: MonsterCardsDocument) => void;
-}
+import type { DocumentFormProps } from '@/documents/types';
 
 function monsterKey(groupName: string, monsterName: string) {
   return `${groupName}\0${monsterName}`;
@@ -37,7 +32,7 @@ function sortedMonsters(monsters: MonsterSummary[]): MonsterSummary[] {
   });
 }
 
-export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps) {
+export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCardsDocument>) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
@@ -120,11 +115,18 @@ export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps
     return monsters;
   }, [selectedByGroup, groups, selectedGroupIds, groupData]);
 
-  const emitValue = useMemo(
-    () => ({ ...initialSaved, monsters: loadedMonsters }),
-    [initialSaved, loadedMonsters],
-  );
-  useEmitOnChange(emitValue, onChange);
+  // Emit when the resolved monster set changes — whether from a user
+  // toggle (selection change) or from an async group-document fetch
+  // completing (groupData change). `value` is read via useEffectEvent so
+  // cache-roundtrips that bump `value`'s identity but leave loadedMonsters
+  // alone don't re-fire this effect. Without that guard, every save
+  // success would re-emit and loop.
+  const emit = useEffectEvent((monsters: Monster[]) => {
+    onChange({ ...value, monsters });
+  });
+  useEffect(() => {
+    emit(loadedMonsters);
+  }, [loadedMonsters]);
 
   return (
     <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
@@ -176,7 +178,7 @@ function GroupPicker({
   onToggleMonster: (groupName: string, name: string) => void;
 }) {
   const monsters = useMemo(() => sortedMonsters(monstersOf(group)), [group]);
-  const allChecked = monsters.every((m) => selected.has(monsterKey(group.name, m.name)));
+  const allChecked = monsters.length > 0 && monsters.every((m) => selected.has(monsterKey(group.name, m.name)));
   const someChecked = monsters.some((m) => selected.has(monsterKey(group.name, m.name)));
 
   return (

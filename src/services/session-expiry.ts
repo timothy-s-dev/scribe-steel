@@ -1,7 +1,7 @@
 // Module-level observable for "the user's Drive auth expired mid-session."
-// useAutoSave reports this when a save fails with a 401; the app-level
-// SessionExpiryDialog subscribes so it can surface a modal across any
-// editor without needing per-page wiring.
+// useDocumentMutation reports this when a save fails with a 401; the
+// app-level SessionExpiryDialog subscribes so it can surface a modal
+// across any editor without needing per-page wiring.
 
 type Listener = (expired: boolean) => void;
 

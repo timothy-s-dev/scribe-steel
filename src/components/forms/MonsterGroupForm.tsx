@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { X, Plus, Copy } from 'lucide-react';
 import { getAllMonsterSummaries, loadMonsterByName, emptyMonster } from '@/data/bestiary';
-import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import { MonsterEditor } from '@/components/MonsterEditor';
 import {
   Dialog,
@@ -14,6 +13,7 @@ import {
 import { Button } from '@/components/shadcn/button';
 import type { Monster, Feature } from '@/data/bestiary';
 import type { MonsterGroupDocument } from '@/documents/monster-groups';
+import type { DocumentFormProps } from '@/documents/types';
 
 const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-1.5 py-1 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 
@@ -40,67 +40,63 @@ function emptyMaliceFeature(): Feature {
   };
 }
 
-interface MonsterGroupFormProps {
-  initialSaved: MonsterGroupDocument;
-  onChange: (saved: MonsterGroupDocument) => void;
-}
-
-export function MonsterGroupForm({ initialSaved, onChange }: MonsterGroupFormProps) {
-  const [saved, setSaved] = useState<MonsterGroupDocument>(initialSaved);
-  const [maliceKeys, setMaliceKeys] = useState<number[]>(() => initialSaved.malice.map(() => uid()));
-  const [monsterKeys, setMonsterKeys] = useState<number[]>(() => initialSaved.monsters.map(() => uid()));
+export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterGroupDocument>) {
+  // UI-only state: per-row ids keep React keys stable across renders.
+  // Initialized from `value` on mount; kept in sync manually as rows are
+  // added/removed. External replacement of `value` (conflict resolution)
+  // is handled by the parent via remount key.
+  const [maliceKeys, setMaliceKeys] = useState<number[]>(() => value.malice.map(() => uid()));
+  const [monsterKeys, setMonsterKeys] = useState<number[]>(() => value.monsters.map(() => uid()));
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
 
-  useEmitOnChange(saved, onChange);
-
   const addMalice = useCallback(() => {
-    setSaved((prev) => ({ ...prev, malice: [...prev.malice, emptyMaliceFeature()] }));
+    onChange({ ...value, malice: [...value.malice, emptyMaliceFeature()] });
     setMaliceKeys((prev) => [...prev, uid()]);
-  }, []);
+  }, [value, onChange]);
 
-  const updateMalice = useCallback((index: number, field: string, value: string) => {
-    setSaved((prev) => ({
-      ...prev,
-      malice: prev.malice.map((m, i) => {
+  const updateMalice = useCallback((index: number, field: string, fieldValue: string) => {
+    onChange({
+      ...value,
+      malice: value.malice.map((m, i) => {
         if (i !== index) return m;
-        if (field === 'cost') return { ...m, cost: value };
-        if (field === 'name') return { ...m, name: value };
-        if (field === 'description') return { ...m, effects: [{ effect: value }] };
+        if (field === 'cost') return { ...m, cost: fieldValue };
+        if (field === 'name') return { ...m, name: fieldValue };
+        if (field === 'description') return { ...m, effects: [{ effect: fieldValue }] };
         return m;
       }),
-    }));
-  }, []);
+    });
+  }, [value, onChange]);
 
   const removeMalice = useCallback((index: number) => {
-    setSaved((prev) => ({ ...prev, malice: prev.malice.filter((_, i) => i !== index) }));
+    onChange({ ...value, malice: value.malice.filter((_, i) => i !== index) });
     setMaliceKeys((prev) => prev.filter((_, i) => i !== index));
-  }, []);
+  }, [value, onChange]);
 
   const addMonster = useCallback(() => {
-    setSaved((prev) => ({ ...prev, monsters: [...prev.monsters, emptyMonster()] }));
+    onChange({ ...value, monsters: [...value.monsters, emptyMonster()] });
     setMonsterKeys((prev) => [...prev, uid()]);
-  }, []);
+  }, [value, onChange]);
 
   const updateMonster = useCallback((index: number, monster: Monster) => {
-    setSaved((prev) => ({
-      ...prev,
-      monsters: prev.monsters.map((m, i) => (i === index ? monster : m)),
-    }));
-  }, []);
+    onChange({
+      ...value,
+      monsters: value.monsters.map((m, i) => (i === index ? monster : m)),
+    });
+  }, [value, onChange]);
 
   const removeMonster = useCallback((index: number) => {
-    setSaved((prev) => ({ ...prev, monsters: prev.monsters.filter((_, i) => i !== index) }));
+    onChange({ ...value, monsters: value.monsters.filter((_, i) => i !== index) });
     setMonsterKeys((prev) => prev.filter((_, i) => i !== index));
-  }, []);
+  }, [value, onChange]);
 
   const copyFromBestiary = useCallback(async (monsterName: string) => {
     const source = await loadMonsterByName(monsterName);
     if (!source) return;
     const copy = structuredClone(source);
-    setSaved((prev) => ({ ...prev, monsters: [...prev.monsters, copy] }));
+    onChange({ ...value, monsters: [...value.monsters, copy] });
     setMonsterKeys((prev) => [...prev, uid()]);
     setCopyDialogOpen(false);
-  }, []);
+  }, [value, onChange]);
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
@@ -109,7 +105,7 @@ export function MonsterGroupForm({ initialSaved, onChange }: MonsterGroupFormPro
           <h3 className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
             Malice Features
           </h3>
-          {saved.malice.map((m, i) => (
+          {value.malice.map((m, i) => (
             <div key={maliceKeys[i]} className="space-y-1 md:space-y-0 md:flex md:gap-1.5 md:items-start">
               <div className="flex gap-1.5 items-start">
                 <input
@@ -163,7 +159,7 @@ export function MonsterGroupForm({ initialSaved, onChange }: MonsterGroupFormPro
           <h3 className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
             Monsters
           </h3>
-          {saved.monsters.map((monster, i) => (
+          {value.monsters.map((monster, i) => (
             <MonsterEditor
               key={monsterKeys[i]}
               monster={monster}
