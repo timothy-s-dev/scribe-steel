@@ -1,8 +1,8 @@
 import { Switch } from '@/components/ui/switch';
-import { ZoomControls } from '@/components/ZoomControls';
+import { ZoomControls } from './ZoomControls';
 import type { ZoomState } from '@/hooks/useZoom';
 
-interface PreviewToolbarProps {
+interface ToolbarProps {
   zoom: ZoomState;
   printMode: boolean;
   onPrintModeChange: (value: boolean) => void;
@@ -11,14 +11,14 @@ interface PreviewToolbarProps {
   exportDisabled?: boolean;
 }
 
-export function PreviewToolbar({
+export function Toolbar({
   zoom,
   printMode,
   onPrintModeChange,
   onExportPdf,
   exporting,
   exportDisabled = false,
-}: PreviewToolbarProps) {
+}: ToolbarProps) {
   return (
     <div className="relative z-10 flex items-center justify-between h-11 px-4 py-2 bg-surface-container flex-shrink-0">
       <div className="flex-1">

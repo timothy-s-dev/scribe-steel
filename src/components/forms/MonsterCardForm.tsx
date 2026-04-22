@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
+import { useMountSkipEffectEvent } from '@/hooks/useMountSkipEffectEvent';
 import type { IndexItem, MonsterGroup, Monster } from '@/data/types';
 import type { MonsterSummary } from '@/data/bestiary';
 import type { MonsterCardsDocument } from '@/documents/monster-cards';
@@ -41,7 +42,7 @@ export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
   const { data: index, isLoading: groupsLoading } = useIndex('monsters');
-  const groups = index?.items ?? [];
+  const groups = useMemo(() => index?.items ?? [], [index?.items]);
 
   const toggleMonster = useCallback((groupName: string, name: string) => {
     const key = monsterKey(groupName, name);
@@ -99,12 +100,12 @@ export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps
     return ids;
   }, [selectedByGroup, groups]);
 
-  const groupQueries = useDocuments<MonsterGroup>('monsters', selectedGroupIds);
+  const { data: groupData } = useDocuments<MonsterGroup>('monsters', selectedGroupIds);
 
   const loadedMonsters = useMemo(() => {
     const monsters: Monster[] = [];
     const groupMap = new Map(
-      selectedGroupIds.map((id, i) => [id, groupQueries[i]?.data]),
+      selectedGroupIds.map((id, i) => [id, groupData[i]]),
     );
     for (const [groupName, monsterNames] of selectedByGroup) {
       const entry = groups.find((g) => g.name === groupName);
@@ -117,19 +118,12 @@ export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps
       }
     }
     return monsters;
-  }, [selectedByGroup, groups, selectedGroupIds, groupQueries]);
+  }, [selectedByGroup, groups, selectedGroupIds, groupData]);
 
-  const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
-  const initialSavedRef = useRef(initialSaved);
-  const lastEmittedKeyRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    const key = JSON.stringify(loadedMonsters);
-    if (key === lastEmittedKeyRef.current) return;
-    lastEmittedKeyRef.current = key;
-    onChangeRef.current({ ...initialSavedRef.current, monsters: loadedMonsters });
-  }, [loadedMonsters]);
+  useMountSkipEffectEvent(
+    () => onChange({ ...initialSaved, monsters: loadedMonsters }),
+    [loadedMonsters],
+  );
 
   return (
     <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ConflictDialog } from '@/components/ConflictDialog';
-import { DocumentPreview } from '@/components/DocumentPreview';
+import { DocumentPreview } from '@/components/preview';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useAutoSave, type SaveStatus } from '@/hooks/useAutoSave';

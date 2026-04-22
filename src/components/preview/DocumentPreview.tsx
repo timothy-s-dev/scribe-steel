@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Preview } from '@/components/Preview';
-import { PreviewToolbar } from '@/components/PreviewToolbar';
+import { Toolbar } from './Toolbar';
+import { SvgPage } from './SvgPage';
+import { useTypstCompiler } from '@/hooks/useTypstCompiler';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
 import { compilePdf } from '@/typst/compiler';
@@ -11,9 +12,6 @@ interface DocumentPreviewProps<T> {
   document: Document<T>;
 }
 
-// Renders the preview pane for any previewable document: toolbar with
-// zoom/print/export + the compiled output. Source and files are derived from
-// the document's metadata, so the component is type-agnostic.
 export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
   const { settings } = useSettings();
   const [printMode, setPrintMode] = useState(settings.printFriendly);
@@ -30,6 +28,17 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
     () => ({ print: printMode ? 'true' : 'false' }),
     [printMode],
   );
+
+  const { pages, error, loading } = useTypstCompiler(built.source, built.files, inputs);
+
+  const { setPageDimensions } = zoom;
+  const firstPageWidth = pages.length > 0 ? pages[0].width : 0;
+  const firstPageHeight = pages.length > 0 ? pages[0].height : 0;
+  useEffect(() => {
+    if (firstPageWidth > 0 && firstPageHeight > 0) {
+      setPageDimensions(firstPageWidth, firstPageHeight);
+    }
+  }, [firstPageWidth, firstPageHeight, setPageDimensions]);
 
   async function handleExportPdf() {
     setExporting(true);
@@ -56,7 +65,7 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
 
   return (
     <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
-      <PreviewToolbar
+      <Toolbar
         zoom={zoom}
         printMode={printMode}
         onPrintModeChange={setPrintMode}
@@ -64,7 +73,29 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
         exporting={exporting}
       />
       <div className="flex-1 min-h-0 overflow-hidden">
-        <Preview content={built.source} template="" files={built.files} zoom={zoom} inputs={inputs} />
+        {loading && pages.length === 0 ? (
+          <div className="flex h-full items-center justify-center text-sm text-outline">
+            Loading Typst compiler...
+          </div>
+        ) : (
+          <div
+            ref={zoom.setContainerEl}
+            className="h-full overflow-auto custom-scrollbar bg-surface-container-low"
+          >
+            {error && (
+              <div className="mx-6 mt-4 rounded-sm bg-tertiary-container/20 p-3 font-label text-xs text-tertiary whitespace-pre-wrap">
+                {error}
+              </div>
+            )}
+            {pages.length > 0 && (
+              <div className="flex flex-col items-center gap-4 py-6">
+                {pages.map((page, i) => (
+                  <SvgPage key={i} page={page} zoom={zoom.effectiveZoom} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

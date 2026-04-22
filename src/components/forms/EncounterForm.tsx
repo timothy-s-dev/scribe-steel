@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { X, Plus, Download } from 'lucide-react';
 import { loadMonsterByName, type MonsterSummary } from '@/data/bestiary';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
+import { useMountSkipEffectEvent } from '@/hooks/useMountSkipEffectEvent';
 import type { Feature, MonsterGroup, IndexItem } from '@/data/types';
 import type { EncounterDocument } from '@/documents/encounters';
 
@@ -133,19 +134,10 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
   const [form, setForm] = useState<EncounterFormState>(() => savedToFormState(initialSaved));
   const fetchDocument = useFetchDocument();
   const { data: monsterIndex } = useIndex('monsters');
-  const allGroups = monsterIndex?.items ?? [];
+  const allGroups = useMemo(() => monsterIndex?.items ?? [], [monsterIndex?.items]);
 
-  const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
-  const nameRef = useRef(initialSaved.name);
-  const firstEmitRef = useRef(true);
-
-  useEffect(() => {
-    if (firstEmitRef.current) {
-      firstEmitRef.current = false;
-      return;
-    }
-    onChangeRef.current(formStateToSaved(form, nameRef.current));
+  useMountSkipEffectEvent(() => {
+    onChange(formStateToSaved(form, initialSaved.name));
   }, [form]);
 
   const updateForm = useCallback(

@@ -1,16 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { compileSvg, type VirtualFile } from '@/typst/compiler';
 
+export interface ParsedPage {
+  width: number;
+  height: number;
+  svg: string;
+}
+
 interface TypstCompilerResult {
-  svg: string | null;
+  pages: ParsedPage[];
   error: string | null;
   loading: boolean;
 }
 
 export function useTypstCompiler(
   content: string,
-  template: string,
-  files: VirtualFile[] = [],
+  files: VirtualFile[],
   inputs?: Record<string, string>,
 ): TypstCompilerResult {
   const [svg, setSvg] = useState<string | null>(null);
@@ -21,7 +26,6 @@ export function useTypstCompiler(
   const filesRef = useRef(files);
   filesRef.current = files;
 
-  // Stable digest of virtual file contents for dependency tracking
   const filesDigest = files.map((f) => f.path + '\0' + f.content).join('\n');
 
   useEffect(() => {
@@ -31,8 +35,7 @@ export function useTypstCompiler(
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(async () => {
       try {
-        const source = template + content;
-        const result = await compileSvg(source, filesRef.current, inputs);
+        const result = await compileSvg(content, filesRef.current, inputs);
         if (generation !== generationRef.current) return;
         setSvg(result);
         setError(null);
@@ -47,7 +50,40 @@ export function useTypstCompiler(
     }, 300);
 
     return () => clearTimeout(timerRef.current);
-  }, [content, template, filesDigest, inputs]);
+  }, [content, filesDigest, inputs]);
 
-  return { svg, error, loading };
+  const pages = useMemo(() => parseSvgPages(svg), [svg]);
+
+  return { pages, error, loading };
+}
+
+function parseSvgPages(svg: string | null): ParsedPage[] {
+  if (!svg) return [];
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svg, 'image/svg+xml');
+  const svgEl = doc.querySelector('svg');
+  if (!svgEl) return [];
+
+  const pageGroups = svgEl.querySelectorAll('g.typst-page');
+  if (pageGroups.length === 0) {
+    const width = parseFloat(svgEl.getAttribute('data-width') || svgEl.getAttribute('width') || '596');
+    const height = parseFloat(svgEl.getAttribute('data-height') || svgEl.getAttribute('height') || '842');
+    return [{ width, height, svg }];
+  }
+
+  const styles = svgEl.querySelector('style')?.outerHTML || '';
+  const defs = svgEl.querySelector('defs')?.outerHTML || '';
+
+  return Array.from(pageGroups).map((group) => {
+    const width = parseFloat(group.getAttribute('data-page-width') || '596');
+    const height = parseFloat(group.getAttribute('data-page-height') || '842');
+
+    const cloned = group.cloneNode(true) as Element;
+    cloned.setAttribute('transform', 'translate(0, 0)');
+
+    const pageSvg = `<svg class="typst-doc" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${styles}${defs}${cloned.outerHTML}</svg>`;
+
+    return { width, height, svg: pageSvg };
+  });
 }

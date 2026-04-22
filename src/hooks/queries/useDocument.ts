@@ -26,6 +26,14 @@ export function useDocuments<T = unknown>(category: Category, ids: string[]) {
       queryFn: () => loadDocument<T>(category, id),
       staleTime: 30 * 1000,
     })),
+    // `combine` projects the observer results into a single value that
+    // react-query memoizes via structural sharing — same contents means
+    // same reference, so downstream memos/effects don't churn on observer
+    // events that don't change the data.
+    combine: (results) => ({
+      data: results.map((r) => r.data),
+      isLoading: results.some((r) => r.isLoading),
+    }),
   });
 }
 
