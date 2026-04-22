@@ -7,8 +7,8 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn/dialog';
+import { Button } from '@/components/shadcn/button';
 
 const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 

@@ -1,3 +1,6 @@
+/* eslint-disable react-refresh/only-export-components --
+ * Provider + useAuth hook co-located. Splitting for Fast Refresh fidelity
+ * isn't worth three files for a rarely-edited auth module. */
 import {
   createContext,
   useContext,
@@ -35,18 +38,16 @@ const AuthContext = createContext<AuthState>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const configured = isConfigured();
+  const isLoading = configured && !initialized;
 
   useEffect(() => {
-    if (!configured) {
-      setIsLoading(false);
-      return;
-    }
+    if (!configured) return;
 
     initAuth().then(() => {
       setIsSignedIn(!!getAccessToken());
-      setIsLoading(false);
+      setInitialized(true);
     });
 
     return onTokenChange((token) => {

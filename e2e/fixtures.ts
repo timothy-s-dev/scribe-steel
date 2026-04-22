@@ -37,6 +37,7 @@ export const test = base.extend<Options & Fixtures>({
         window.localStorage.setItem(key, '1');
       }, MOCK_AUTH_KEY);
     }
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture callback, not a React hook
     await use(context);
   },
 

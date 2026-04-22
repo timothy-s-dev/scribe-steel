@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { X, Plus, Copy } from 'lucide-react';
-import { getAllMonsterSummaries, loadMonsterByName } from '@/data/bestiary';
+import { getAllMonsterSummaries, loadMonsterByName, emptyMonster } from '@/data/bestiary';
 import { useEmitOnChange } from '@/hooks/useEmitOnChange';
-import { MonsterEditor, emptyMonster } from '@/components/MonsterEditor';
+import { MonsterEditor } from '@/components/MonsterEditor';
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,9 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import type { Monster, Feature } from '@/data/types';
+} from '@/components/shadcn/dialog';
+import { Button } from '@/components/shadcn/button';
+import type { Monster, Feature } from '@/data/bestiary';
 import type { MonsterGroupDocument } from '@/documents/monster-groups';
 
 const smallInputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-1.5 py-1 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';

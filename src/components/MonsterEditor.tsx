@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Monster, Feature, Effect } from '@/data/types';
+import type { Monster, Feature, Effect } from '@/data/bestiary';
 import { ChevronDown, ChevronUp, ChevronRight, X, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 
 // ── Shared styles ────────────────────────────────────────────────────────────
@@ -15,27 +15,6 @@ function uid() {
 }
 
 // ── Empty defaults ───────────────────────────────────────────────────────────
-
-export function emptyMonster(): Monster {
-  return {
-    name: '',
-    level: 1,
-    roles: [],
-    ancestry: [],
-    ev: 1,
-    size: '1M',
-    speed: 5,
-    stamina: 10,
-    stability: 0,
-    free_strike: 1,
-    might: 0,
-    agility: 0,
-    reason: 0,
-    intuition: 0,
-    presence: 0,
-    features: [],
-  };
-}
 
 function emptyAbilityFeature(): Feature & { _id: number } {
   return {

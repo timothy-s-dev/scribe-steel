@@ -7,7 +7,7 @@ import { queryClient } from '@/lib/queryClient'
 import './index.css'
 import App from '@/App'
 import { AuthProvider } from '@/contexts/AuthContext'
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@/components/shadcn/sonner'
 import { StorageNotice } from '@/components/StorageNotice'
 
 // In mock-drive builds only, expose the QueryClient so E2E tests can drive

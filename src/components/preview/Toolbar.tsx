@@ -1,4 +1,4 @@
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@/components/shadcn/switch';
 import { ZoomControls } from './ZoomControls';
 import type { ZoomState } from '@/hooks/useZoom';
 

@@ -7,12 +7,12 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn/dialog';
+import { Button } from '@/components/shadcn/button';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { monsterGroupsMetadata, type MonsterGroupDocument } from '@/documents/monster-groups';
-import type { MonsterGroup } from '@/data/types';
+import type { MonsterGroup } from '@/data/bestiary';
 import type { CreateDialogProps } from './NameOnlyCreateDialog';
 
 export function CreateMonsterGroupDialog({

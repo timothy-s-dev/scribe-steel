@@ -1,6 +1,6 @@
 import { useSettings } from '@/hooks/queries/useSettings';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@/components/shadcn/switch';
 import type { ZoomMode } from '@/hooks/useZoom';
 import { Settings } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';

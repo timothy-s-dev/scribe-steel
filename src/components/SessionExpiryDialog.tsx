@@ -6,8 +6,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/components/shadcn/dialog';
+import { Button } from '@/components/shadcn/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { isSessionExpired, onSessionExpiryChange } from '@/services/session-expiry';
 

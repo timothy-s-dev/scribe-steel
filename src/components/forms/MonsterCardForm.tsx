@@ -3,8 +3,8 @@ import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
 import { useEmitOnChange } from '@/hooks/useEmitOnChange';
-import type { IndexItem, MonsterGroup, Monster } from '@/data/types';
-import type { MonsterSummary } from '@/data/bestiary';
+import type { IndexItem } from '@/data/types';
+import type { MonsterGroup, Monster, MonsterSummary } from '@/data/bestiary';
 import type { MonsterCardsDocument } from '@/documents/monster-cards';
 
 interface MonsterCardFormProps {

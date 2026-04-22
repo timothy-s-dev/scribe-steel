@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { X, Plus, Download } from 'lucide-react';
-import { loadMonsterByName, type MonsterSummary } from '@/data/bestiary';
+import { loadMonsterByName, type Feature, type MonsterGroup, type MonsterSummary } from '@/data/bestiary';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useEmitOnChange } from '@/hooks/useEmitOnChange';
-import type { Feature, MonsterGroup, IndexItem } from '@/data/types';
+import type { IndexItem } from '@/data/types';
 import type { EncounterDocument } from '@/documents/encounters';
 
 interface MaliceEntry {

@@ -1,6 +1,7 @@
 import { Users } from 'lucide-react';
 import { MonsterGroupForm } from '@/components/forms/MonsterGroupForm';
-import type { DocumentMetaFields, Feature, Monster } from '@/data/types';
+import type { DocumentMetaFields } from '@/data/types';
+import type { Feature, Monster } from '@/data/bestiary';
 import type { DocumentMetadata } from './types';
 
 export interface MonsterGroupDocument extends DocumentMetaFields {

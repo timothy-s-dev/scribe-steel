@@ -17,7 +17,7 @@ interface TokenClientConfig {
   prompt?: '' | 'none' | 'consent' | 'select_account';
 }
 
-interface TokenClient {
+export interface TokenClient {
   requestAccessToken(overrides?: { prompt?: string }): void;
 }
 
@@ -31,4 +31,6 @@ interface Google {
   };
 }
 
-declare const google: Google;
+declare global {
+  const google: Google;
+}
