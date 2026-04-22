@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TypstEditor } from '@/components/TypstEditor';
-import { useMountSkipEffectEvent } from '@/hooks/useMountSkipEffectEvent';
+import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import { type LoreBookDocument } from '@/documents/lore-books';
 
 const inputClass = 'w-full bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
@@ -15,7 +15,7 @@ interface LoreBookFormProps {
 export function LoreBookForm({ initialSaved, onChange }: LoreBookFormProps) {
   const [saved, setSaved] = useState<LoreBookDocument>(initialSaved);
 
-  useMountSkipEffectEvent(() => onChange(saved), [saved]);
+  useEmitOnChange(saved, onChange);
 
   const set = <K extends keyof LoreBookDocument>(key: K, value: LoreBookDocument[K]) =>
     setSaved((prev) => ({ ...prev, [key]: value }));

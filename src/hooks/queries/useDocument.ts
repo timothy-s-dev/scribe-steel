@@ -1,17 +1,30 @@
 import { useQuery, useQueries, useMutation, useQueryClient } from '@tanstack/react-query';
-import { loadDocument as loadDriveDocument, saveDocument, removeDocument } from '@/services/google-drive';
+import {
+  loadDocument as loadDriveDocument,
+  createDocument,
+  updateDocument,
+  removeDocument,
+} from '@/services/google-drive';
 import { loadStaticDocument } from './staticData';
 import type { Category } from '@/data/types';
 
-async function loadDocument<T>(category: Category, id: string): Promise<T> {
+// The cache stores { data, version } for every document query. Version is
+// used for optimistic concurrency on save; callers that only want the data
+// unwrap as needed (see useDocuments / useFetchDocument below).
+interface DocumentEnvelope<T> {
+  data: T;
+  version: number;
+}
+
+async function loadDocument<T>(category: Category, id: string): Promise<DocumentEnvelope<T>> {
   const staticResult = loadStaticDocument(category, id);
-  if (staticResult) return staticResult as Promise<T>;
+  if (staticResult) return staticResult as Promise<DocumentEnvelope<T>>;
   return loadDriveDocument<T>(id);
 }
 
 export function useDocument<T = unknown>(category: Category, id: string | undefined, options?: { enabled?: boolean }) {
   const enabled = options?.enabled ?? true;
-  return useQuery<T>({
+  return useQuery<DocumentEnvelope<T>>({
     queryKey: [category, 'document', id],
     queryFn: () => loadDocument<T>(category, id!),
     enabled: enabled && !!id,
@@ -29,9 +42,10 @@ export function useDocuments<T = unknown>(category: Category, ids: string[]) {
     // `combine` projects the observer results into a single value that
     // react-query memoizes via structural sharing — same contents means
     // same reference, so downstream memos/effects don't churn on observer
-    // events that don't change the data.
+    // events that don't change the data. Callers of useDocuments don't
+    // care about versions, so we unwrap to just the data here.
     combine: (results) => ({
-      data: results.map((r) => r.data),
+      data: results.map((r) => r.data?.data),
       isLoading: results.some((r) => r.isLoading),
     }),
   });
@@ -39,34 +53,49 @@ export function useDocuments<T = unknown>(category: Category, ids: string[]) {
 
 export function useFetchDocument() {
   const queryClient = useQueryClient();
-  return <T = unknown>(category: Category, id: string) =>
-    queryClient.fetchQuery<T>({
+  return async <T = unknown>(category: Category, id: string): Promise<T> => {
+    const envelope = await queryClient.fetchQuery<DocumentEnvelope<T>>({
       queryKey: [category, 'document', id],
       queryFn: () => loadDocument<T>(category, id),
       staleTime: 30 * 1000,
     });
+    return envelope.data;
+  };
 }
 
-export function useSaveDocument() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (args: {
+// Shape of the args union matches the two concrete Drive operations, so
+// TypeScript enforces expectedVersion on updates at every call site.
+type SaveArgs =
+  | {
+      mode: 'create';
       category: Category;
       name: string;
       data: unknown;
       extraIndexFields?: Record<string, unknown>;
-      existingFileId?: string;
-    }) =>
-      saveDocument(
-        args.category,
-        args.name,
-        args.data,
-        args.extraIndexFields,
-        args.existingFileId,
-      ),
+    }
+  | {
+      mode: 'update';
+      category: Category;
+      name: string;
+      data: unknown;
+      fileId: string;
+      expectedVersion: number;
+      extraIndexFields?: Record<string, unknown>;
+    };
+
+export function useSaveDocument() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (args: SaveArgs) =>
+      args.mode === 'create'
+        ? createDocument(args)
+        : updateDocument(args),
     onSuccess: (result, args) => {
       queryClient.invalidateQueries({ queryKey: [args.category, 'index'] });
-      queryClient.setQueryData([args.category, 'document', result.fileId], result.data);
+      queryClient.setQueryData([args.category, 'document', result.fileId], {
+        data: result.data,
+        version: result.version,
+      });
     },
   });
 }

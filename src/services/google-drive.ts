@@ -16,6 +16,21 @@ class DriveError extends Error {
   }
 }
 
+// Thrown by updateDocument when the server's current file version doesn't
+// match expectedVersion — i.e. somebody else updated the file since we
+// loaded it. Carries the remote data and version so the caller can surface
+// a "keep local vs use remote" resolution UI without another round-trip.
+export class DriveConflictError extends Error {
+  remoteData: unknown;
+  remoteVersion: number;
+  constructor(remoteData: unknown, remoteVersion: number) {
+    super('Remote version has changed since load');
+    this.name = 'DriveConflictError';
+    this.remoteData = remoteData;
+    this.remoteVersion = remoteVersion;
+  }
+}
+
 async function headers(): Promise<HeadersInit> {
   const token = getAccessToken();
   if (!token) throw new DriveError('Not authenticated', 401);
@@ -78,17 +93,25 @@ async function createFile(folderId: string, name: string, content: unknown): Pro
   return data.id;
 }
 
-async function updateFile(fileId: string, content: unknown): Promise<void> {
-  await driveRequest(`${UPLOAD_API}/files/${fileId}?uploadType=media`, {
+async function updateFile(fileId: string, content: unknown): Promise<{ version: number }> {
+  const res = await driveRequest(`${UPLOAD_API}/files/${fileId}?uploadType=media&fields=version`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(content, null, 2),
   });
+  const { version } = await res.json();
+  return { version: Number(version) };
 }
 
 async function readFile<T = unknown>(fileId: string): Promise<T> {
   const res = await driveRequest(`${API}/files/${fileId}?alt=media`);
   return res.json() as Promise<T>;
+}
+
+async function getFileVersion(fileId: string): Promise<number> {
+  const res = await driveRequest(`${API}/files/${fileId}?fields=version`);
+  const { version } = await res.json();
+  return Number(version);
 }
 
 async function findFile(name: string, folderId: string): Promise<string | null> {
@@ -153,6 +176,27 @@ async function writeIndex(folderId: string, indexFileId: string | null, index: I
   return createFile(folderId, 'index.json', index);
 }
 
+function stampUpdatedAt(data: unknown, now: string): unknown {
+  return data && typeof data === 'object' && !Array.isArray(data)
+    ? { ...(data as Record<string, unknown>), updatedAt: now }
+    : data;
+}
+
+async function updateIndexEntry(
+  folderId: string,
+  fileId: string,
+  entry: IndexItem,
+): Promise<void> {
+  const { index, fileId: indexFileId } = await readIndex(folderId);
+  const existing = index.items.findIndex((item) => item.fileId === fileId);
+  if (existing >= 0) {
+    index.items[existing] = entry;
+  } else {
+    index.items.push(entry);
+  }
+  await writeIndex(folderId, indexFileId, index);
+}
+
 // ── Public API ──────────────────────────────────────────────────────────────
 
 export async function loadSettings<T = unknown>(): Promise<{ data: T; fileId: string | null }> {
@@ -179,46 +223,73 @@ export async function loadIndex(category: Category): Promise<IndexFile> {
   return index;
 }
 
-export async function loadDocument<T = unknown>(fileId: string): Promise<T> {
-  return readFile<T>(fileId);
+export async function loadDocument<T = unknown>(
+  fileId: string,
+): Promise<{ data: T; version: number }> {
+  const [data, version] = await Promise.all([
+    readFile<T>(fileId),
+    getFileVersion(fileId),
+  ]);
+  return { data, version };
 }
 
-export async function saveDocument(
-  category: Category,
-  name: string,
-  data: unknown,
-  extraIndexFields?: Record<string, unknown>,
-  existingFileId?: string,
-): Promise<{ fileId: string; updatedAt: string; data: unknown }> {
+export async function createDocument(args: {
+  category: Category;
+  name: string;
+  data: unknown;
+  extraIndexFields?: Record<string, unknown>;
+}): Promise<{ fileId: string; version: number; updatedAt: string; data: unknown }> {
+  const { category, name, data, extraIndexFields } = args;
+  const folderId = (await getLayout()).folders[category];
+  const now = new Date().toISOString();
+  const stamped = stampUpdatedAt(data, now);
+
+  const fileId = await createFile(folderId, slugify(name) + '.json', stamped);
+  const version = await getFileVersion(fileId);
+
+  await updateIndexEntry(folderId, fileId, {
+    fileId,
+    name,
+    updatedAt: now,
+    ...extraIndexFields,
+  });
+
+  return { fileId, version, updatedAt: now, data: stamped };
+}
+
+export async function updateDocument(args: {
+  category: Category;
+  name: string;
+  data: unknown;
+  fileId: string;
+  expectedVersion: number;
+  extraIndexFields?: Record<string, unknown>;
+}): Promise<{ fileId: string; version: number; updatedAt: string; data: unknown }> {
+  const { category, name, data, fileId, expectedVersion, extraIndexFields } = args;
   const folderId = (await getLayout()).folders[category];
 
+  // Application-level optimistic concurrency: Drive has no native If-Match,
+  // so we GET the current version and bail if it diverged since load.
+  // There's a small TOCTOU window between this check and the PATCH; we
+  // accept that for a solo-user-across-devices workflow.
+  const currentVersion = await getFileVersion(fileId);
+  if (currentVersion !== expectedVersion) {
+    const remoteData = await readFile<unknown>(fileId);
+    throw new DriveConflictError(remoteData, currentVersion);
+  }
+
   const now = new Date().toISOString();
-  const stamped =
-    data && typeof data === 'object' && !Array.isArray(data)
-      ? { ...(data as Record<string, unknown>), updatedAt: now }
-      : data;
+  const stamped = stampUpdatedAt(data, now);
+  const { version } = await updateFile(fileId, stamped);
 
-  let fileId: string;
-  const fileName = slugify(name) + '.json';
-  if (existingFileId) {
-    await updateFile(existingFileId, stamped);
-    fileId = existingFileId;
-  } else {
-    fileId = await createFile(folderId, fileName, stamped);
-  }
+  await updateIndexEntry(folderId, fileId, {
+    fileId,
+    name,
+    updatedAt: now,
+    ...extraIndexFields,
+  });
 
-  const { index, fileId: indexFileId } = await readIndex(folderId);
-  const existing = index.items.findIndex((item) => item.fileId === fileId);
-  const entry: IndexItem = { fileId, name, updatedAt: now, ...extraIndexFields };
-
-  if (existing >= 0) {
-    index.items[existing] = entry;
-  } else {
-    index.items.push(entry);
-  }
-
-  await writeIndex(folderId, indexFileId, index);
-  return { fileId, updatedAt: now, data: stamped };
+  return { fileId, version, updatedAt: now, data: stamped };
 }
 
 export async function removeDocument(category: Category, fileId: string): Promise<void> {

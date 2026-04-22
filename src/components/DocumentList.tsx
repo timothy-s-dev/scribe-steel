@@ -37,6 +37,7 @@ export function DocumentList<Data>({ type }: DocumentListProps<Data>) {
       try {
         const extraIndexFields = type.indexFields?.(data);
         const result = await saveMutation.mutateAsync({
+          mode: 'create',
           category: type.category,
           name,
           data,

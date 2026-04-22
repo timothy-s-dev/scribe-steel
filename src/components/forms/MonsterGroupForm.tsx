@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { X, Plus, Copy } from 'lucide-react';
 import { getAllMonsterSummaries, loadMonsterByName } from '@/data/bestiary';
-import { useMountSkipEffectEvent } from '@/hooks/useMountSkipEffectEvent';
+import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import { MonsterEditor, emptyMonster } from '@/components/MonsterEditor';
 import {
   Dialog,
@@ -51,7 +51,7 @@ export function MonsterGroupForm({ initialSaved, onChange }: MonsterGroupFormPro
   const [monsterKeys, setMonsterKeys] = useState<number[]>(() => initialSaved.monsters.map(() => uid()));
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
 
-  useMountSkipEffectEvent(() => onChange(saved), [saved]);
+  useEmitOnChange(saved, onChange);
 
   const addMalice = useCallback(() => {
     setSaved((prev) => ({ ...prev, malice: [...prev.malice, emptyMaliceFeature()] }));

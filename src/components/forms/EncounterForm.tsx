@@ -3,7 +3,7 @@ import { X, Plus, Download } from 'lucide-react';
 import { loadMonsterByName, type MonsterSummary } from '@/data/bestiary';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
-import { useMountSkipEffectEvent } from '@/hooks/useMountSkipEffectEvent';
+import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import type { Feature, MonsterGroup, IndexItem } from '@/data/types';
 import type { EncounterDocument } from '@/documents/encounters';
 
@@ -136,9 +136,11 @@ export function EncounterForm({ initialSaved, onChange }: EncounterFormProps) {
   const { data: monsterIndex } = useIndex('monsters');
   const allGroups = useMemo(() => monsterIndex?.items ?? [], [monsterIndex?.items]);
 
-  useMountSkipEffectEvent(() => {
-    onChange(formStateToSaved(form, initialSaved.name));
-  }, [form]);
+  const emitValue = useMemo(
+    () => formStateToSaved(form, initialSaved.name),
+    [form, initialSaved.name],
+  );
+  useEmitOnChange(emitValue, onChange);
 
   const updateForm = useCallback(
     (updater: (prev: EncounterFormState) => EncounterFormState) => {

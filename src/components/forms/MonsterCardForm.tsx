@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
-import { useMountSkipEffectEvent } from '@/hooks/useMountSkipEffectEvent';
+import { useEmitOnChange } from '@/hooks/useEmitOnChange';
 import type { IndexItem, MonsterGroup, Monster } from '@/data/types';
 import type { MonsterSummary } from '@/data/bestiary';
 import type { MonsterCardsDocument } from '@/documents/monster-cards';
@@ -120,10 +120,11 @@ export function MonsterCardForm({ initialSaved, onChange }: MonsterCardFormProps
     return monsters;
   }, [selectedByGroup, groups, selectedGroupIds, groupData]);
 
-  useMountSkipEffectEvent(
-    () => onChange({ ...initialSaved, monsters: loadedMonsters }),
-    [loadedMonsters],
+  const emitValue = useMemo(
+    () => ({ ...initialSaved, monsters: loadedMonsters }),
+    [initialSaved, loadedMonsters],
   );
+  useEmitOnChange(emitValue, onChange);
 
   return (
     <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">

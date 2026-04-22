@@ -25,10 +25,16 @@ export function getStaticEntries(category: Category): IndexItem[] {
   return registry.get(category)?.entries() ?? [];
 }
 
-export function loadStaticDocument(category: Category, id: string): Promise<unknown> | null {
+// Static documents are immutable and have no real version. The editor never
+// saves them, so the version is only here to keep the cache shape uniform
+// with Drive-loaded documents.
+export function loadStaticDocument(
+  category: Category,
+  id: string,
+): Promise<{ data: unknown; version: number }> | null {
   const data = registry.get(category);
   if (!data) return null;
   const isStatic = data.entries().some((e) => e.fileId === id);
   if (!isStatic) return null;
-  return data.loadDocument(id);
+  return data.loadDocument(id).then((d) => ({ data: d, version: 0 }));
 }
