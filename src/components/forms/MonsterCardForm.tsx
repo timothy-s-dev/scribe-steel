@@ -2,6 +2,7 @@ import { useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
+import { FormPanel } from '@/components/form';
 import type { IndexItem } from '@/data/types';
 import type { MonsterGroup, Monster, MonsterSummary } from '@/data/bestiary';
 import type { MonsterCardsDocument } from '@/documents/monster-cards';
@@ -129,11 +130,15 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
   }, [loadedMonsters]);
 
   return (
-    <div className="flex-1 min-w-0 md:w-80 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
-      <div className="hidden md:flex items-center h-11 px-4 py-2 bg-surface-container flex-shrink-0">
-        <span className="text-sm font-semibold font-body text-on-surface">Monsters</span>
-      </div>
-
+    <FormPanel
+      className="md:w-80"
+      header={<span className="text-sm font-semibold font-body text-on-surface">Monsters</span>}
+      footer={
+        <span className="text-xs font-label text-on-surface-variant">
+          {selected.size} monster{selected.size !== 1 ? 's' : ''} selected
+        </span>
+      }
+    >
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-4">
         {groups.map((group) => (
           <GroupPicker
@@ -152,13 +157,7 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
           </p>
         )}
       </div>
-
-      <div className="px-4 py-3 bg-surface-container flex-shrink-0">
-        <div className="text-xs font-label text-on-surface-variant">
-          {selected.size} monster{selected.size !== 1 ? 's' : ''} selected
-        </div>
-      </div>
-    </div>
+    </FormPanel>
   );
 }
 

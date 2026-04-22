@@ -7,7 +7,7 @@ import {
   loadMonsterByName,
 } from '@/data/bestiary';
 import { MonsterEditor } from '@/components/MonsterEditor';
-import { AddButton, Input, RemoveButton, SectionHeader } from '@/components/form';
+import { AddButton, FormPanel, Input, RemoveButton, SectionHeader } from '@/components/form';
 import { removeById, updateById } from '@/lib/arrays';
 import {
   Dialog,
@@ -51,7 +51,7 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
   );
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
+    <FormPanel>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-6 max-w-4xl">
         <section className="space-y-4 md:space-y-2">
           <SectionHeader>Malice Features</SectionHeader>
@@ -145,6 +145,6 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </FormPanel>
   );
 }

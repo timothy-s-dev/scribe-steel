@@ -1,12 +1,12 @@
 import { TypstEditor } from '@/components/TypstEditor';
-import { Field, Input, Textarea } from '@/components/form';
+import { Field, FormPanel, Input, Textarea } from '@/components/form';
 import { type LoreBookDocument } from '@/documents/lore-books';
 import type { DocumentFormProps } from '@/documents/types';
 
 export function LoreBookForm({ value, onChange }: DocumentFormProps<LoreBookDocument>) {
   return (
-    <div className="flex-1 min-w-0 md:w-1/2 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
-      <div className="flex-shrink-0 bg-surface-container px-4 py-3 space-y-2 overflow-y-auto custom-scrollbar max-h-[50%]">
+    <FormPanel className="md:w-1/2">
+      <div className="flex-shrink bg-surface-container px-4 py-3 space-y-2 overflow-y-auto custom-scrollbar">
         <Field label="Title" required>
           <Input
             value={value.title}
@@ -45,7 +45,9 @@ export function LoreBookForm({ value, onChange }: DocumentFormProps<LoreBookDocu
           />
         </Field>
       </div>
-      <TypstEditor value={value.content} onChange={(content) => onChange({ ...value, content })} />
-    </div>
+      <div className="flex-1 min-h-[300px] flex flex-col overflow-hidden">
+        <TypstEditor value={value.content} onChange={(content) => onChange({ ...value, content })} />
+      </div>
+    </FormPanel>
   );
 }

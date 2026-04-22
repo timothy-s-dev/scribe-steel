@@ -6,6 +6,7 @@ import { useIndex } from '@/hooks/queries/useIndex';
 import {
   AddButton,
   Field,
+  FormPanel,
   Input,
   RemoveButton,
   SectionHeader,
@@ -108,7 +109,7 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
   );
 
   return (
-    <div className="flex-1 min-w-0 md:w-1/3 md:flex-none flex flex-col overflow-hidden md:border-r border-outline-variant/20">
+    <FormPanel className="md:w-1/3">
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-5">
         <section className="space-y-2">
           <SectionHeader>Encounter Info</SectionHeader>
@@ -243,7 +244,7 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
           />
         </section>
       </div>
-    </div>
+    </FormPanel>
   );
 }
 

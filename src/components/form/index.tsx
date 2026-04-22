@@ -103,6 +103,41 @@ export function AddButton({
   );
 }
 
+// Shared shell for editor form panes. Header/footer are optional slots:
+// pass semantic content (a label, a counter) and FormPanel wraps it in the
+// standard bg-surface-container chrome so every form gets the same look.
+// The body is children, free-form — each form decides its own scroll layout.
+export function FormPanel({
+  className,
+  header,
+  footer,
+  children,
+}: {
+  className?: string;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex-1 min-w-0 md:flex-none h-full flex flex-col overflow-hidden md:border-r border-outline-variant/20',
+        className,
+      )}
+    >
+      {header != null && (
+        <div className="flex-shrink-0 flex items-center min-h-11 px-4 py-2 bg-surface-container">
+          {header}
+        </div>
+      )}
+      {children}
+      {footer != null && (
+        <div className="flex-shrink-0 px-4 py-3 bg-surface-container">{footer}</div>
+      )}
+    </div>
+  );
+}
+
 export function RemoveButton({
   onClick,
   label,
