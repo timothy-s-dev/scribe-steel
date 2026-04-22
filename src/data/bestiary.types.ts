@@ -9,6 +9,7 @@ export interface Effect {
 }
 
 export interface Feature {
+  id: string;
   type: "feature";
   feature_type: "ability" | "trait";
   name: string;
@@ -24,6 +25,7 @@ export interface Feature {
 }
 
 export interface Monster {
+  id: string;
   name: string;
   level: number;
   roles: string[];

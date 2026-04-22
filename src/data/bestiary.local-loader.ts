@@ -1,11 +1,39 @@
 import type { Monster, MonsterGroup, MonsterSummary, GroupSummary } from './bestiary.types';
 import indexData from './bestiary/index.json';
 
+// Bestiary JSON fixtures don't carry ids; Feature/Monster require them.
+// Hydrated groups are memoized by raw module identity so ids are stable
+// across repeated loads (React keys would otherwise churn).
+type RawFeature = Omit<Monster['features'][number], 'id'>;
+type RawMonster = Omit<Monster, 'id' | 'features'> & { features: RawFeature[] };
+type RawGroup = Omit<MonsterGroup, 'malice' | 'monsters'> & {
+  malice: RawFeature[];
+  monsters: RawMonster[];
+};
+
+const hydratedGroups = new WeakMap<RawGroup, MonsterGroup>();
+
+function hydrateGroup(raw: RawGroup): MonsterGroup {
+  const cached = hydratedGroups.get(raw);
+  if (cached) return cached;
+  const hydrated: MonsterGroup = {
+    ...raw,
+    malice: raw.malice.map((f) => ({ ...f, id: crypto.randomUUID() })),
+    monsters: raw.monsters.map((m) => ({
+      ...m,
+      id: crypto.randomUUID(),
+      features: m.features.map((f) => ({ ...f, id: crypto.randomUUID() })),
+    })),
+  };
+  hydratedGroups.set(raw, hydrated);
+  return hydrated;
+}
+
 // ── Lazy-load modules (returns promises, not eager imports) ─────────────────
 
 const groupModules = import.meta.glob('./bestiary/*.json') as Record<
   string,
-  () => Promise<{ default: MonsterGroup }>
+  () => Promise<{ default: RawGroup }>
 >;
 
 // ── Summaries (sync, lightweight) ───────────────────────────────────────────
@@ -30,7 +58,7 @@ export async function loadGroup(groupName: string): Promise<MonsterGroup | null>
   if (!loader) return null;
 
   const mod = await loader();
-  return mod.default;
+  return hydrateGroup(mod.default);
 }
 
 export async function loadMonsterByName(monsterName: string): Promise<Monster | null> {

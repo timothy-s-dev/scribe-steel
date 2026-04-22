@@ -1,24 +1,18 @@
 import { useState, useCallback } from 'react';
 import type { Monster, Feature, Effect } from '@/data/bestiary';
 import { ChevronDown, ChevronUp, ChevronRight, X, Plus, ArrowUp, ArrowDown } from 'lucide-react';
+import { removeById, updateById } from '@/lib/arrays';
 
 // ── Shared styles ────────────────────────────────────────────────────────────
 
 const inputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 const labelClass = 'text-[10px] font-label text-on-surface-variant/70';
 
-// ── ID helper ────────────────────────────────────────────────────────────────
-
-let _nextId = 1;
-function uid() {
-  return _nextId++;
-}
-
 // ── Empty defaults ───────────────────────────────────────────────────────────
 
-function emptyAbilityFeature(): Feature & { _id: number } {
+function emptyAbilityFeature(): Feature {
   return {
-    _id: uid(),
+    id: crypto.randomUUID(),
     type: 'feature',
     feature_type: 'ability',
     name: '',
@@ -33,26 +27,14 @@ function emptyAbilityFeature(): Feature & { _id: number } {
   };
 }
 
-function emptyTraitFeature(): Feature & { _id: number } {
+function emptyTraitFeature(): Feature {
   return {
-    _id: uid(),
+    id: crypto.randomUUID(),
     type: 'feature',
     feature_type: 'trait',
     name: '',
     effects: [{ effect: '' }],
   };
-}
-
-// ── Keyed wrappers for stable list rendering ────────────────────────────────
-
-type KeyedFeature = Feature & { _id: number };
-
-function keyFeatures(features: Feature[]): KeyedFeature[] {
-  return features.map((f) => ({ ...f, _id: uid() }));
-}
-
-function stripKeys(features: KeyedFeature[]): Feature[] {
-  return features.map(({ _id, ...rest }) => rest);
 }
 
 // ── Main component ───────────────────────────────────────────────────────────
@@ -65,7 +47,7 @@ interface MonsterEditorProps {
 
 export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProps) {
   const [expanded, setExpanded] = useState(!monster.name);
-  const [features, setFeatures] = useState<KeyedFeature[]>(() => keyFeatures(monster.features));
+  const features = monster.features;
 
   const update = useCallback(
     (field: string, value: unknown) => {
@@ -74,58 +56,22 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
     [monster, onChange],
   );
 
-  const updateFeature = useCallback(
-    (id: number, updater: (f: KeyedFeature) => KeyedFeature) => {
-      setFeatures((prev) => {
-        const next = prev.map((f) => (f._id === id ? updater(f) : f));
-        onChange({ ...monster, features: stripKeys(next) });
-        return next;
-      });
-    },
-    [monster, onChange],
-  );
-
-  const addAbility = useCallback(() => {
-    setFeatures((prev) => {
-      const next = [...prev, emptyAbilityFeature()];
-      onChange({ ...monster, features: stripKeys(next) });
-      return next;
-    });
-  }, [monster, onChange]);
-
-  const addTrait = useCallback(() => {
-    setFeatures((prev) => {
-      const next = [...prev, emptyTraitFeature()];
-      onChange({ ...monster, features: stripKeys(next) });
-      return next;
-    });
-  }, [monster, onChange]);
-
-  const removeFeature = useCallback(
-    (id: number) => {
-      setFeatures((prev) => {
-        const next = prev.filter((f) => f._id !== id);
-        onChange({ ...monster, features: stripKeys(next) });
-        return next;
-      });
-    },
+  const setFeatures = useCallback(
+    (next: Feature[]) => onChange({ ...monster, features: next }),
     [monster, onChange],
   );
 
   const moveFeature = useCallback(
-    (id: number, direction: -1 | 1) => {
-      setFeatures((prev) => {
-        const idx = prev.findIndex((f) => f._id === id);
-        if (idx < 0) return prev;
-        const target = idx + direction;
-        if (target < 0 || target >= prev.length) return prev;
-        const next = [...prev];
-        [next[idx], next[target]] = [next[target], next[idx]];
-        onChange({ ...monster, features: stripKeys(next) });
-        return next;
-      });
+    (id: string, direction: -1 | 1) => {
+      const idx = features.findIndex((f) => f.id === id);
+      if (idx < 0) return;
+      const target = idx + direction;
+      if (target < 0 || target >= features.length) return;
+      const next = [...features];
+      [next[idx], next[target]] = [next[target], next[idx]];
+      setFeatures(next);
     },
-    [monster, onChange],
+    [features, setFeatures],
   );
 
   // ── Collapsed summary row ──────────────────────────────────────────────────
@@ -230,30 +176,30 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
       <Section label="Features">
         {features.map((feat, idx) => (
           <FeatureWrapper
-            key={feat._id}
+            key={feat.id}
             feature={feat}
             isFirst={idx === 0}
             isLast={idx === features.length - 1}
-            onMoveUp={() => moveFeature(feat._id, -1)}
-            onMoveDown={() => moveFeature(feat._id, 1)}
-            onRemove={() => removeFeature(feat._id)}
+            onMoveUp={() => moveFeature(feat.id, -1)}
+            onMoveDown={() => moveFeature(feat.id, 1)}
+            onRemove={() => setFeatures(removeById(features, feat.id))}
           >
             {feat.feature_type === 'ability' ? (
               <AbilityFeatureEditor
                 feature={feat}
-                onChange={(updater) => updateFeature(feat._id, updater)}
+                onChange={(updater) => setFeatures(updateById(features, feat.id, updater))}
               />
             ) : (
               <TraitFeatureEditor
                 feature={feat}
-                onChange={(updater) => updateFeature(feat._id, updater)}
+                onChange={(updater) => setFeatures(updateById(features, feat.id, updater))}
               />
             )}
           </FeatureWrapper>
         ))}
         <div className="flex gap-3">
-          <AddButton onClick={addAbility}>Add Ability</AddButton>
-          <AddButton onClick={addTrait}>Add Trait</AddButton>
+          <AddButton onClick={() => setFeatures([...features, emptyAbilityFeature()])}>Add Ability</AddButton>
+          <AddButton onClick={() => setFeatures([...features, emptyTraitFeature()])}>Add Trait</AddButton>
         </div>
       </Section>
     </div>
@@ -271,7 +217,7 @@ function FeatureWrapper({
   onRemove,
   children,
 }: {
-  feature: KeyedFeature;
+  feature: Feature;
   isFirst: boolean;
   isLast: boolean;
   onMoveUp: () => void;
@@ -344,8 +290,8 @@ function AbilityFeatureEditor({
   feature,
   onChange,
 }: {
-  feature: KeyedFeature;
-  onChange: (updater: (f: KeyedFeature) => KeyedFeature) => void;
+  feature: Feature;
+  onChange: (updater: (f: Feature) => Feature) => void;
 }) {
   const set = (field: string, value: unknown) =>
     onChange((f) => ({ ...f, [field]: value }));
@@ -499,8 +445,8 @@ function TraitFeatureEditor({
   feature,
   onChange,
 }: {
-  feature: KeyedFeature;
-  onChange: (updater: (f: KeyedFeature) => KeyedFeature) => void;
+  feature: Feature;
+  onChange: (updater: (f: Feature) => Feature) => void;
 }) {
   return (
     <div className="grid grid-cols-[1fr_2fr] gap-2">

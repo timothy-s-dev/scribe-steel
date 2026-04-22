@@ -7,25 +7,38 @@ import type { DocumentMetadata } from './types';
 
 const IMPORT_PATH = '/templates/encounter.typ';
 
+export interface EncounterMalice {
+  id: string;
+  cost: number;
+  name: string;
+  description: string;
+}
+
+export interface EncounterCreature {
+  id: string;
+  name: string;
+  stamina: string;
+  stability: number;
+  speed: number;
+  freeStrike: string;
+  distance: string;
+  notes: string;
+  count?: number;
+}
+
+export interface EncounterGroup {
+  id: string;
+  label: string;
+  creatures: EncounterCreature[];
+}
+
 export interface EncounterDocument extends DocumentMetaFields {
   title: string;
   objective: string;
   victory: string;
   failure: string;
-  malice: { cost: number; name: string; description: string }[];
-  groups: {
-    label: string;
-    creatures: {
-      name: string;
-      stamina: string;
-      stability: number;
-      speed: number;
-      freeStrike: string;
-      distance: string;
-      notes: string;
-      count?: number;
-    }[];
-  }[];
+  malice: EncounterMalice[];
+  groups: EncounterGroup[];
   content: string;
 }
 

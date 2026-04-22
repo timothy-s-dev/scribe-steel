@@ -12,7 +12,7 @@ import { Button } from '@/components/shadcn/button';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { monsterGroupsMetadata, type MonsterGroupDocument } from '@/documents/monster-groups';
-import type { MonsterGroup } from '@/data/bestiary';
+import { cloneFeature, type MonsterGroup } from '@/data/bestiary';
 import type { CreateDialogProps } from './NameOnlyCreateDialog';
 
 export function CreateMonsterGroupDialog({
@@ -42,7 +42,7 @@ export function CreateMonsterGroupDialog({
     const data = monsterGroupsMetadata.createDefault(trimmed);
     if (copyFrom) {
       const source = await fetchDocument<MonsterGroup>('monsters', copyFrom);
-      data.malice = structuredClone(source.malice);
+      data.malice = source.malice.map(cloneFeature);
     }
     onSubmit(trimmed, data);
   };
