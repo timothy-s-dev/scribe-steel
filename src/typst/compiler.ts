@@ -4,13 +4,15 @@ const VERSION = '0.7.0-rc2';
 const CDN = `https://cdn.jsdelivr.net/npm`;
 
 $typst.setCompilerInitOptions({
-  getModule: () =>
-    `${CDN}/@myriaddreamin/typst-ts-web-compiler@${VERSION}/pkg/typst_ts_web_compiler_bg.wasm`,
+  getModule: () => ({
+    module_or_path: `${CDN}/@myriaddreamin/typst-ts-web-compiler@${VERSION}/pkg/typst_ts_web_compiler_bg.wasm`,
+  }),
 });
 
 $typst.setRendererInitOptions({
-  getModule: () =>
-    `${CDN}/@myriaddreamin/typst-ts-renderer@${VERSION}/pkg/typst_ts_renderer_bg.wasm`,
+  getModule: () => ({
+    module_or_path: `${CDN}/@myriaddreamin/typst-ts-renderer@${VERSION}/pkg/typst_ts_renderer_bg.wasm`,
+  }),
 });
 
 // Preload full (un-subset) fonts needed by templates.
