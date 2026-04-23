@@ -67,7 +67,11 @@ export function Field({
         )}
       >
         {label}
-        {required ? null : <span className="text-outline/50 ml-1">(optional)</span>}
+        {required ? null : (
+          <span className="text-outline/50 ml-1" aria-hidden="true">
+            (optional)
+          </span>
+        )}
       </span>
       {children}
     </label>

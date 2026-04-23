@@ -91,11 +91,11 @@ test.describe('Encounter Sheets editor', () => {
         visible(page.getByRole('button', { name: 'Remove malice feature' })),
       ).toHaveCount(0);
 
-      // The import-from-group select appears next to "Add Malice Feature"
-      // only when at least one group with malice exists. Pick the first
-      // non-placeholder option.
-      const importSelect = visible(page.locator('select').filter({ hasText: 'Import from group' }));
-      await importSelect.selectOption({ index: 1 });
+      // The import-from-group combobox appears next to "Add Malice Feature"
+      // only when at least one group with malice exists. Open it and pick
+      // the first option (a stock bestiary group).
+      await visible(page.getByPlaceholder('Import from group...')).click();
+      await page.getByRole('option').first().click();
 
       await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 

@@ -47,10 +47,10 @@ test.describe('Monster Groups list page', () => {
       await page.getByRole('button', { name: 'Monster Group', exact: true }).click();
 
       await page.getByPlaceholder('e.g., Undead Horde').fill('Copied Malice');
-      // First dropdown option is "Start empty"; index 1 is the first source
-      // with malice from the stock bestiary.
-      const select = page.locator('select');
-      await select.selectOption({ index: 1 });
+      // Open the "Copy malice from" combobox and pick the first option
+      // (a stock bestiary group with malice features).
+      await page.getByPlaceholder('Start empty').click();
+      await page.getByRole('option').first().click();
 
       await page.getByRole('button', { name: 'Create' }).click();
       await expect(page).toHaveURL(/\/monster-groups\/[^/]+$/);

@@ -69,16 +69,14 @@ test.describe('Monster Groups editor', () => {
   test('copy a monster from the bestiary and persist', async ({ page }) => {
     await createGroup(page, 'Bestiary Copy');
 
-    await page.getByRole('button', { name: 'Copy from Bestiary' }).click();
+    // Open the bestiary combobox and pick the first monster. Each option
+    // row shows the monster name + "L{n} ..." metadata, so we filter on
+    // the level pattern to skip group-label headers.
+    const combobox = page.getByPlaceholder('Copy from bestiary...').filter({ visible: true });
+    await combobox.click();
 
-    // Dialog is open — pick the first bestiary monster by clicking the first
-    // option row. Each option shows the monster name as the main text.
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByRole('heading', { name: 'Copy from Bestiary' })).toBeVisible();
-
-    const firstOption = dialog.locator('button').filter({ hasText: /L\d+/ }).first();
-    const monsterName = (await firstOption.locator('> span').first().textContent())?.trim() ?? '';
-    expect(monsterName).not.toBe('');
+    const firstOption = page.getByRole('option').filter({ hasText: /L\d+/ }).first();
+    await expect(firstOption).toBeVisible();
     await firstOption.click();
 
     await expect(page.getByText('Saved', { exact: true })).toBeVisible();
