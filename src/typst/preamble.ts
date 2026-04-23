@@ -24,9 +24,11 @@ export function showWith(functionName: string, args: string[]): string {
   return `#show: ${functionName}.with(\n${args.join(',\n')},\n)`;
 }
 
-// Fields that never flow into the Typst template as args — either because
-// they're storage metadata or because they play a different role (name =
-// filename identity, content = body appended below the preamble).
+// Fields that never flow into the Typst template as args. `name` is
+// filename identity, `content` is appended below the preamble as the
+// template body. `version` and `updatedAt` are no longer written but
+// kept in the exclude list so docs saved before their removal don't
+// try to pass them to the template as undeclared parameters.
 const DEFAULT_EXCLUDES = ['version', 'updatedAt', 'name', 'content'] as const;
 
 interface JsonBackedOptions<T extends object> {
@@ -43,8 +45,7 @@ interface JsonBackedOptions<T extends object> {
 // template's function parameters.
 //
 // Convention:
-//   - `name` and `content` are skipped by default (name = filename, content = body).
-//   - `version` and `updatedAt` are skipped by default (storage metadata).
+//   - Fields in DEFAULT_EXCLUDES are skipped (see that comment).
 //   - Every other top-level key becomes `key: _data.key`.
 //   - The `content` field (or whatever `contentField` names) is appended
 //     below the `#show:` line so the template receives it as its body.

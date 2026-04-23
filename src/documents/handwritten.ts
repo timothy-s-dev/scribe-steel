@@ -15,7 +15,6 @@ export const handwrittenMetadata: DocumentMetadata<HandwrittenDocument> = {
   demoEnabled: true,
   FormComponent: HandwrittenForm,
   createDefault: (name) => ({
-    version: 1,
     name,
     title: name,
     content: '',

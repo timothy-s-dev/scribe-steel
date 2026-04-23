@@ -20,7 +20,6 @@ export const loreBooksMetadata: DocumentMetadata<LoreBookDocument> = {
   demoEnabled: true,
   FormComponent: LoreBookForm,
   createDefault: (name) => ({
-    version: 1,
     name,
     title: name,
     category: '',

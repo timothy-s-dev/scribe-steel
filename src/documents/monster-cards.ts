@@ -21,7 +21,6 @@ export const monsterCardsMetadata: DocumentMetadata<MonsterCardsDocument> = {
   icon: Skull,
   FormComponent: MonsterCardForm,
   createDefault: () => ({
-    version: 1,
     name: 'Monster Cards',
     title: 'Monster Cards',
     monsters: [],

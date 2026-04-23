@@ -15,7 +15,6 @@ export const monsterGroupsMetadata: DocumentMetadata<MonsterGroupDocument> = {
   icon: Users,
   FormComponent: MonsterGroupForm,
   createDefault: (name) => ({
-    version: 2,
     name,
     malice: [],
     monsters: [],

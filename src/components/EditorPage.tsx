@@ -99,13 +99,11 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
     (data: T): Record<string, unknown> => type.indexFields?.(data) ?? {},
     [type],
   );
-  const getUpdatedAt = useCallback((d: T) => d.updatedAt, []);
 
   const mutation = useDocumentMutation<T>({
     category: type.category,
     fileId,
     deriveIndexFields,
-    getUpdatedAt,
   });
 
   const handleUseRemote = useCallback(() => {
@@ -214,8 +212,7 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
       {!isDemo && (
         <ConflictDialog
           open={!!mutation.conflict}
-          localUpdatedAt={mutation.conflict?.localUpdatedAt}
-          remoteUpdatedAt={mutation.conflict?.remoteUpdatedAt}
+          remoteModifiedTime={mutation.conflict?.remoteModifiedTime}
           onUseRemote={handleUseRemote}
           onKeepLocal={mutation.resolveKeepLocal}
         />

@@ -3,8 +3,7 @@ import { Button } from '@/components/shadcn/button';
 
 interface ConflictDialogProps {
   open: boolean;
-  localUpdatedAt: string | undefined;
-  remoteUpdatedAt: string | undefined;
+  remoteModifiedTime: string | undefined;
   onUseRemote: () => void;
   onKeepLocal: () => void;
 }
@@ -20,8 +19,7 @@ function formatTimestamp(iso: string | undefined): string {
 
 export function ConflictDialog({
   open,
-  localUpdatedAt,
-  remoteUpdatedAt,
+  remoteModifiedTime,
   onUseRemote,
   onKeepLocal,
 }: ConflictDialogProps) {
@@ -41,13 +39,12 @@ export function ConflictDialog({
               <div className="font-label font-bold uppercase tracking-wide text-on-surface-variant">
                 Your local edits
               </div>
-              <div className="pt-1 text-on-surface">based on {formatTimestamp(localUpdatedAt)}</div>
             </div>
             <div className="rounded-sm bg-surface-container-high p-2">
               <div className="font-label font-bold uppercase tracking-wide text-on-surface-variant">
                 Remote version
               </div>
-              <div className="pt-1 text-on-surface">saved {formatTimestamp(remoteUpdatedAt)}</div>
+              <div className="pt-1 text-on-surface">saved {formatTimestamp(remoteModifiedTime)}</div>
             </div>
           </div>
         </div>

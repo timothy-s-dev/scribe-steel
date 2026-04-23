@@ -20,8 +20,7 @@ export type SaveStatus = 'idle' | 'saving' | 'saved' | 'retrying' | 'error';
 export interface ConflictState {
   remoteData: unknown;
   remoteMd5: string;
-  remoteUpdatedAt: string | undefined;
-  localUpdatedAt: string | undefined;
+  remoteModifiedTime: string;
 }
 
 export interface RetryState {
@@ -37,11 +36,8 @@ function nextDelay(attempt: number): number {
   return Math.min(RETRY_BASE_MS * 2 ** (attempt - 1), RETRY_MAX_MS);
 }
 
-// `updatedAt` is stamped at save time, so it always differs between what's
-// in the cache and what we're about to write. Strip it for no-op comparison.
-const META_KEYS = new Set(['updatedAt']);
 function canonicalize(data: unknown): string {
-  return JSON.stringify(data, (key, value) => (META_KEYS.has(key) ? undefined : value));
+  return JSON.stringify(data);
 }
 
 interface UseDocumentMutationOptions<T> {
@@ -51,7 +47,6 @@ interface UseDocumentMutationOptions<T> {
   // skip the network save — see staticData.isVirtualId.
   fileId: string;
   deriveIndexFields?: (data: T) => Record<string, unknown>;
-  getUpdatedAt: (data: T) => string | undefined;
 }
 
 export interface UseDocumentMutationResult<T> {
@@ -83,7 +78,6 @@ export function useDocumentMutation<T extends { name: string }>({
   category,
   fileId,
   deriveIndexFields,
-  getUpdatedAt,
 }: UseDocumentMutationOptions<T>): UseDocumentMutationResult<T> {
   const { isSignedIn } = useAuth();
   const queryClient = useQueryClient();
@@ -151,8 +145,7 @@ export function useDocumentMutation<T extends { name: string }>({
           setConflict({
             remoteData: err.remoteData,
             remoteMd5: err.remoteMd5,
-            remoteUpdatedAt: readUpdatedAt(err.remoteData, getUpdatedAt),
-            localUpdatedAt: getUpdatedAt(data),
+            remoteModifiedTime: err.remoteModifiedTime,
           });
           // Conflict has its own resolution UI; don't keep retrying.
           cancelRetry();
@@ -191,7 +184,7 @@ export function useDocumentMutation<T extends { name: string }>({
         });
       }
     },
-    [fileId, isSignedIn, queryClient, category, deriveIndexFields, mutateAsync, getUpdatedAt, cancelRetry],
+    [fileId, isSignedIn, queryClient, category, deriveIndexFields, mutateAsync, cancelRetry],
   );
 
   useEffect(() => {
@@ -307,15 +300,4 @@ export function useDocumentMutation<T extends { name: string }>({
       : null;
 
   return { edit, saveStatus, error, conflict, retry, resolveUseRemote, resolveKeepLocal };
-}
-
-function readUpdatedAt<T>(
-  data: unknown,
-  getUpdatedAt: (d: T) => string | undefined,
-): string | undefined {
-  try {
-    return getUpdatedAt(data as T);
-  } catch {
-    return undefined;
-  }
 }

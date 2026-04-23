@@ -49,7 +49,6 @@ export const encountersMetadata: DocumentMetadata<EncounterDocument> = {
   demoEnabled: true,
   FormComponent: EncounterForm,
   createDefault: (name) => ({
-    version: 1,
     name,
     title: name,
     objective: '',
