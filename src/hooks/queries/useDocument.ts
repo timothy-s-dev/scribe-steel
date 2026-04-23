@@ -34,7 +34,7 @@ export function useDocument<T = unknown>(category: Category, id: string | undefi
     queryKey: [category, 'document', id],
     queryFn: () => loadDocument<T>(category, id!),
     enabled: enabled && !!id,
-    staleTime: 30 * 1000,
+    staleTime: 15 * 60 * 1000,
     // Virtual ids (demo docs) have no backing Drive file and are synthesized
     // on read. Evicting the cache entry on last unsubscribe gives each new
     // mount a fresh createDefault, matching the pre-refactor "reset on
@@ -49,7 +49,7 @@ export function useDocuments<T = unknown>(category: Category, ids: string[]) {
     queries: ids.map((id) => ({
       queryKey: [category, 'document', id] as const,
       queryFn: () => loadDocument<T>(category, id),
-      staleTime: 30 * 1000,
+      staleTime: 15 * 60 * 1000,
     })),
     // `combine` projects the observer results into a single value that
     // react-query memoizes via structural sharing — same contents means
@@ -69,7 +69,7 @@ export function useFetchDocument() {
     const envelope = await queryClient.fetchQuery<DocumentEnvelope<T>>({
       queryKey: [category, 'document', id],
       queryFn: () => loadDocument<T>(category, id),
-      staleTime: 30 * 1000,
+      staleTime: 15 * 60 * 1000,
     });
     return envelope.data;
   };

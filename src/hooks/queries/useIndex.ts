@@ -20,6 +20,11 @@ export function useIndex(category: Category, options?: { enabled?: boolean }) {
       const driveItems = driveIndex.items.map((item) => ({ ...item, custom: true }));
       return { version: driveIndex.version, items: [...staticItems, ...driveItems] };
     },
+    // 15 minutes. The app is effectively the only writer, so we keep this
+    // long enough that intra-session navigation feels instant, but short
+    // enough that cross-device edits (phone during a game, laptop while
+    // travelling) get picked up when the user returns to a long-idle tab.
+    staleTime: 15 * 60 * 1000,
     enabled: options?.enabled ?? true,
   });
 }

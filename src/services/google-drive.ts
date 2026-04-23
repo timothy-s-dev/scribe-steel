@@ -57,19 +57,6 @@ async function driveRequest(url: string, init?: RequestInit): Promise<Response> 
 
 // ── Low-level folder/file operations (private) ──────────────────────────────
 
-async function findFolder(name: string, parentId?: string): Promise<string | null> {
-  const q = [
-    `name='${name}'`,
-    `mimeType='application/vnd.google-apps.folder'`,
-    'trashed=false',
-  ];
-  if (parentId) q.push(`'${parentId}' in parents`);
-  const params = new URLSearchParams({ q: q.join(' and '), fields: 'files(id)', pageSize: '1' });
-  const res = await driveRequest(`${API}/files?${params}`);
-  const data = await res.json();
-  return data.files?.[0]?.id ?? null;
-}
-
 async function createFolder(name: string, parentId?: string): Promise<string> {
   const body: Record<string, unknown> = { name, mimeType: 'application/vnd.google-apps.folder' };
   if (parentId) body.parents = [parentId];
@@ -80,12 +67,6 @@ async function createFolder(name: string, parentId?: string): Promise<string> {
   });
   const data = await res.json();
   return data.id;
-}
-
-async function findOrCreateFolder(name: string, parentId?: string): Promise<string> {
-  const existing = await findFolder(name, parentId);
-  if (existing) return existing;
-  return createFolder(name, parentId);
 }
 
 async function createFile(folderId: string, name: string, content: unknown): Promise<string> {
@@ -122,41 +103,133 @@ async function getFileMd5(fileId: string): Promise<string> {
   return String(md5Checksum);
 }
 
-async function findFile(name: string, folderId: string): Promise<string | null> {
-  const q = [`name='${name}'`, `'${folderId}' in parents`, 'trashed=false'];
-  const params = new URLSearchParams({ q: q.join(' and '), fields: 'files(id)', pageSize: '1' });
-  const res = await driveRequest(`${API}/files?${params}`);
-  const data = await res.json();
-  return data.files?.[0]?.id ?? null;
-}
-
 async function deleteFile(fileId: string): Promise<void> {
   await driveRequest(`${API}/files/${fileId}`, { method: 'DELETE' });
 }
 
 // ── Storage layout (dedup-safe via TanStack Query) ──────────────────────────
 
+// Everything we discover or create once per session. Folder ids never
+// change for the lifetime of the Drive account, and per-category index
+// fileIds don't change once created — so this is cached at staleTime
+// Infinity. `indexFiles` entries are absent until the first write for
+// that category (the index.json is created lazily on demand, so a
+// brand-new user's layout has all folders but no index files yet).
 interface StorageLayout {
   root: string;
   folders: Record<Category, string>;
+  indexFiles: Partial<Record<Category, string>>;
+  settingsFile: string | null;
 }
 
+const LAYOUT_QUERY_KEY = ['internal', 'storage-layout'] as const;
 const ALL_CATEGORIES: Category[] = ['monsters', 'encounters', 'handwritten', 'lore-books', 'monster-cards'];
+const ROOT_FOLDER_NAME = 'Scribe Steel';
+
+interface DiscoveredFile {
+  id: string;
+  name: string;
+  mimeType: string;
+  parents?: string[];
+}
+
+// One bulk query returns every candidate folder/file we might care about;
+// we rebuild the tree client-side via the `parents` field. False matches
+// (another "monsters" folder, a stray "index.json" elsewhere in the
+// user's Drive) are filtered out by the parent-chain walk below. The
+// candidate set is small even for heavy Drive users because each query
+// term is an exact name match.
+async function discoverLayout(): Promise<Partial<StorageLayout>> {
+  const names = [
+    ROOT_FOLDER_NAME,
+    ...ALL_CATEGORIES,
+    'index.json',
+    'settings.json',
+  ];
+  const q = `(${names.map((n) => `name='${n}'`).join(' or ')}) and trashed=false`;
+  const params = new URLSearchParams({
+    q,
+    fields: 'files(id,name,mimeType,parents)',
+    pageSize: '1000',
+  });
+  const res = await driveRequest(`${API}/files?${params}`);
+  const data = (await res.json()) as { files?: DiscoveredFile[] };
+  const files = data.files ?? [];
+
+  const FOLDER_MIME = 'application/vnd.google-apps.folder';
+  const root = files.find((f) => f.mimeType === FOLDER_MIME && f.name === ROOT_FOLDER_NAME);
+  if (!root) return {};
+
+  const folders: Partial<Record<Category, string>> = {};
+  for (const cat of ALL_CATEGORIES) {
+    const folder = files.find(
+      (f) => f.mimeType === FOLDER_MIME && f.name === cat && f.parents?.includes(root.id),
+    );
+    if (folder) folders[cat] = folder.id;
+  }
+
+  const indexFiles: Partial<Record<Category, string>> = {};
+  for (const cat of ALL_CATEGORIES) {
+    const folderId = folders[cat];
+    if (!folderId) continue;
+    const indexFile = files.find(
+      (f) => f.name === 'index.json' && f.parents?.includes(folderId),
+    );
+    if (indexFile) indexFiles[cat] = indexFile.id;
+  }
+
+  const settings = files.find(
+    (f) => f.name === 'settings.json' && f.parents?.includes(root.id),
+  );
+
+  return {
+    root: root.id,
+    folders: folders as Record<Category, string>,
+    indexFiles,
+    settingsFile: settings?.id ?? null,
+  };
+}
+
+// Create anything the bulk query didn't surface. New user: everything.
+// Version upgrade (new category added): just the new folder. Steady
+// state: nothing — pure no-op.
+async function reconcileLayout(partial: Partial<StorageLayout>): Promise<StorageLayout> {
+  const root = partial.root ?? (await createFolder(ROOT_FOLDER_NAME));
+  const existing = partial.folders ?? ({} as Record<Category, string>);
+  const folders: Record<Category, string> = { ...existing } as Record<Category, string>;
+  for (const cat of ALL_CATEGORIES) {
+    if (!folders[cat]) {
+      folders[cat] = await createFolder(cat, root);
+    }
+  }
+  return {
+    root,
+    folders,
+    indexFiles: partial.indexFiles ?? {},
+    settingsFile: partial.settingsFile ?? null,
+  };
+}
 
 async function initStorageLayout(): Promise<StorageLayout> {
-  const root = await findOrCreateFolder('Scribe Steel');
-  const entries = await Promise.all(
-    ALL_CATEGORIES.map(async (cat) => [cat, await findOrCreateFolder(cat, root)] as const),
-  );
-  return { root, folders: Object.fromEntries(entries) as Record<Category, string> };
+  const partial = await discoverLayout();
+  return reconcileLayout(partial);
 }
 
 async function getLayout(): Promise<StorageLayout> {
   return queryClient.ensureQueryData({
-    queryKey: ['internal', 'storage-layout'],
+    queryKey: LAYOUT_QUERY_KEY,
     queryFn: initStorageLayout,
     staleTime: Infinity,
   });
+}
+
+// Patch the cached layout in place. Called when we lazily create a file
+// whose id we want to remember for the session (index.json on first
+// write, settings.json on first save).
+function patchLayout(update: (prev: StorageLayout) => StorageLayout): void {
+  const current = queryClient.getQueryData<StorageLayout>(LAYOUT_QUERY_KEY);
+  if (!current) return;
+  queryClient.setQueryData<StorageLayout>(LAYOUT_QUERY_KEY, update(current));
 }
 
 function slugify(name: string): string {
@@ -169,19 +242,30 @@ function emptyIndex(): IndexFile {
   return { version: 1, items: [] };
 }
 
-async function readIndex(folderId: string): Promise<{ index: IndexFile; fileId: string | null }> {
-  const indexFileId = await findFile('index.json', folderId);
+async function readIndex(category: Category): Promise<{ index: IndexFile; fileId: string | null }> {
+  const layout = await getLayout();
+  const indexFileId = layout.indexFiles[category] ?? null;
   if (!indexFileId) return { index: emptyIndex(), fileId: null };
   const index = await readFile<IndexFile>(indexFileId);
   return { index, fileId: indexFileId };
 }
 
-async function writeIndex(folderId: string, indexFileId: string | null, index: IndexFile): Promise<string> {
+async function writeIndex(
+  category: Category,
+  indexFileId: string | null,
+  index: IndexFile,
+): Promise<string> {
   if (indexFileId) {
     await updateFile(indexFileId, index);
     return indexFileId;
   }
-  return createFile(folderId, 'index.json', index);
+  const layout = await getLayout();
+  const created = await createFile(layout.folders[category], 'index.json', index);
+  patchLayout((prev) => ({
+    ...prev,
+    indexFiles: { ...prev.indexFiles, [category]: created },
+  }));
+  return created;
 }
 
 function stampUpdatedAt(data: unknown, now: string): unknown {
@@ -191,43 +275,43 @@ function stampUpdatedAt(data: unknown, now: string): unknown {
 }
 
 async function updateIndexEntry(
-  folderId: string,
+  category: Category,
   fileId: string,
   entry: IndexItem,
 ): Promise<void> {
-  const { index, fileId: indexFileId } = await readIndex(folderId);
+  const { index, fileId: indexFileId } = await readIndex(category);
   const existing = index.items.findIndex((item) => item.fileId === fileId);
   if (existing >= 0) {
     index.items[existing] = entry;
   } else {
     index.items.push(entry);
   }
-  await writeIndex(folderId, indexFileId, index);
+  await writeIndex(category, indexFileId, index);
 }
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
 export async function loadSettings<T = unknown>(): Promise<{ data: T; fileId: string | null }> {
-  const { root } = await getLayout();
-  const fid = await findFile('settings.json', root);
-  if (!fid) return { data: null as T, fileId: null };
-  const data = await readFile<T>(fid);
-  return { data, fileId: fid };
+  const { settingsFile } = await getLayout();
+  if (!settingsFile) return { data: null as T, fileId: null };
+  const data = await readFile<T>(settingsFile);
+  return { data, fileId: settingsFile };
 }
 
 export async function saveSettings(data: unknown, existingFileId?: string | null): Promise<string> {
-  const { root } = await getLayout();
-  const fid = existingFileId ?? await findFile('settings.json', root);
+  const layout = await getLayout();
+  const fid = existingFileId ?? layout.settingsFile;
   if (fid) {
     await updateFile(fid, data);
     return fid;
   }
-  return createFile(root, 'settings.json', data);
+  const created = await createFile(layout.root, 'settings.json', data);
+  patchLayout((prev) => ({ ...prev, settingsFile: created }));
+  return created;
 }
 
 export async function loadIndex(category: Category): Promise<IndexFile> {
-  const folderId = (await getLayout()).folders[category];
-  const { index } = await readIndex(folderId);
+  const { index } = await readIndex(category);
   return index;
 }
 
@@ -255,7 +339,7 @@ export async function createDocument(args: {
   const fileId = await createFile(folderId, slugify(name) + '.json', stamped);
   const md5 = await getFileMd5(fileId);
 
-  await updateIndexEntry(folderId, fileId, {
+  await updateIndexEntry(category, fileId, {
     fileId,
     name,
     updatedAt: now,
@@ -274,7 +358,6 @@ export async function updateDocument(args: {
   extraIndexFields?: Record<string, unknown>;
 }): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
   const { category, name, data, fileId, expectedMd5, extraIndexFields } = args;
-  const folderId = (await getLayout()).folders[category];
 
   // Application-level optimistic concurrency: Drive has no native If-Match
   // for media uploads, so we GET the current content checksum and bail if
@@ -291,7 +374,7 @@ export async function updateDocument(args: {
   const stamped = stampUpdatedAt(data, now);
   const { md5 } = await updateFile(fileId, stamped);
 
-  await updateIndexEntry(folderId, fileId, {
+  await updateIndexEntry(category, fileId, {
     fileId,
     name,
     updatedAt: now,
@@ -302,13 +385,12 @@ export async function updateDocument(args: {
 }
 
 export async function removeDocument(category: Category, fileId: string): Promise<void> {
-  const folderId = (await getLayout()).folders[category];
   await deleteFile(fileId);
 
-  const { index, fileId: indexFileId } = await readIndex(folderId);
+  const { index, fileId: indexFileId } = await readIndex(category);
   index.items = index.items.filter((item) => item.fileId !== fileId);
   if (indexFileId) {
-    await writeIndex(folderId, indexFileId, index);
+    await writeIndex(category, indexFileId, index);
   }
 }
 
