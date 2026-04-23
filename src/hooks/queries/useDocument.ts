@@ -8,12 +8,16 @@ import {
 import { isVirtualId, loadStaticDocument, loadVirtualDocument } from './staticData';
 import type { Category, IndexFile, IndexItem } from '@/data/types';
 
-// The cache stores { data, version } for every document query. Version is
-// used for optimistic concurrency on save; callers that only want the data
-// unwrap as needed (see useDocuments / useFetchDocument below).
+// The cache stores { data, md5 } for every document query. md5 is Drive's
+// md5Checksum of the stored content — used for optimistic concurrency on
+// save. We use md5 rather than Drive's `version` field because `version`
+// reflects internal server bookkeeping (async metadata bumps) that
+// doesn't correspond to actual content changes; md5 only moves when
+// bytes change. Callers that only want the data unwrap as needed (see
+// useDocuments / useFetchDocument below).
 export interface DocumentEnvelope<T> {
   data: T;
-  version: number;
+  md5: string;
 }
 
 async function loadDocument<T>(category: Category, id: string): Promise<DocumentEnvelope<T>> {
@@ -72,7 +76,7 @@ export function useFetchDocument() {
 }
 
 // Shape of the args union matches the two concrete Drive operations, so
-// TypeScript enforces expectedVersion on updates at every call site.
+// TypeScript enforces expectedMd5 on updates at every call site.
 type SaveArgs =
   | {
       mode: 'create';
@@ -87,7 +91,7 @@ type SaveArgs =
       name: string;
       data: unknown;
       fileId: string;
-      expectedVersion: number;
+      expectedMd5: string;
       extraIndexFields?: Record<string, unknown>;
     };
 
@@ -122,7 +126,7 @@ export function useSaveDocument() {
       });
       queryClient.setQueryData([args.category, 'document', result.fileId], {
         data: result.data,
-        version: result.version,
+        md5: result.md5,
       });
     },
   });

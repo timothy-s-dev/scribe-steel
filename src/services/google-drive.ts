@@ -16,18 +16,23 @@ class DriveError extends Error {
   }
 }
 
-// Thrown by updateDocument when the server's current file version doesn't
-// match expectedVersion — i.e. somebody else updated the file since we
-// loaded it. Carries the remote data and version so the caller can surface
+// Thrown by updateDocument when the server's current md5Checksum doesn't
+// match expectedMd5 — i.e. somebody else updated the file since we
+// loaded it. Carries the remote data and md5 so the caller can surface
 // a "keep local vs use remote" resolution UI without another round-trip.
+//
+// We use md5Checksum (not the `version` field) because Drive bumps
+// `version` for internal bookkeeping that doesn't reflect a content
+// change — verified empirically via dev logging. md5 only changes when
+// the file's bytes change, which is exactly the semantics we want.
 export class DriveConflictError extends Error {
   remoteData: unknown;
-  remoteVersion: number;
-  constructor(remoteData: unknown, remoteVersion: number) {
-    super('Remote version has changed since load');
+  remoteMd5: string;
+  constructor(remoteData: unknown, remoteMd5: string) {
+    super('Remote content has changed since load');
     this.name = 'DriveConflictError';
     this.remoteData = remoteData;
-    this.remoteVersion = remoteVersion;
+    this.remoteMd5 = remoteMd5;
   }
 }
 
@@ -93,14 +98,17 @@ async function createFile(folderId: string, name: string, content: unknown): Pro
   return data.id;
 }
 
-async function updateFile(fileId: string, content: unknown): Promise<{ version: number }> {
-  const res = await driveRequest(`${UPLOAD_API}/files/${fileId}?uploadType=media&fields=version`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(content, null, 2),
-  });
-  const { version } = await res.json();
-  return { version: Number(version) };
+async function updateFile(fileId: string, content: unknown): Promise<{ md5: string }> {
+  const res = await driveRequest(
+    `${UPLOAD_API}/files/${fileId}?uploadType=media&fields=md5Checksum`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(content, null, 2),
+    },
+  );
+  const { md5Checksum } = await res.json();
+  return { md5: String(md5Checksum) };
 }
 
 async function readFile<T = unknown>(fileId: string): Promise<T> {
@@ -108,10 +116,10 @@ async function readFile<T = unknown>(fileId: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-async function getFileVersion(fileId: string): Promise<number> {
-  const res = await driveRequest(`${API}/files/${fileId}?fields=version`);
-  const { version } = await res.json();
-  return Number(version);
+async function getFileMd5(fileId: string): Promise<string> {
+  const res = await driveRequest(`${API}/files/${fileId}?fields=md5Checksum`);
+  const { md5Checksum } = await res.json();
+  return String(md5Checksum);
 }
 
 async function findFile(name: string, folderId: string): Promise<string | null> {
@@ -225,12 +233,12 @@ export async function loadIndex(category: Category): Promise<IndexFile> {
 
 export async function loadDocument<T = unknown>(
   fileId: string,
-): Promise<{ data: T; version: number }> {
-  const [data, version] = await Promise.all([
+): Promise<{ data: T; md5: string }> {
+  const [data, md5] = await Promise.all([
     readFile<T>(fileId),
-    getFileVersion(fileId),
+    getFileMd5(fileId),
   ]);
-  return { data, version };
+  return { data, md5 };
 }
 
 export async function createDocument(args: {
@@ -238,14 +246,14 @@ export async function createDocument(args: {
   name: string;
   data: unknown;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; version: number; updatedAt: string; data: unknown }> {
+}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
   const { category, name, data, extraIndexFields } = args;
   const folderId = (await getLayout()).folders[category];
   const now = new Date().toISOString();
   const stamped = stampUpdatedAt(data, now);
 
   const fileId = await createFile(folderId, slugify(name) + '.json', stamped);
-  const version = await getFileVersion(fileId);
+  const md5 = await getFileMd5(fileId);
 
   await updateIndexEntry(folderId, fileId, {
     fileId,
@@ -254,7 +262,7 @@ export async function createDocument(args: {
     ...extraIndexFields,
   });
 
-  return { fileId, version, updatedAt: now, data: stamped };
+  return { fileId, md5, updatedAt: now, data: stamped };
 }
 
 export async function updateDocument(args: {
@@ -262,25 +270,26 @@ export async function updateDocument(args: {
   name: string;
   data: unknown;
   fileId: string;
-  expectedVersion: number;
+  expectedMd5: string;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; version: number; updatedAt: string; data: unknown }> {
-  const { category, name, data, fileId, expectedVersion, extraIndexFields } = args;
+}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
+  const { category, name, data, fileId, expectedMd5, extraIndexFields } = args;
   const folderId = (await getLayout()).folders[category];
 
-  // Application-level optimistic concurrency: Drive has no native If-Match,
-  // so we GET the current version and bail if it diverged since load.
-  // There's a small TOCTOU window between this check and the PATCH; we
-  // accept that for a solo-user-across-devices workflow.
-  const currentVersion = await getFileVersion(fileId);
-  if (currentVersion !== expectedVersion) {
+  // Application-level optimistic concurrency: Drive has no native If-Match
+  // for media uploads, so we GET the current content checksum and bail if
+  // it diverged since load. There's a small TOCTOU window between this
+  // check and the PATCH; we accept that for a solo-user-across-devices
+  // workflow.
+  const currentMd5 = await getFileMd5(fileId);
+  if (currentMd5 !== expectedMd5) {
     const remoteData = await readFile<unknown>(fileId);
-    throw new DriveConflictError(remoteData, currentVersion);
+    throw new DriveConflictError(remoteData, currentMd5);
   }
 
   const now = new Date().toISOString();
   const stamped = stampUpdatedAt(data, now);
-  const { version } = await updateFile(fileId, stamped);
+  const { md5 } = await updateFile(fileId, stamped);
 
   await updateIndexEntry(folderId, fileId, {
     fileId,
@@ -289,7 +298,7 @@ export async function updateDocument(args: {
     ...extraIndexFields,
   });
 
-  return { fileId, version, updatedAt: now, data: stamped };
+  return { fileId, md5, updatedAt: now, data: stamped };
 }
 
 export async function removeDocument(category: Category, fileId: string): Promise<void> {

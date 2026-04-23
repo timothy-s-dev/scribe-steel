@@ -19,7 +19,7 @@ export type SaveStatus = 'idle' | 'saving' | 'saved' | 'retrying' | 'error';
 
 export interface ConflictState {
   remoteData: unknown;
-  remoteVersion: number;
+  remoteMd5: string;
   remoteUpdatedAt: string | undefined;
   localUpdatedAt: string | undefined;
 }
@@ -69,7 +69,7 @@ export interface UseDocumentMutationResult<T> {
   // Discard local edits: invalidate the cache so the next read pulls
   // authoritative state from Drive. Resolves the conflict state.
   resolveUseRemote: () => void;
-  // Keep local edits: bump the cached version to the remote's so the next
+  // Keep local edits: bump the cached md5 to the remote's so the next
   // save sees itself as up-to-date, then re-fire the save. Resolves the
   // conflict state.
   resolveKeepLocal: () => void;
@@ -113,9 +113,9 @@ export function useDocumentMutation<T extends { name: string }>({
     setRetry(null);
   }, []);
 
-  // runSave is recursive via the backoff timer. Hold the latest version in
-  // a ref so the timer always invokes the current closure (avoids stale
-  // dep captures across re-renders).
+  // runSave is recursive via the backoff timer. Hold the latest version
+  // in a ref so the timer always invokes the current closure (avoids
+  // stale dep captures across re-renders).
   const runSaveRef = useRef<(data: T) => Promise<void>>(undefined);
 
   const runSave = useCallback(
@@ -141,7 +141,7 @@ export function useDocumentMutation<T extends { name: string }>({
           name: data.name,
           data,
           fileId,
-          expectedVersion: cached.version,
+          expectedMd5: cached.md5,
           extraIndexFields: derived,
         });
         lastSyncedCanonicalRef.current = canonical;
@@ -150,7 +150,7 @@ export function useDocumentMutation<T extends { name: string }>({
         if (err instanceof DriveConflictError) {
           setConflict({
             remoteData: err.remoteData,
-            remoteVersion: err.remoteVersion,
+            remoteMd5: err.remoteMd5,
             remoteUpdatedAt: readUpdatedAt(err.remoteData, getUpdatedAt),
             localUpdatedAt: getUpdatedAt(data),
           });
@@ -276,12 +276,12 @@ export function useDocumentMutation<T extends { name: string }>({
 
   const resolveKeepLocal = useCallback(() => {
     if (!conflict) return;
-    const { remoteVersion } = conflict;
-    // Bump the cached version to match the server's so the next save's
-    // expectedVersion is current. The cached `data` is already the local
+    const { remoteMd5 } = conflict;
+    // Bump the cached md5 to match the server's so the next save's
+    // expectedMd5 is current. The cached `data` is already the local
     // edits (we never overwrote it on conflict).
     queryClient.setQueryData<DocumentEnvelope<T>>([category, 'document', fileId], (prev) =>
-      prev ? { ...prev, version: remoteVersion } : prev,
+      prev ? { ...prev, md5: remoteMd5 } : prev,
     );
     setConflict(null);
     const cached = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);

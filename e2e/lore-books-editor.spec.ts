@@ -125,9 +125,9 @@ function previewText(page: Page, text: string) {
 }
 
 // Mutate the mock Drive state to simulate a concurrent save from another
-// device: updates the stored data and bumps the file's version. The local
-// cache retains the pre-edit version, so the next save's version check
-// detects the mismatch and raises the conflict dialog.
+// device: updates the stored data and assigns a fresh md5. The local
+// cache retains the pre-edit md5, so the next save's md5 check detects
+// the mismatch and raises the conflict dialog.
 async function simulateRemoteEdit(page: Page, fileId: string, newTitle: string) {
   await page.evaluate(
     ({ id, title }) => {
@@ -135,7 +135,7 @@ async function simulateRemoteEdit(page: Page, fileId: string, newTitle: string) 
       const state = JSON.parse(raw);
       const doc = state.documents[id];
       doc.data = { ...doc.data, title, updatedAt: new Date().toISOString() };
-      doc.version = (doc.version ?? 1) + 1;
+      doc.md5 = crypto.randomUUID();
       localStorage.setItem('scribe-steel-mock-drive-state', JSON.stringify(state));
     },
     { id: fileId, title: newTitle },

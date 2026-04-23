@@ -41,23 +41,23 @@ export function isVirtualId(id: string): boolean {
 export function loadVirtualDocument(
   category: Category,
   id: string,
-): Promise<{ data: unknown; version: number }> | null {
+): Promise<{ data: unknown; md5: string }> | null {
   if (!isVirtualId(id)) return null;
   const meta = documentMetadataByCategory[category];
   if (!meta) return null;
-  return Promise.resolve({ data: meta.createDefault(''), version: 0 });
+  return Promise.resolve({ data: meta.createDefault(''), md5: '' });
 }
 
-// Static documents are immutable and have no real version. The editor never
-// saves them, so the version is only here to keep the cache shape uniform
-// with Drive-loaded documents.
+// Static documents are immutable and have no real content hash. The editor
+// never saves them, so the md5 is only here to keep the cache shape
+// uniform with Drive-loaded documents.
 export function loadStaticDocument(
   category: Category,
   id: string,
-): Promise<{ data: unknown; version: number }> | null {
+): Promise<{ data: unknown; md5: string }> | null {
   const data = registry.get(category);
   if (!data) return null;
   const isStatic = data.entries().some((e) => e.fileId === id);
   if (!isStatic) return null;
-  return data.loadDocument(id).then((d) => ({ data: d, version: 0 }));
+  return data.loadDocument(id).then((d) => ({ data: d, md5: '' }));
 }

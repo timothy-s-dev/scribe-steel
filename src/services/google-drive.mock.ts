@@ -19,12 +19,12 @@ class DriveError extends Error {
 // uniformly across mock and prod.
 class DriveConflictError extends Error {
   remoteData: unknown;
-  remoteVersion: number;
-  constructor(remoteData: unknown, remoteVersion: number) {
-    super('Remote version has changed since load');
+  remoteMd5: string;
+  constructor(remoteData: unknown, remoteMd5: string) {
+    super('Remote content has changed since load');
     this.name = 'DriveConflictError';
     this.remoteData = remoteData;
-    this.remoteVersion = remoteVersion;
+    this.remoteMd5 = remoteMd5;
   }
 }
 
@@ -57,7 +57,11 @@ function maybeInjectFailure(op: 'save' | 'load' | 'list'): void {
 
 interface MockDoc {
   data: unknown;
-  version: number;
+  // Stand-in for Drive's md5Checksum. Prod uses a real MD5 of the stored
+  // bytes; in the mock any string that changes iff the content changes is
+  // sufficient (crypto.subtle doesn't support MD5 in browsers anyway).
+  // Generated fresh on every write via crypto.randomUUID().
+  md5: string;
 }
 
 interface MockState {
@@ -75,16 +79,20 @@ function load(): MockState {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return emptyState();
     const parsed = JSON.parse(raw) as Partial<MockState> & {
-      // Pre-versioning shape: documents was Record<string, unknown>.
-      // Migrate transparently so older mock state doesn't crash.
+      // Historical shapes: documents was Record<string, unknown>, then
+      // {data, version}. Migrate transparently so older mock state
+      // doesn't crash on reload.
       documents?: Record<string, unknown>;
     };
     const documents: Record<string, MockDoc> = {};
     for (const [id, value] of Object.entries(parsed.documents ?? {})) {
-      documents[id] =
-        value && typeof value === 'object' && 'data' in (value as object) && 'version' in (value as object)
-          ? (value as MockDoc)
-          : { data: value, version: 1 };
+      if (value && typeof value === 'object' && 'data' in (value as object) && 'md5' in (value as object)) {
+        documents[id] = value as MockDoc;
+      } else if (value && typeof value === 'object' && 'data' in (value as object)) {
+        documents[id] = { data: (value as { data: unknown }).data, md5: newId() };
+      } else {
+        documents[id] = { data: value, md5: newId() };
+      }
     }
     return {
       settings: parsed.settings ?? null,
@@ -149,7 +157,7 @@ export async function loadIndex(category: Category): Promise<IndexFile> {
 
 export async function loadDocument<T = unknown>(
   fileId: string,
-): Promise<{ data: T; version: number }> {
+): Promise<{ data: T; md5: string }> {
   requireAuth();
   maybeInjectFailure('load');
   await delay();
@@ -158,7 +166,7 @@ export async function loadDocument<T = unknown>(
   if (!doc) {
     throw new DriveError(`Drive API 404: file ${fileId} not found`, 404);
   }
-  return { data: doc.data as T, version: doc.version };
+  return { data: doc.data as T, md5: doc.md5 };
 }
 
 export async function createDocument(args: {
@@ -166,7 +174,7 @@ export async function createDocument(args: {
   name: string;
   data: unknown;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; version: number; updatedAt: string; data: unknown }> {
+}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
   requireAuth();
   maybeInjectFailure('save');
   await delay();
@@ -175,8 +183,9 @@ export async function createDocument(args: {
   const fileId = newId();
   const now = new Date().toISOString();
   const stamped = stampUpdatedAt(data, now);
+  const md5 = newId();
 
-  state.documents[fileId] = { data: stamped, version: 1 };
+  state.documents[fileId] = { data: stamped, md5 };
 
   const index = state.indexes[category] ?? emptyIndex();
   const entry: IndexItem = { fileId, name, updatedAt: now, ...extraIndexFields };
@@ -184,7 +193,7 @@ export async function createDocument(args: {
   state.indexes[category] = index;
   persist(state);
 
-  return { fileId, version: 1, updatedAt: now, data: stamped };
+  return { fileId, md5, updatedAt: now, data: stamped };
 }
 
 export async function updateDocument(args: {
@@ -192,26 +201,26 @@ export async function updateDocument(args: {
   name: string;
   data: unknown;
   fileId: string;
-  expectedVersion: number;
+  expectedMd5: string;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; version: number; updatedAt: string; data: unknown }> {
+}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
   requireAuth();
   maybeInjectFailure('save');
   await delay();
-  const { category, name, data, fileId, expectedVersion, extraIndexFields } = args;
+  const { category, name, data, fileId, expectedMd5, extraIndexFields } = args;
   const state = load();
   const existing = state.documents[fileId];
   if (!existing) {
     throw new DriveError(`Drive API 404: file ${fileId} not found`, 404);
   }
-  if (existing.version !== expectedVersion) {
-    throw new DriveConflictError(existing.data, existing.version);
+  if (existing.md5 !== expectedMd5) {
+    throw new DriveConflictError(existing.data, existing.md5);
   }
 
   const now = new Date().toISOString();
   const stamped = stampUpdatedAt(data, now);
-  const version = existing.version + 1;
-  state.documents[fileId] = { data: stamped, version };
+  const md5 = newId();
+  state.documents[fileId] = { data: stamped, md5 };
 
   const index = state.indexes[category] ?? emptyIndex();
   const entry: IndexItem = { fileId, name, updatedAt: now, ...extraIndexFields };
@@ -224,7 +233,7 @@ export async function updateDocument(args: {
   state.indexes[category] = index;
   persist(state);
 
-  return { fileId, version, updatedAt: now, data: stamped };
+  return { fileId, md5, updatedAt: now, data: stamped };
 }
 
 export async function removeDocument(category: Category, fileId: string): Promise<void> {
