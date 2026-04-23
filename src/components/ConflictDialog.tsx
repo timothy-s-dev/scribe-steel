@@ -1,20 +1,12 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/shadcn/dialog';
-import { Button } from '@/components/shadcn/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/shadcn/dialog';
+import { Cloud, Pencil } from 'lucide-react';
+import { formatRelativeTime } from '@/lib/relativeTime';
 
 interface ConflictDialogProps {
   open: boolean;
   remoteModifiedTime: string | undefined;
   onUseRemote: () => void;
   onKeepLocal: () => void;
-}
-
-function formatTimestamp(iso: string | undefined): string {
-  if (!iso) return 'unknown';
-  try {
-    return new Date(iso).toLocaleString();
-  } catch {
-    return iso;
-  }
 }
 
 export function ConflictDialog({
@@ -35,23 +27,30 @@ export function ConflictDialog({
             saved yet. Choose which version to keep.
           </p>
           <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
-            <div className="rounded-sm bg-surface-container-high p-2">
+            <button
+              type="button"
+              onClick={onKeepLocal}
+              className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-3 rounded-sm bg-surface-container-high p-4 text-center ring-1 ring-transparent transition-colors hover:bg-surface-container-highest hover:ring-primary focus-visible:ring-primary focus-visible:outline-none"
+            >
+              <Pencil className="size-12 text-on-surface-variant" />
               <div className="font-label font-bold uppercase tracking-wide text-on-surface-variant">
-                Your local edits
+                Keep local
               </div>
-            </div>
-            <div className="rounded-sm bg-surface-container-high p-2">
+              <div className="text-on-surface">Current Session &middot; Unsaved</div>
+            </button>
+            <button
+              type="button"
+              onClick={onUseRemote}
+              className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-3 rounded-sm bg-surface-container-high p-4 text-center ring-1 ring-transparent transition-colors hover:bg-surface-container-highest hover:ring-primary focus-visible:ring-primary focus-visible:outline-none"
+            >
+              <Cloud className="size-12 text-on-surface-variant" />
               <div className="font-label font-bold uppercase tracking-wide text-on-surface-variant">
-                Remote version
+                Use remote
               </div>
-              <div className="pt-1 text-on-surface">saved {formatTimestamp(remoteModifiedTime)}</div>
-            </div>
+              <div className="text-on-surface">Last saved {formatRelativeTime(remoteModifiedTime)}</div>
+            </button>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onUseRemote}>Discard local, use remote</Button>
-          <Button onClick={onKeepLocal}>Keep local, overwrite remote</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -75,6 +75,14 @@
   --color-background: #111316;
   --color-foreground: #e2e2e6;
 
+  --color-popover: #1e2023;
+  --color-popover-foreground: #e2e2e6;
+  --color-muted: #282a2d;
+  --color-muted-foreground: #c1c7d0;
+  --color-border: #41474f;
+  --color-accent: #282a2d;
+  --color-accent-foreground: #e2e2e6;
+
   --radius-sm: 0.125rem;
   --radius-md: 0.375rem;
   --radius-lg: 0.25rem;

@@ -125,7 +125,7 @@ test.describe('Handwritten editor', () => {
         page.getByRole('heading', { name: 'Document changed elsewhere' }),
       ).toBeVisible();
 
-      await page.getByRole('button', { name: 'Discard local, use remote' }).click();
+      await page.getByRole('button', { name: /Use remote/ }).click();
 
       await expect(visibleTitleInput(page)).toHaveValue('remote wins');
     });
@@ -145,7 +145,7 @@ test.describe('Handwritten editor', () => {
         page.getByRole('heading', { name: 'Document changed elsewhere' }),
       ).toBeVisible();
 
-      await page.getByRole('button', { name: 'Keep local, overwrite remote' }).click();
+      await page.getByRole('button', { name: /Keep local/ }).click();
 
       await expect(page.getByText('Saved', { exact: true })).toBeVisible();
       await expect(visibleTitleInput(page)).toHaveValue('local wins');
