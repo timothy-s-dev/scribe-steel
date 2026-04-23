@@ -109,8 +109,7 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
   );
 
   return (
-    <FormPanel className="md:w-1/3">
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-5">
+    <FormPanel className="md:w-1/3" bodyClassName="space-y-5">
         <section className="space-y-2">
           <SectionHeader>Encounter Info</SectionHeader>
           <Field label="Title" required>
@@ -243,7 +242,6 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
             placeholder="Freeform Typst content (markup supported)"
           />
         </section>
-      </div>
     </FormPanel>
   );
 }

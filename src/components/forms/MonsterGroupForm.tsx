@@ -51,73 +51,71 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
   );
 
   return (
-    <FormPanel>
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-6 max-w-4xl">
-        <section className="space-y-4 md:space-y-2">
-          <SectionHeader>Malice Features</SectionHeader>
-          {value.malice.map((m) => (
-            <div key={m.id} className="space-y-1 md:space-y-0 md:flex md:gap-1.5 md:items-start">
-              <div className="flex gap-1.5 items-start">
-                <Input
-                  inputSize="sm"
-                  className="w-16 text-center"
-                  value={m.cost ?? ''}
-                  onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { cost: e.target.value }) })}
-                  title="Cost"
-                  placeholder="3"
-                />
-                <Input
-                  inputSize="sm"
-                  className="flex-1 md:w-28 md:flex-none"
-                  value={m.name}
-                  onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { name: e.target.value }) })}
-                  placeholder="Name"
-                />
-                <RemoveButton
-                  onClick={() => onChange({ ...value, malice: removeById(value.malice, m.id) })}
-                  label="Remove malice feature"
-                  className="md:hidden"
-                />
-              </div>
+    <FormPanel bodyClassName="px-6 py-4 space-y-6 max-w-4xl">
+      <section className="space-y-4 md:space-y-2">
+        <SectionHeader>Malice Features</SectionHeader>
+        {value.malice.map((m) => (
+          <div key={m.id} className="space-y-1 md:space-y-0 md:flex md:gap-1.5 md:items-start">
+            <div className="flex gap-1.5 items-start">
               <Input
                 inputSize="sm"
-                className="md:flex-1"
-                value={maliceDescription(m)}
-                onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { effects: [{ effect: e.target.value }] }) })}
-                placeholder="Description"
+                className="w-16 text-center"
+                value={m.cost ?? ''}
+                onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { cost: e.target.value }) })}
+                title="Cost"
+                placeholder="3"
+              />
+              <Input
+                inputSize="sm"
+                className="flex-1 md:w-28 md:flex-none"
+                value={m.name}
+                onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { name: e.target.value }) })}
+                placeholder="Name"
               />
               <RemoveButton
                 onClick={() => onChange({ ...value, malice: removeById(value.malice, m.id) })}
                 label="Remove malice feature"
-                className="hidden md:block"
+                className="md:hidden"
               />
             </div>
-          ))}
-          <AddButton onClick={() => onChange({ ...value, malice: [...value.malice, emptyMaliceFeature()] })}>
-            Add Malice Feature
-          </AddButton>
-        </section>
-
-        <section className="space-y-3">
-          <SectionHeader>Monsters</SectionHeader>
-          {value.monsters.map((monster) => (
-            <MonsterEditor
-              key={monster.id}
-              monster={monster}
-              onChange={(m) => onChange({ ...value, monsters: updateById(value.monsters, monster.id, m) })}
-              onRemove={() => onChange({ ...value, monsters: removeById(value.monsters, monster.id) })}
+            <Input
+              inputSize="sm"
+              className="md:flex-1"
+              value={maliceDescription(m)}
+              onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { effects: [{ effect: e.target.value }] }) })}
+              placeholder="Description"
             />
-          ))}
-          <div className="flex gap-3">
-            <AddButton onClick={() => onChange({ ...value, monsters: [...value.monsters, emptyMonster()] })}>
-              Add Monster
-            </AddButton>
-            <AddButton onClick={() => setCopyDialogOpen(true)} icon={Copy}>
-              Copy from Bestiary
-            </AddButton>
+            <RemoveButton
+              onClick={() => onChange({ ...value, malice: removeById(value.malice, m.id) })}
+              label="Remove malice feature"
+              className="hidden md:block"
+            />
           </div>
-        </section>
-      </div>
+        ))}
+        <AddButton onClick={() => onChange({ ...value, malice: [...value.malice, emptyMaliceFeature()] })}>
+          Add Malice Feature
+        </AddButton>
+      </section>
+
+      <section className="space-y-3">
+        <SectionHeader>Monsters</SectionHeader>
+        {value.monsters.map((monster) => (
+          <MonsterEditor
+            key={monster.id}
+            monster={monster}
+            onChange={(m) => onChange({ ...value, monsters: updateById(value.monsters, monster.id, m) })}
+            onRemove={() => onChange({ ...value, monsters: removeById(value.monsters, monster.id) })}
+          />
+        ))}
+        <div className="flex gap-3">
+          <AddButton onClick={() => onChange({ ...value, monsters: [...value.monsters, emptyMonster()] })}>
+            Add Monster
+          </AddButton>
+          <AddButton onClick={() => setCopyDialogOpen(true)} icon={Copy}>
+            Copy from Bestiary
+          </AddButton>
+        </div>
+      </section>
 
       <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
         <DialogContent>

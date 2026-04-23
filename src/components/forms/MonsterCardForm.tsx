@@ -132,6 +132,7 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
   return (
     <FormPanel
       className="md:w-80"
+      bodyClassName="space-y-4"
       header={<span className="text-sm font-semibold font-body text-on-surface">Monsters</span>}
       footer={
         <span className="text-xs font-label text-on-surface-variant">
@@ -139,24 +140,22 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
         </span>
       }
     >
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-3 space-y-4">
-        {groups.map((group) => (
-          <GroupPicker
-            key={group.name}
-            group={group}
-            selected={selected}
-            isCollapsed={!expanded.has(group.name)}
-            onToggleCollapse={() => toggleExpanded(group.name)}
-            onToggleGroup={() => toggleGroup(group.name)}
-            onToggleMonster={toggleMonster}
-          />
-        ))}
-        {groupsLoading && (
-          <p className="text-xs font-label text-on-surface-variant text-center py-2">
-            Loading custom groups...
-          </p>
-        )}
-      </div>
+      {groups.map((group) => (
+        <GroupPicker
+          key={group.name}
+          group={group}
+          selected={selected}
+          isCollapsed={!expanded.has(group.name)}
+          onToggleCollapse={() => toggleExpanded(group.name)}
+          onToggleGroup={() => toggleGroup(group.name)}
+          onToggleMonster={toggleMonster}
+        />
+      ))}
+      {groupsLoading && (
+        <p className="text-xs font-label text-on-surface-variant text-center py-2">
+          Loading custom groups...
+        </p>
+      )}
     </FormPanel>
   );
 }

@@ -103,17 +103,19 @@ export function AddButton({
   );
 }
 
-// Shared shell for editor form panes. Header/footer are optional slots:
-// pass semantic content (a label, a counter) and FormPanel wraps it in the
-// standard bg-surface-container chrome so every form gets the same look.
-// The body is children, free-form — each form decides its own scroll layout.
+// Shared shell for editor form panes. `className` targets the outer panel
+// (width override); `bodyClassName` targets the scrollable body inside
+// (padding, spacing, max-width). Header/footer are optional slots wrapped
+// in shared bg-surface-container chrome.
 export function FormPanel({
   className,
+  bodyClassName,
   header,
   footer,
   children,
 }: {
   className?: string;
+  bodyClassName?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
   children: React.ReactNode;
@@ -130,7 +132,14 @@ export function FormPanel({
           {header}
         </div>
       )}
-      {children}
+      <div
+        className={cn(
+          'flex-1 min-h-0 flex flex-col overflow-y-auto custom-scrollbar px-4 py-3',
+          bodyClassName,
+        )}
+      >
+        {children}
+      </div>
       {footer != null && (
         <div className="flex-shrink-0 px-4 py-3 bg-surface-container">{footer}</div>
       )}
