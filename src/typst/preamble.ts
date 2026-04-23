@@ -26,10 +26,8 @@ export function showWith(functionName: string, args: string[]): string {
 
 // Fields that never flow into the Typst template as args. `name` is
 // filename identity, `content` is appended below the preamble as the
-// template body. `version` and `updatedAt` are no longer written but
-// kept in the exclude list so docs saved before their removal don't
-// try to pass them to the template as undeclared parameters.
-const DEFAULT_EXCLUDES = ['version', 'updatedAt', 'name', 'content'] as const;
+// template body.
+const DEFAULT_EXCLUDES = ['name', 'content'] as const;
 
 interface JsonBackedOptions<T extends object> {
   importPath: string;
@@ -67,12 +65,6 @@ export function jsonBackedBuildSource<T extends object>(
     const argKeys = (Object.keys(data) as (keyof T)[]).filter((k) => !excluded.has(k));
     const args = argKeys.map((k) => `  ${String(k)}: _data.${String(k)}`);
 
-    // Payload includes every field except storage metadata. Args reference
-    // the payload by key, so unused fields there are harmless.
-    const payload = Object.fromEntries(
-      Object.entries(data).filter(([k]) => k !== 'updatedAt' && k !== 'version'),
-    );
-
     const content = (data[contentField] as unknown as string | undefined) ?? '';
 
     const source = [
@@ -87,7 +79,7 @@ export function jsonBackedBuildSource<T extends object>(
       source,
       files: [
         ...opts.templateFiles,
-        { path: payloadPath, content: JSON.stringify(payload) },
+        { path: payloadPath, content: JSON.stringify(data) },
       ],
     };
   };
