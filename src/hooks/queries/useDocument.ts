@@ -104,12 +104,15 @@ export function useSaveDocument() {
         : updateDocument(args),
     onSuccess: (result, args) => {
       // The service layer has already patched the index cache with the new
-      // entry + fresh md5 as part of the write. Just seed the document cache
-      // so a subsequent navigation doesn't re-fetch content we already have.
-      queryClient.setQueryData([args.category, 'document', result.fileId], {
-        data: result.data,
-        md5: result.md5,
-      });
+      // entry + fresh md5 as part of the write. For the document cache,
+      // update md5 *without* touching data — if the user typed something
+      // while this save was in flight, the cache already has the newer
+      // value and we'd clobber it otherwise. If the cache is empty (first
+      // save right after create), seed it from the result.
+      queryClient.setQueryData<DocumentEnvelope<unknown>>(
+        [args.category, 'document', result.fileId],
+        (prev) => prev ? { ...prev, md5: result.md5 } : { data: result.data, md5: result.md5 },
+      );
     },
   });
 }

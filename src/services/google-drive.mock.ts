@@ -63,6 +63,13 @@ const LATENCY_MS = 40;
 // ops instead of just one — useful for exercising backoff sequences.
 const FAIL_NEXT_KEY = 'scribe-steel-mock-fail-next';
 
+// Test-only escape hatch: set localStorage["scribe-steel-mock-slow-next"] to
+// e.g. "save:3000" to make the next matching op wait that many extra ms
+// before completing. Useful for exercising race conditions that only open up
+// when a save's network call is slower than the debounce window. Consumed
+// on first match, same as the failure flag.
+const SLOW_NEXT_KEY = 'scribe-steel-mock-slow-next';
+
 function maybeInjectFailure(op: 'save' | 'load' | 'list'): void {
   const raw = localStorage.getItem(FAIL_NEXT_KEY);
   if (!raw) return;
@@ -77,6 +84,16 @@ function maybeInjectFailure(op: 'save' | 'load' | 'list'): void {
   }
   const status = Number.parseInt(statusStr, 10) || 500;
   throw new DriveError(`Simulated ${op} failure (${status})`, status);
+}
+
+async function maybeInjectSlowness(op: 'save' | 'load' | 'list'): Promise<void> {
+  const raw = localStorage.getItem(SLOW_NEXT_KEY);
+  if (!raw) return;
+  const [slowOp, msStr] = raw.split(':');
+  if (slowOp !== op) return;
+  localStorage.removeItem(SLOW_NEXT_KEY);
+  const ms = Number.parseInt(msStr, 10) || 0;
+  if (ms > 0) await new Promise((r) => setTimeout(r, ms));
 }
 
 interface MockDoc {
@@ -213,6 +230,7 @@ export async function createDocument(args: {
   requireAuth();
   maybeInjectFailure('save');
   await delay();
+  await maybeInjectSlowness('save');
   const { category, name, data, extraIndexFields } = args;
   const state = load();
   const fileId = newId();
@@ -242,6 +260,7 @@ export async function updateDocument(args: {
   requireAuth();
   maybeInjectFailure('save');
   await delay();
+  await maybeInjectSlowness('save');
   const { category, name, data, fileId, expectedMd5, extraIndexFields } = args;
   const state = load();
   const existing = state.documents[fileId];

@@ -94,6 +94,42 @@ test.describe('Auto-save', () => {
     await expect(page.getByText('Saved', { exact: true })).toBeVisible();
   });
 
+  test('edit during an in-flight save is queued, not raced into a conflict', async ({ page }) => {
+    await createHandwrittenDoc(page, 'Concurrent Edit Test');
+
+    // Land a baseline save so the cached md5 matches what's on the
+    // mock, and the editor's save-status observer has seen a success.
+    await visibleTitleInput(page).fill('baseline');
+    await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+
+    // Slow the next save past the debounce window. Without serialization,
+    // a second edit's save would fire while the first is still waiting
+    // for the mock's response — both would hit Drive with the pre-save
+    // md5, and whichever commits second would raise a conflict.
+    await page.evaluate(() => {
+      localStorage.setItem('scribe-steel-mock-slow-next', 'save:3000');
+    });
+
+    // First edit kicks off the slow save.
+    await visibleTitleInput(page).fill('first');
+    await expect(page.getByText('Saving...', { exact: true })).toBeVisible();
+
+    // Second edit arrives while the first save is still in flight. It
+    // should be queued into the post-save drain path instead of racing.
+    await visibleTitleInput(page).fill('first plus second');
+
+    // The conflict dialog would fire if the race opened — assert it
+    // never appears during the whole settle window.
+    await expect(
+      page.getByRole('heading', { name: 'Document changed elsewhere' }),
+    ).toBeHidden();
+    await expect(page.getByText('Saved', { exact: true })).toBeVisible({ timeout: 10_000 });
+
+    // Round-trip: the queued edit's value is what actually persisted.
+    await page.reload();
+    await expect(visibleTitleInput(page)).toHaveValue('first plus second');
+  });
+
   test('a fresh edit cancels a pending retry and restarts the debounce', async ({ page }) => {
     await createHandwrittenDoc(page, 'Cancel Retry Test');
 

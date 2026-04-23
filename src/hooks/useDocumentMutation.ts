@@ -89,6 +89,13 @@ export function useDocumentMutation<T extends { name: string }>({
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingRef = useRef<T | null>(null);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // True while a save's network call is in flight. Guards against firing
+  // a second save on top of the first — concurrent saves would both read
+  // the same pre-save md5 from the cache, and whichever hits Drive second
+  // would see a mismatch and raise DriveConflictError. A save attempt
+  // that arrives while this is true gets queued into pendingRef and
+  // drained when the current save succeeds.
+  const saveInFlightRef = useRef(false);
   // Set by the 401 catch so the auth-recovery effect knows to retry once
   // sign-in returns. Cleared when the effect consumes it. Distinct from
   // `mutation.isError` (which lights up for any failure) so that conflicts
@@ -115,6 +122,14 @@ export function useDocumentMutation<T extends { name: string }>({
   const runSave = useCallback(
     async (data: T) => {
       if (isVirtualId(fileId) || !isSignedIn) return;
+      // Serialize: if another save is mid-flight, queue this attempt so it
+      // fires once the current one resolves. Without this, two saves would
+      // both read the pre-save md5 from the cache and the second one would
+      // hit DriveConflictError when Drive's md5 has already moved on.
+      if (saveInFlightRef.current) {
+        pendingRef.current = data;
+        return;
+      }
 
       const cached = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
       if (!cached) {
@@ -128,6 +143,8 @@ export function useDocumentMutation<T extends { name: string }>({
       if (canonical === lastSyncedCanonicalRef.current) return;
 
       const derived = deriveIndexFields ? deriveIndexFields(data) : undefined;
+      saveInFlightRef.current = true;
+      let succeeded = false;
       try {
         await mutateAsync({
           mode: 'update',
@@ -140,6 +157,7 @@ export function useDocumentMutation<T extends { name: string }>({
         });
         lastSyncedCanonicalRef.current = canonical;
         cancelRetry();
+        succeeded = true;
       } catch (err) {
         if (err instanceof DriveConflictError) {
           setConflict({
@@ -149,9 +167,7 @@ export function useDocumentMutation<T extends { name: string }>({
           });
           // Conflict has its own resolution UI; don't keep retrying.
           cancelRetry();
-          return;
-        }
-        if (err instanceof DriveError && err.status === 401) {
+        } else if (err instanceof DriveError && err.status === 401) {
           // Sign-out flips isSignedIn false; re-auth flips it true and the
           // auth-recovery effect re-fires the save with the latest cached
           // data. Backoff retry isn't appropriate here — the user has to
@@ -160,28 +176,42 @@ export function useDocumentMutation<T extends { name: string }>({
           cancelRetry();
           reportSessionExpired();
           invalidateToken();
-          return;
+        } else {
+          // Generic transient error — schedule the next attempt with
+          // exponential backoff. Use the state setter to avoid stale reads
+          // of the previous attempt count.
+          const message = err instanceof Error ? err.message : String(err);
+          setRetry((prev) => {
+            const attempt = (prev?.attempt ?? 0) + 1;
+            const delay = nextDelay(attempt);
+            clearTimeout(retryTimerRef.current);
+            retryTimerRef.current = setTimeout(() => {
+              // Pull fresh data from the cache so any edits the user made
+              // during the wait window are honored.
+              const latest = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
+              if (latest) void runSaveRef.current?.(latest.data);
+            }, delay);
+            return {
+              attempt,
+              nextRetryAt: Date.now() + delay,
+              lastError: message,
+            };
+          });
         }
-        // Generic transient error — schedule the next attempt with
-        // exponential backoff. Use the state setter to avoid stale reads
-        // of the previous attempt count.
-        const message = err instanceof Error ? err.message : String(err);
-        setRetry((prev) => {
-          const attempt = (prev?.attempt ?? 0) + 1;
-          const delay = nextDelay(attempt);
-          clearTimeout(retryTimerRef.current);
-          retryTimerRef.current = setTimeout(() => {
-            // Pull fresh data from the cache so any edits the user made
-            // during the wait window are honored.
-            const latest = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
-            if (latest) void runSaveRef.current?.(latest.data);
-          }, delay);
-          return {
-            attempt,
-            nextRetryAt: Date.now() + delay,
-            lastError: message,
-          };
-        });
+      } finally {
+        saveInFlightRef.current = false;
+      }
+
+      // Drain a save that was queued during the in-flight window. Only on
+      // success — conflict/401/transient-retry each have their own follow-up
+      // path that reads from the cache (which already has the latest edits).
+      if (succeeded) {
+        const queued = pendingRef.current;
+        if (queued !== null) {
+          pendingRef.current = null;
+          clearTimeout(timerRef.current);
+          void runSaveRef.current?.(queued);
+        }
       }
     },
     [fileId, isSignedIn, queryClient, category, deriveIndexFields, mutateAsync, cancelRetry],
