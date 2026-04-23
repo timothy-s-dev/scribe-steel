@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Download } from 'lucide-react';
-import { loadMonsterByName, type Feature, type MonsterGroup, type MonsterSummary } from '@/data/bestiary';
+import { loadMonsterByName, type Feature, type MonsterGroup } from '@/data/bestiary';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import {
@@ -10,9 +10,10 @@ import {
   Input,
   RemoveButton,
   SectionHeader,
-  Select,
   Textarea,
 } from '@/components/form';
+import { MonsterGroupSelector } from '@/components/selectors/MonsterGroupSelector';
+import { MonsterSelector } from '@/components/selectors/MonsterSelector';
 import { removeById, updateById } from '@/lib/arrays';
 import type { IndexItem } from '@/data/types';
 import type {
@@ -51,10 +52,6 @@ function maliceFromFeature(f: Feature): EncounterMalice {
     name: f.name,
     description: f.effects.map((e) => e.effect).filter(Boolean).join(' '),
   };
-}
-
-function monstersOf(item: IndexItem): MonsterSummary[] {
-  return (item.monsters as MonsterSummary[] | undefined) ?? [];
 }
 
 export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDocument>) {
@@ -98,14 +95,12 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
   );
 
   const importMaliceFromGroup = useCallback(
-    async (groupName: string) => {
-      const entry = allGroups.find((g) => g.name === groupName);
-      if (!entry) return;
+    async (entry: IndexItem) => {
       const group = await fetchDocument<MonsterGroup>('monsters', entry.fileId);
       if (!group || group.malice.length === 0) return;
       onChange({ ...value, malice: [...value.malice, ...group.malice.map(maliceFromFeature)] });
     },
-    [allGroups, fetchDocument, onChange, value],
+    [fetchDocument, onChange, value],
   );
 
   return (
@@ -165,23 +160,15 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
               Add Malice Feature
             </AddButton>
             {groupsWithMalice.length > 0 && (
-              <div className="flex items-center gap-1">
-                <Download size={14} className="text-primary" aria-hidden="true" />
-                <Select
-                  inputSize="sm"
-                  className="text-xs text-primary"
-                  value=""
-                  onChange={(e) => {
-                    if (e.target.value) importMaliceFromGroup(e.target.value);
-                  }}
-                >
-                  <option value="">Import from group...</option>
-                  {groupsWithMalice.map((group) => (
-                    <option key={group.name} value={group.name}>
-                      {group.name}{group.custom ? ' (Custom)' : ''}
-                    </option>
-                  ))}
-                </Select>
+              <div className="flex items-center gap-1 flex-1 min-w-0">
+                <Download size={14} className="text-primary flex-shrink-0" aria-hidden="true" />
+                <MonsterGroupSelector
+                  className="flex-1 min-w-0"
+                  groups={groupsWithMalice}
+                  value={null}
+                  onValueChange={(g) => g && importMaliceFromGroup(g)}
+                  placeholder="Import from group..."
+                />
               </div>
             )}
           </div>
@@ -269,25 +256,13 @@ function CreatureRow({
           onChange={(e) => onUpdate({ name: e.target.value })}
           placeholder="Creature name"
         />
-        <Select
-          inputSize="sm"
-          className="w-40 text-xs"
-          value=""
-          onChange={(e) => {
-            if (e.target.value) onFill(e.target.value);
-          }}
-        >
-          <option value="">Fill from...</option>
-          {monsterGroups.map((group) => (
-            <optgroup key={group.name} label={`${group.name}${group.custom ? ' (Custom)' : ''}`}>
-              {monstersOf(group).map((m) => (
-                <option key={m.name} value={m.name}>
-                  {m.name} — L{m.level} {m.roles.join(', ')} (EV {m.ev ?? '-'})
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </Select>
+        <MonsterSelector
+          className="w-40"
+          groups={monsterGroups}
+          value={null}
+          onValueChange={(m) => m && onFill(m.name)}
+          placeholder="Fill from..."
+        />
         <RemoveButton onClick={onRemove} label="Remove creature" compact />
       </div>
       <div className="flex gap-1 items-center flex-wrap">

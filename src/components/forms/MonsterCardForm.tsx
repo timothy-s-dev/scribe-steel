@@ -3,6 +3,7 @@ import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
 import { FormPanel } from '@/components/form';
+import { sortedMonsters } from '@/data/bestiary';
 import type { IndexItem } from '@/data/types';
 import type { MonsterGroup, Monster, MonsterSummary } from '@/data/bestiary';
 import type { MonsterCardsDocument } from '@/documents/monster-cards';
@@ -14,23 +15,6 @@ function monsterKey(groupName: string, monsterName: string) {
 
 function monstersOf(item: IndexItem): MonsterSummary[] {
   return (item.monsters as MonsterSummary[] | undefined) ?? [];
-}
-
-function roleRank(monster: MonsterSummary): number {
-  const roles = monster.roles.map((r) => r.toLowerCase());
-  if (roles.some((r) => r.startsWith('minion'))) return 0;
-  if (roles.includes('leader')) return 2;
-  return 1;
-}
-
-function sortedMonsters(monsters: MonsterSummary[]): MonsterSummary[] {
-  return [...monsters].sort((a, b) => {
-    if (a.level !== b.level) return a.level - b.level;
-    const ar = roleRank(a);
-    const br = roleRank(b);
-    if (ar !== br) return ar - br;
-    return a.name.localeCompare(b.name);
-  });
 }
 
 export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCardsDocument>) {

@@ -1,23 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Copy } from 'lucide-react';
-import {
-  cloneMonster,
-  emptyMonster,
-  getAllMonsterSummaries,
-  loadMonsterByName,
-} from '@/data/bestiary';
+import { cloneMonster, emptyMonster, loadMonsterByName } from '@/data/bestiary';
 import { MonsterEditor } from '@/components/MonsterEditor';
 import { AddButton, FormPanel, Input, RemoveButton, SectionHeader } from '@/components/form';
+import { MonsterSelector } from '@/components/selectors/MonsterSelector';
+import { useIndex } from '@/hooks/queries/useIndex';
 import { removeById, updateById } from '@/lib/arrays';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from '@/components/shadcn/dialog';
-import { Button } from '@/components/shadcn/button';
 import type { Feature } from '@/data/bestiary';
 import type { MonsterGroupDocument } from '@/documents/monster-groups';
 import type { DocumentFormProps } from '@/documents/types';
@@ -38,14 +26,14 @@ function maliceDescription(f: Feature): string {
 }
 
 export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterGroupDocument>) {
-  const [copyDialogOpen, setCopyDialogOpen] = useState(false);
+  const { data: index } = useIndex('monsters');
+  const allGroups = index?.items ?? [];
 
   const copyFromBestiary = useCallback(
     async (monsterName: string) => {
       const source = await loadMonsterByName(monsterName);
       if (!source) return;
       onChange({ ...value, monsters: [...value.monsters, cloneMonster(source)] });
-      setCopyDialogOpen(false);
     },
     [value, onChange],
   );
@@ -107,42 +95,22 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
             onRemove={() => onChange({ ...value, monsters: removeById(value.monsters, monster.id) })}
           />
         ))}
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center flex-wrap">
           <AddButton onClick={() => onChange({ ...value, monsters: [...value.monsters, emptyMonster()] })}>
             Add Monster
           </AddButton>
-          <AddButton onClick={() => setCopyDialogOpen(true)} icon={Copy}>
-            Copy from Bestiary
-          </AddButton>
+          <div className="flex items-center gap-1 flex-1 min-w-[16rem]">
+            <Copy size={14} className="text-primary flex-shrink-0" aria-hidden="true" />
+            <MonsterSelector
+              className="flex-1 min-w-0"
+              groups={allGroups}
+              value={null}
+              onValueChange={(m) => m && copyFromBestiary(m.name)}
+              placeholder="Copy from bestiary..."
+            />
+          </div>
         </div>
       </section>
-
-      <Dialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Copy from Bestiary</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-80 overflow-y-auto space-y-1">
-            {getAllMonsterSummaries().map((m) => (
-              <button
-                key={m.name}
-                onClick={() => copyFromBestiary(m.name)}
-                className="flex items-center gap-3 w-full px-3 py-2 rounded-sm hover:bg-surface-container-high transition-colors text-left cursor-pointer"
-              >
-                <span className="text-sm font-body font-semibold text-on-surface">
-                  {m.name}
-                </span>
-                <span className="text-xs font-label text-on-surface-variant">
-                  L{m.level} {m.roles.join(', ')} · EV {m.ev ?? '-'}
-                </span>
-              </button>
-            ))}
-          </div>
-          <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancel</Button>} />
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </FormPanel>
   );
 }

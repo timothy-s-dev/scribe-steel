@@ -1,4 +1,22 @@
-import type { Monster, Feature } from './bestiary.types';
+import type { Monster, Feature, MonsterSummary } from './bestiary.types';
+
+function roleRank(monster: MonsterSummary): number {
+  const roles = monster.roles.map((r) => r.toLowerCase());
+  if (roles.some((r) => r.startsWith('minion'))) return 0;
+  if (roles.includes('leader')) return 2;
+  return 1;
+}
+
+// Shared ordering: level ascending, then minion → regular → leader, then name.
+export function sortedMonsters(monsters: MonsterSummary[]): MonsterSummary[] {
+  return [...monsters].sort((a, b) => {
+    if (a.level !== b.level) return a.level - b.level;
+    const ar = roleRank(a);
+    const br = roleRank(b);
+    if (ar !== br) return ar - br;
+    return a.name.localeCompare(b.name);
+  });
+}
 
 export function emptyMonster(): Monster {
   return {
