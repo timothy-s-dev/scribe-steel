@@ -54,18 +54,62 @@ test.describe('Auto-save', () => {
     expect(await readSaveCounter(page)).toBe(1);
   });
 
-  test('save failure surfaces "Save failed"', async ({ page }) => {
-    await createHandwrittenDoc(page, 'Save Fail Test');
+  test('transient save failure shows the retry banner with countdown', async ({ page }) => {
+    await createHandwrittenDoc(page, 'Save Retry Test');
 
     // Arm the mock to reject the next save with a 500. The mock consumes the
-    // flag on use so this affects exactly one save.
+    // flag on use so the next attempt after this one succeeds.
     await page.evaluate(() => {
       localStorage.setItem('scribe-steel-mock-fail-next', 'save:500');
     });
 
-    await visibleTitleInput(page).pressSequentially('will fail', { delay: 10 });
+    await visibleTitleInput(page).pressSequentially('will retry', { delay: 10 });
 
-    await expect(page.getByText('Save failed', { exact: true })).toBeVisible();
+    // The first attempt fails; the banner appears with attempt 2 queued.
+    await expect(page.getByRole('status')).toContainText("Couldn't save to Drive");
+    await expect(page.getByRole('status')).toContainText('attempt 2');
+
+    // The backoff timer fires the retry, which succeeds against the mock
+    // (the failure flag was consumed by the first attempt). The banner
+    // clears and the saved indicator returns.
+    await expect(page.getByRole('status')).toBeHidden({ timeout: 5_000 });
+    await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+  });
+
+  test('repeated failures back off and surface increasing attempt counts', async ({ page }) => {
+    await createHandwrittenDoc(page, 'Backoff Test');
+
+    // Fail the next 3 saves so we observe attempts 2, 3, 4 before recovery.
+    await page.evaluate(() => {
+      localStorage.setItem('scribe-steel-mock-fail-next', 'save:500x3');
+    });
+
+    await visibleTitleInput(page).pressSequentially('keep failing', { delay: 10 });
+
+    await expect(page.getByRole('status')).toContainText('attempt 2');
+    await expect(page.getByRole('status')).toContainText('attempt 3', { timeout: 6_000 });
+    await expect(page.getByRole('status')).toContainText('attempt 4', { timeout: 10_000 });
+    // Fourth attempt succeeds (the failure budget was 3) — banner clears.
+    await expect(page.getByRole('status')).toBeHidden({ timeout: 20_000 });
+    await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+  });
+
+  test('a fresh edit cancels a pending retry and restarts the debounce', async ({ page }) => {
+    await createHandwrittenDoc(page, 'Cancel Retry Test');
+
+    await page.evaluate(() => {
+      localStorage.setItem('scribe-steel-mock-fail-next', 'save:500');
+    });
+
+    await visibleTitleInput(page).pressSequentially('first', { delay: 10 });
+    await expect(page.getByRole('status')).toContainText('attempt 2');
+
+    // Type more — the banner should clear immediately because the new edit
+    // takes priority over the queued retry. The next save (after debounce)
+    // succeeds against the mock since the failure flag was already consumed.
+    await visibleTitleInput(page).pressSequentially(' more', { delay: 10 });
+    await expect(page.getByRole('status')).toBeHidden();
+    await expect(page.getByText('Saved', { exact: true })).toBeVisible();
   });
 });
 

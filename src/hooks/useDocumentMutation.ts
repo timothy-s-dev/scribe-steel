@@ -9,14 +9,32 @@ import { reportSessionExpired } from '@/services/session-expiry';
 import type { Category } from '@/data/types';
 
 const DEBOUNCE_MS = 2000;
+// Exponential backoff for transient (non-401, non-conflict) save failures.
+// Starts at 2s and doubles up to a 60s ceiling — kept indefinite so a
+// user's edits never silently sit unsaved when Drive is flaky.
+const RETRY_BASE_MS = 2000;
+const RETRY_MAX_MS = 60_000;
 
-export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'retrying' | 'error';
 
 export interface ConflictState {
   remoteData: unknown;
   remoteVersion: number;
   remoteUpdatedAt: string | undefined;
   localUpdatedAt: string | undefined;
+}
+
+export interface RetryState {
+  // 1-based count of failed attempts so far. The pending retry is attempt
+  // `attempt + 1`.
+  attempt: number;
+  // Wall-clock ms (Date.now()) when the timer fires.
+  nextRetryAt: number;
+  lastError: string;
+}
+
+function nextDelay(attempt: number): number {
+  return Math.min(RETRY_BASE_MS * 2 ** (attempt - 1), RETRY_MAX_MS);
 }
 
 // `updatedAt` is stamped at save time, so it always differs between what's
@@ -44,6 +62,10 @@ export interface UseDocumentMutationResult<T> {
   saveStatus: SaveStatus;
   error: string | null;
   conflict: ConflictState | null;
+  // Populated when the most recent save failed transiently and a retry is
+  // armed via setTimeout. Cleared on success, on a fresh user edit, or on
+  // an unrecoverable terminal state (conflict / 401).
+  retry: RetryState | null;
   // Discard local edits: invalidate the cache so the next read pulls
   // authoritative state from Drive. Resolves the conflict state.
   resolveUseRemote: () => void;
@@ -68,12 +90,16 @@ export function useDocumentMutation<T extends { name: string }>({
   const mutation = useSaveDocument();
   const { mutateAsync } = mutation;
   const [conflict, setConflict] = useState<ConflictState | null>(null);
+  const [retry, setRetry] = useState<RetryState | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingRef = useRef<T | null>(null);
-  // Most recent value handed to `runSave`. Used by the auth-retry effect
-  // when a 401 aborts before the debounced buffer is re-filled.
-  const lastAttemptedRef = useRef<T | null>(null);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Set by the 401 catch so the auth-recovery effect knows to retry once
+  // sign-in returns. Cleared when the effect consumes it. Distinct from
+  // `mutation.isError` (which lights up for any failure) so that conflicts
+  // and 5xxs don't trip the auth-recovery path.
+  const authRetryPendingRef = useRef(false);
   // Canonical form of the data we last successfully persisted (or the
   // server-authoritative data the cache was populated with). We can't
   // compare against the cache's data to detect no-ops because `edit`
@@ -81,10 +107,20 @@ export function useDocumentMutation<T extends { name: string }>({
   // the time runSave fires, the cache already matches the outgoing data.
   const lastSyncedCanonicalRef = useRef<string | null>(null);
 
+  const cancelRetry = useCallback(() => {
+    clearTimeout(retryTimerRef.current);
+    retryTimerRef.current = undefined;
+    setRetry(null);
+  }, []);
+
+  // runSave is recursive via the backoff timer. Hold the latest version in
+  // a ref so the timer always invokes the current closure (avoids stale
+  // dep captures across re-renders).
+  const runSaveRef = useRef<(data: T) => Promise<void>>(undefined);
+
   const runSave = useCallback(
     async (data: T) => {
       if (isVirtualId(fileId) || !isSignedIn) return;
-      lastAttemptedRef.current = data;
 
       const cached = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
       if (!cached) {
@@ -109,6 +145,7 @@ export function useDocumentMutation<T extends { name: string }>({
           extraIndexFields: derived,
         });
         lastSyncedCanonicalRef.current = canonical;
+        cancelRetry();
       } catch (err) {
         if (err instanceof DriveConflictError) {
           setConflict({
@@ -117,25 +154,58 @@ export function useDocumentMutation<T extends { name: string }>({
             remoteUpdatedAt: readUpdatedAt(err.remoteData, getUpdatedAt),
             localUpdatedAt: getUpdatedAt(data),
           });
+          // Conflict has its own resolution UI; don't keep retrying.
+          cancelRetry();
           return;
         }
         if (err instanceof DriveError && err.status === 401) {
-          // Leave lastAttemptedRef pointing at this value so the retry
-          // effect can re-fire once sign-in recovers.
+          // Sign-out flips isSignedIn false; re-auth flips it true and the
+          // auth-recovery effect re-fires the save with the latest cached
+          // data. Backoff retry isn't appropriate here — the user has to
+          // act, and SessionExpiryDialog handles that.
+          authRetryPendingRef.current = true;
+          cancelRetry();
           reportSessionExpired();
           invalidateToken();
           return;
         }
-        // Other errors surface via mutation.error / saveStatus.
+        // Generic transient error — schedule the next attempt with
+        // exponential backoff. Use the state setter to avoid stale reads
+        // of the previous attempt count.
+        const message = err instanceof Error ? err.message : String(err);
+        setRetry((prev) => {
+          const attempt = (prev?.attempt ?? 0) + 1;
+          const delay = nextDelay(attempt);
+          clearTimeout(retryTimerRef.current);
+          retryTimerRef.current = setTimeout(() => {
+            // Pull fresh data from the cache so any edits the user made
+            // during the wait window are honored.
+            const latest = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
+            if (latest) void runSaveRef.current?.(latest.data);
+          }, delay);
+          return {
+            attempt,
+            nextRetryAt: Date.now() + delay,
+            lastError: message,
+          };
+        });
       }
     },
-    [fileId, isSignedIn, queryClient, category, deriveIndexFields, mutateAsync, getUpdatedAt],
+    [fileId, isSignedIn, queryClient, category, deriveIndexFields, mutateAsync, getUpdatedAt, cancelRetry],
   );
+
+  useEffect(() => {
+    runSaveRef.current = runSave;
+  });
 
   const scheduleSave = useCallback(
     (data: T) => {
       pendingRef.current = data;
       clearTimeout(timerRef.current);
+      // A fresh user edit takes priority over any pending backoff retry —
+      // cancel the retry so we don't end up with two concurrent saves
+      // racing each other.
+      cancelRetry();
       timerRef.current = setTimeout(() => {
         const pending = pendingRef.current;
         if (pending === null) return;
@@ -143,7 +213,7 @@ export function useDocumentMutation<T extends { name: string }>({
         void runSave(pending);
       }, DEBOUNCE_MS);
     },
-    [runSave],
+    [runSave, cancelRetry],
   );
 
   const edit = useCallback(
@@ -166,19 +236,27 @@ export function useDocumentMutation<T extends { name: string }>({
     [queryClient, category, fileId, conflict, scheduleSave],
   );
 
-  // Retry the last-attempted save when auth recovers. Unlike flushing the
-  // debounce buffer, this works even after the debounced call fired and
-  // was rejected with 401 (buffer is empty, but lastAttemptedRef is set).
+  // Resume the save after the user signs back in following a 401. Pulls
+  // the latest data from the cache so any edits the user made while
+  // signed out (which still optimistically updated the cache) are
+  // included in the retry. Wrapped in useEffectEvent so the runSave
+  // identity doesn't drag the effect into refire loops on every render.
+  const performAuthRetry = useEffectEvent(() => {
+    if (!authRetryPendingRef.current) return;
+    authRetryPendingRef.current = false;
+    const cached = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
+    if (cached) void runSave(cached.data);
+  });
   useEffect(() => {
-    if (!isSignedIn || !mutation.isError) return;
-    const data = lastAttemptedRef.current;
-    if (data === null) return;
-    void runSave(data);
-  }, [isSignedIn, mutation.isError, runSave]);
+    if (isSignedIn) performAuthRetry();
+  }, [isSignedIn]);
 
   // Flush pending save on unmount so edits aren't lost on navigation.
+  // Cancel any backoff retry too — we'll fire one final attempt with the
+  // pending data instead of waiting for the timer.
   const finalFlush = useEffectEvent(() => {
     clearTimeout(timerRef.current);
+    clearTimeout(retryTimerRef.current);
     const pending = pendingRef.current;
     if (pending === null) return;
     pendingRef.current = null;
@@ -212,17 +290,23 @@ export function useDocumentMutation<T extends { name: string }>({
 
   const saveStatus: SaveStatus = mutation.isPending
     ? 'saving'
-    : conflict
-      ? 'error'
-      : mutation.isError
+    : retry
+      ? 'retrying'
+      : conflict
         ? 'error'
-        : mutation.isSuccess
-          ? 'saved'
-          : 'idle';
+        : mutation.isError
+          ? 'error'
+          : mutation.isSuccess
+            ? 'saved'
+            : 'idle';
 
-  const error = mutation.error ? (mutation.error as Error).message : null;
+  const error = retry
+    ? retry.lastError
+    : mutation.error
+      ? (mutation.error as Error).message
+      : null;
 
-  return { edit, saveStatus, error, conflict, resolveUseRemote, resolveKeepLocal };
+  return { edit, saveStatus, error, conflict, retry, resolveUseRemote, resolveKeepLocal };
 }
 
 function readUpdatedAt<T>(

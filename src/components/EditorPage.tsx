@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ConflictDialog } from '@/components/ConflictDialog';
+import { SaveRetryBanner } from '@/components/SaveRetryBanner';
 import { DocumentPreview } from '@/components/preview';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
@@ -18,6 +19,8 @@ function saveStatusLabel(status: SaveStatus): string {
       return 'Saving...';
     case 'saved':
       return 'Saved';
+    case 'retrying':
+      return 'Retrying save...';
     case 'error':
       return 'Save failed';
     default:
@@ -206,6 +209,7 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
           </span>
         )}
       </div>
+      {!isDemo && <SaveRetryBanner retry={mutation.retry} />}
       <div className="flex-1 min-h-0 overflow-hidden">{editorBody}</div>
       {!isDemo && (
         <ConflictDialog

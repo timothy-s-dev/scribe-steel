@@ -71,14 +71,9 @@ test.describe('Lore Books editor', () => {
       await visibleField(page, 'Title').fill('baseline');
       await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
-      await page.evaluate(() => {
-        localStorage.setItem('scribe-steel-mock-fail-next', 'save:500');
-      });
+      await simulateRemoteEdit(page, fileId, 'remote edit');
 
       await visibleField(page, 'Title').fill('local edit');
-      await expect(page.getByText('Save failed', { exact: true })).toBeVisible();
-
-      await simulateRemoteEdit(page, fileId, 'remote edit');
 
       await expect(
         page.getByRole('heading', { name: 'Document changed elsewhere' }),
@@ -129,18 +124,19 @@ function previewText(page: Page, text: string) {
   return page.locator('.tsel').filter({ hasText: text });
 }
 
+// Mutate the mock Drive state to simulate a concurrent save from another
+// device: updates the stored data and bumps the file's version. The local
+// cache retains the pre-edit version, so the next save's version check
+// detects the mismatch and raises the conflict dialog.
 async function simulateRemoteEdit(page: Page, fileId: string, newTitle: string) {
   await page.evaluate(
     ({ id, title }) => {
       const raw = localStorage.getItem('scribe-steel-mock-drive-state')!;
       const state = JSON.parse(raw);
-      state.documents[id].title = title;
-      state.documents[id].updatedAt = new Date().toISOString();
+      const doc = state.documents[id];
+      doc.data = { ...doc.data, title, updatedAt: new Date().toISOString() };
+      doc.version = (doc.version ?? 1) + 1;
       localStorage.setItem('scribe-steel-mock-drive-state', JSON.stringify(state));
-
-      const qc = (window as unknown as { __queryClient: { invalidateQueries: (args: unknown) => Promise<unknown> } })
-        .__queryClient;
-      void qc.invalidateQueries({ queryKey: ['lore-books', 'document', id] });
     },
     { id: fileId, title: newTitle },
   );
