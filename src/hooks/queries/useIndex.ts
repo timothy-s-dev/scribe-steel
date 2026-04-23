@@ -1,25 +1,37 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAccessToken } from '@/services/google-auth';
-import { loadIndex } from '@/services/google-drive';
+import { indexQueryKey, loadIndex, type CachedDriveIndex } from '@/services/google-drive';
 import { getStaticEntries } from './staticData';
 import type { Category, IndexFile } from '@/data/types';
 
+function emptyCache(): CachedDriveIndex {
+  return { items: [], fileId: null, md5: null };
+}
+
 export function useIndex(category: Category, options?: { enabled?: boolean }) {
   const { isSignedIn } = useAuth();
-  return useQuery<IndexFile>({
+  return useQuery<CachedDriveIndex, Error, IndexFile>({
     // isSignedIn participates in the key so signed-out and signed-in results
     // don't share a cache entry (otherwise a stale signed-out fetch can
     // freeze a signed-in view into a static-only list until manually
     // invalidated).
-    queryKey: [category, 'index', isSignedIn],
+    queryKey: indexQueryKey(category, isSignedIn),
     queryFn: async () => {
-      const staticItems = getStaticEntries(category);
-      if (!getAccessToken()) return { version: 1, items: staticItems };
-      const driveIndex = await loadIndex(category);
-      const driveItems = driveIndex.items.map((item) => ({ ...item, custom: true }));
-      return { version: driveIndex.version, items: [...staticItems, ...driveItems] };
+      if (!getAccessToken()) return emptyCache();
+      return loadIndex(category);
     },
+    // The cache holds the raw Drive-side state (plus fileId/md5 for the
+    // service layer's md5 concurrency check on mutation). The UI-facing
+    // shape — static items layered in front of Drive items — is derived
+    // here so consumers keep the IndexFile contract without the cache
+    // having to duplicate static data.
+    select: (cached): IndexFile => ({
+      items: [
+        ...getStaticEntries(category),
+        ...cached.items.map((item) => ({ ...item, custom: true })),
+      ],
+    }),
     // 15 minutes. The app is effectively the only writer, so we keep this
     // long enough that intra-session navigation feels instant, but short
     // enough that cross-device edits (phone during a game, laptop while

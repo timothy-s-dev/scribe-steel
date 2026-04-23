@@ -4,7 +4,29 @@
 // Drive data survives re-login.
 
 import { getAccessToken } from './google-auth.mock';
+import { queryClient } from '@/lib/queryClient';
 import type { Category, IndexFile, IndexItem } from '@/data/types';
+
+export interface CachedDriveIndex {
+  items: IndexItem[];
+  fileId: string | null;
+  md5: string | null;
+}
+
+export const indexQueryKey = (category: Category, isSignedIn: boolean) =>
+  [category, 'index', isSignedIn] as const;
+
+// Mirror the real service's cache-update behavior so useIndex observers
+// re-render after a mutation without needing a refetch. The mock has no
+// real md5; we synthesize new ones so any cache identity checks behave
+// the same way (new write → new md5).
+function syncIndexCache(category: Category, index: IndexFile): void {
+  queryClient.setQueryData<CachedDriveIndex>(indexQueryKey(category, true), {
+    items: index.items,
+    fileId: `mock-index-${category}`,
+    md5: newId(),
+  });
+}
 
 class DriveError extends Error {
   status: number;
@@ -127,7 +149,7 @@ function newId(): string {
 }
 
 function emptyIndex(): IndexFile {
-  return { version: 1, items: [] };
+  return { items: [] };
 }
 
 function delay(): Promise<void> {
@@ -152,11 +174,20 @@ export async function saveSettings(data: unknown, existingFileId?: string | null
   return fileId;
 }
 
-export async function loadIndex(category: Category): Promise<IndexFile> {
+export async function loadIndex(category: Category): Promise<CachedDriveIndex> {
   requireAuth();
   await delay();
   const state = load();
-  return state.indexes[category] ?? emptyIndex();
+  const index = state.indexes[category] ?? emptyIndex();
+  // The mock has no real md5; the real service uses it for optimistic
+  // concurrency on index mutation, but the mock mutates state directly
+  // and doesn't exercise that path. Synthesizing stable fake values
+  // keeps the return shape consistent with the real service.
+  return {
+    items: index.items,
+    fileId: state.indexes[category] ? `mock-index-${category}` : null,
+    md5: state.indexes[category] ? `mock-md5-${category}` : null,
+  };
 }
 
 export async function loadDocument<T = unknown>(
@@ -195,6 +226,7 @@ export async function createDocument(args: {
   index.items.push(entry);
   state.indexes[category] = index;
   persist(state);
+  syncIndexCache(category, index);
 
   return { fileId, md5, updatedAt: now, data };
 }
@@ -234,6 +266,7 @@ export async function updateDocument(args: {
   }
   state.indexes[category] = index;
   persist(state);
+  syncIndexCache(category, index);
 
   return { fileId, md5, updatedAt: now, data };
 }
@@ -247,6 +280,7 @@ export async function removeDocument(category: Category, fileId: string): Promis
   if (index) {
     index.items = index.items.filter((item) => item.fileId !== fileId);
     state.indexes[category] = index;
+    syncIndexCache(category, index);
   }
   persist(state);
 }

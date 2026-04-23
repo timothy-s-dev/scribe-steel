@@ -6,7 +6,7 @@ import {
   removeDocument,
 } from '@/services/google-drive';
 import { isVirtualId, loadStaticDocument, loadVirtualDocument } from './staticData';
-import type { Category, IndexFile, IndexItem } from '@/data/types';
+import type { Category } from '@/data/types';
 
 // The cache stores { data, md5 } for every document query. md5 is Drive's
 // md5Checksum of the stored content — used for optimistic concurrency on
@@ -103,27 +103,9 @@ export function useSaveDocument() {
         ? createDocument(args)
         : updateDocument(args),
     onSuccess: (result, args) => {
-      // Patch the index cache in place instead of invalidating — we have
-      // the authoritative entry in hand, and the server-side write in
-      // updateDocument has already persisted it. Refetching would mean two
-      // extra Drive calls (findFile + readFile) per save.
-      const entry: IndexItem = {
-        fileId: result.fileId,
-        name: args.name,
-        updatedAt: result.updatedAt,
-        ...(args.extraIndexFields ?? {}),
-        // useIndex tags Drive-backed items; preserve that shape so the UI
-        // doesn't treat a freshly-saved entry as static.
-        custom: true,
-      };
-      queryClient.setQueriesData<IndexFile>({ queryKey: [args.category, 'index'] }, (prev) => {
-        if (!prev) return prev;
-        const idx = prev.items.findIndex((i) => i.fileId === result.fileId);
-        const items = idx >= 0
-          ? prev.items.map((i, j) => (j === idx ? entry : i))
-          : [...prev.items, entry];
-        return { ...prev, items };
-      });
+      // The service layer has already patched the index cache with the new
+      // entry + fresh md5 as part of the write. Just seed the document cache
+      // so a subsequent navigation doesn't re-fetch content we already have.
       queryClient.setQueryData([args.category, 'document', result.fileId], {
         data: result.data,
         md5: result.md5,
@@ -138,7 +120,7 @@ export function useDeleteDocument() {
     mutationFn: (args: { category: Category; fileId: string }) =>
       removeDocument(args.category, args.fileId),
     onSuccess: (_data, args) => {
-      queryClient.invalidateQueries({ queryKey: [args.category, 'index'] });
+      // Service already patched the index cache in removeDocument.
       queryClient.removeQueries({ queryKey: [args.category, 'document', args.fileId] });
     },
   });

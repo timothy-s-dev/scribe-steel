@@ -10,7 +10,6 @@ export interface IndexItem {
 }
 
 export interface IndexFile {
-  version: number;
   items: IndexItem[];
 }
 
