@@ -6,6 +6,7 @@ if (dsn) {
   Sentry.init({
     dsn,
     environment: import.meta.env.MODE,
+    release: `scribe-steel@${__APP_VERSION__}`,
     integrations: [
       Sentry.browserTracingIntegration(),
     ],

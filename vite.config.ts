@@ -2,6 +2,7 @@ import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import pkg from './package.json' with { type: 'json' }
 
 export default defineConfig(({ mode }) => {
@@ -16,11 +17,34 @@ export default defineConfig(({ mode }) => {
       }
     : {}
 
+  const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN
+  const sentryOrg = process.env.SENTRY_ORG
+  const sentryProject = process.env.SENTRY_PROJECT
+  const sentryEnabled = Boolean(sentryAuthToken && sentryOrg && sentryProject)
+
   return {
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version),
     },
-    plugins: [react(), tailwindcss()],
+    build: {
+      // Only emit source maps when we're uploading them to Sentry — otherwise
+      // they'd ship to Firebase Hosting as dead weight.
+      sourcemap: sentryEnabled,
+    },
+    plugins: [
+      react(),
+      tailwindcss(),
+      sentryVitePlugin({
+        org: sentryOrg,
+        project: sentryProject,
+        authToken: sentryAuthToken,
+        disable: !sentryEnabled,
+        release: { name: `scribe-steel@${pkg.version}` },
+        sourcemaps: {
+          filesToDeleteAfterUpload: ['./dist/**/*.map'],
+        },
+      }),
+    ],
     server: {
       port: 5173,
       strictPort: true,
