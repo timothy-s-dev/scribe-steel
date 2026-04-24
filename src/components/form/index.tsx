@@ -1,40 +1,31 @@
 import { forwardRef } from 'react';
 import { Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { compactLabelClass, inputBaseClass, inputSizeClass, type InputSize } from '@/lib/formStyles';
 
-const baseInput =
-  'w-full bg-surface-container-high text-on-surface text-sm font-body rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
-
-const sizes = {
-  md: 'px-2 py-1.5',
-  sm: 'px-1.5 py-1',
-} as const;
-
-type Size = keyof typeof sizes;
-
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & { inputSize?: Size };
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & { inputSize?: InputSize };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, inputSize = 'md', ...props }, ref) => (
-    <input ref={ref} className={cn(baseInput, sizes[inputSize], className)} {...props} />
+    <input ref={ref} className={cn('w-full', inputBaseClass, inputSizeClass[inputSize], className)} {...props} />
   ),
 );
 Input.displayName = 'Input';
 
-type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & { inputSize?: Size };
+type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & { inputSize?: InputSize };
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, inputSize = 'md', ...props }, ref) => (
-    <textarea ref={ref} className={cn(baseInput, sizes[inputSize], className)} {...props} />
+    <textarea ref={ref} className={cn('w-full', inputBaseClass, inputSizeClass[inputSize], className)} {...props} />
   ),
 );
 Textarea.displayName = 'Textarea';
 
-type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & { inputSize?: Size };
+type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & { inputSize?: InputSize };
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, inputSize = 'md', children, ...props }, ref) => (
-    <select ref={ref} className={cn(baseInput, sizes[inputSize], className)} {...props}>
+    <select ref={ref} className={cn('w-full', inputBaseClass, inputSizeClass[inputSize], className)} {...props}>
       {children}
     </select>
   ),
@@ -61,13 +52,13 @@ export function Field({
       <span
         className={cn(
           compact
-            ? 'text-[10px] font-label text-on-surface-variant/70'
+            ? compactLabelClass
             : 'text-xs font-label text-on-surface-variant',
           labelClassName,
         )}
       >
         {label}
-        {required ? null : (
+        {!required && !compact && (
           <span className="text-outline/50 ml-1" aria-hidden="true">
             (optional)
           </span>

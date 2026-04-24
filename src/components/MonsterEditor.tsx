@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react';
 import { emptyAbilityFeature, emptyTraitFeature, type Monster, type Feature, type Effect } from '@/data/bestiary';
-import { ChevronDown, ChevronUp, ChevronRight, X, Plus, ArrowUp, ArrowDown } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronRight, X, ArrowUp, ArrowDown } from 'lucide-react';
+import { AddButton, Field, Input, Select } from '@/components/form';
+import { compactLabelClass, inputBaseClass, inputSizeClass } from '@/lib/formStyles';
+import { cn } from '@/lib/utils';
 import { removeById, updateById } from '@/lib/arrays';
 
 // ── Shared styles ────────────────────────────────────────────────────────────
 
-const inputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
-const labelClass = 'text-[10px] font-label text-on-surface-variant/70';
+const inputClass = cn(inputBaseClass, inputSizeClass.md);
+const labelClass = compactLabelClass;
 
 // ── Main component ───────────────────────────────────────────────────────────
 
@@ -104,27 +107,27 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
       {/* Identity */}
       <Section label="Identity">
         <div className="grid grid-cols-[1fr_60px] md:grid-cols-[1fr_60px_1fr_60px] gap-2">
-          <LabeledInput label="Name" value={monster.name} onChange={(v) => update('name', v)} />
-          <LabeledInput label="Level" type="number" value={monster.level} onChange={(v) => update('level', parseInt(v) || 1)} />
-          <LabeledInput label="Roles" value={monster.roles.join(', ')} onChange={(v) => update('roles', v.split(',').map((s) => s.trim()).filter(Boolean))} />
-          <LabeledInput label="EV" type="number" value={monster.ev ?? ''} onChange={(v) => update('ev', v ? parseInt(v) || 0 : null)} />
+          <Field label="Name" compact><Input value={monster.name} onChange={(e) => update('name', e.target.value)} /></Field>
+          <Field label="Level" compact><Input type="number" value={monster.level} onChange={(e) => update('level', parseInt(e.target.value) || 1)} /></Field>
+          <Field label="Roles" compact><Input value={monster.roles.join(', ')} onChange={(e) => update('roles', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} /></Field>
+          <Field label="EV" compact><Input type="number" value={monster.ev ?? ''} onChange={(e) => update('ev', e.target.value ? parseInt(e.target.value) || 0 : null)} /></Field>
         </div>
-        <LabeledInput label="Ancestry" value={monster.ancestry.join(', ')} onChange={(v) => update('ancestry', v.split(',').map((s) => s.trim()).filter(Boolean))} />
+        <Field label="Ancestry" compact><Input value={monster.ancestry.join(', ')} onChange={(e) => update('ancestry', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} /></Field>
       </Section>
 
       {/* Combat Stats */}
       <Section label="Combat Stats">
         <div className="grid grid-cols-5 gap-2">
-          <LabeledInput label="Size" value={monster.size} onChange={(v) => update('size', v)} />
-          <LabeledInput label="Speed" type="number" value={monster.speed} onChange={(v) => update('speed', parseInt(v) || 0)} />
-          <LabeledInput label="Stamina" type="number" value={monster.stamina} onChange={(v) => update('stamina', parseInt(v) || 0)} />
-          <LabeledInput label="Stability" type="number" value={monster.stability} onChange={(v) => update('stability', parseInt(v) || 0)} />
-          <LabeledInput label="Free Strike" type="number" value={monster.free_strike} onChange={(v) => update('free_strike', parseInt(v) || 0)} />
+          <Field label="Size" compact><Input value={monster.size} onChange={(e) => update('size', e.target.value)} /></Field>
+          <Field label="Speed" compact><Input type="number" value={monster.speed} onChange={(e) => update('speed', parseInt(e.target.value) || 0)} /></Field>
+          <Field label="Stamina" compact><Input type="number" value={monster.stamina} onChange={(e) => update('stamina', parseInt(e.target.value) || 0)} /></Field>
+          <Field label="Stability" compact><Input type="number" value={monster.stability} onChange={(e) => update('stability', parseInt(e.target.value) || 0)} /></Field>
+          <Field label="Free Strike" compact><Input type="number" value={monster.free_strike} onChange={(e) => update('free_strike', parseInt(e.target.value) || 0)} /></Field>
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <LabeledInput label="Immunities" value={(monster.immunities ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('immunities', arr.length ? arr : undefined); }} placeholder="e.g., Fire 5" />
-          <LabeledInput label="Weaknesses" value={(monster.weaknesses ?? []).join(', ')} onChange={(v) => { const arr = v.split(',').map((s) => s.trim()).filter(Boolean); update('weaknesses', arr.length ? arr : undefined); }} placeholder="e.g., Holy 3" />
-          <LabeledInput label="Movement" value={monster.movement ?? ''} onChange={(v) => update('movement', v || undefined)} placeholder="e.g., Fly, Teleport" />
+          <Field label="Immunities" compact><Input value={(monster.immunities ?? []).join(', ')} onChange={(e) => { const arr = e.target.value.split(',').map((s) => s.trim()).filter(Boolean); update('immunities', arr.length ? arr : undefined); }} placeholder="e.g., Fire 5" /></Field>
+          <Field label="Weaknesses" compact><Input value={(monster.weaknesses ?? []).join(', ')} onChange={(e) => { const arr = e.target.value.split(',').map((s) => s.trim()).filter(Boolean); update('weaknesses', arr.length ? arr : undefined); }} placeholder="e.g., Holy 3" /></Field>
+          <Field label="Movement" compact><Input value={monster.movement ?? ''} onChange={(e) => update('movement', e.target.value || undefined)} placeholder="e.g., Fly, Teleport" /></Field>
         </div>
       </Section>
 
@@ -132,13 +135,13 @@ export function MonsterEditor({ monster, onChange, onRemove }: MonsterEditorProp
       <Section label="Characteristics">
         <div className="grid grid-cols-5 gap-2">
           {(['might', 'agility', 'reason', 'intuition', 'presence'] as const).map((key) => (
-            <LabeledInput
-              key={key}
-              label={key.charAt(0).toUpperCase() + key.slice(1)}
-              type="number"
-              value={monster[key]}
-              onChange={(v) => update(key, parseInt(v) || 0)}
-            />
+            <Field key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} compact>
+              <Input
+                type="number"
+                value={monster[key]}
+                onChange={(e) => update(key, parseInt(e.target.value) || 0)}
+              />
+            </Field>
           ))}
         </div>
       </Section>
@@ -313,21 +316,31 @@ function AbilityFeatureEditor({
     <div className="space-y-2">
       {/* Desktop: name, type, usage on one row; Mobile: stacked */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
-        <LabeledInput label="Name" value={feature.name} onChange={(v) => set('name', v)} />
-        <LabeledSelect label="Type" value={feature.ability_type ?? ''} onChange={(v) => set('ability_type', v || undefined)} options={ABILITY_TYPES} placeholder="(none)" />
-        <LabeledSelect label="Usage" value={feature.usage ?? ''} onChange={(v) => set('usage', v || undefined)} options={ABILITY_USAGES} placeholder="(none)" />
+        <Field label="Name" compact><Input value={feature.name} onChange={(e) => set('name', e.target.value)} /></Field>
+        <Field label="Type" compact>
+          <Select value={feature.ability_type ?? ''} onChange={(e) => set('ability_type', e.target.value || undefined)}>
+            <option value="">(none)</option>
+            {ABILITY_TYPES.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+          </Select>
+        </Field>
+        <Field label="Usage" compact>
+          <Select value={feature.usage ?? ''} onChange={(e) => set('usage', e.target.value || undefined)}>
+            <option value="">(none)</option>
+            {ABILITY_USAGES.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+          </Select>
+        </Field>
       </div>
 
       {/* Desktop: keywords, distance, target on one row; Mobile: stacked */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
-        <LabeledInput label="Keywords" value={(feature.keywords ?? []).join(', ')} onChange={(v) => set('keywords', v.split(',').map((s: string) => s.trim()).filter(Boolean))} />
-        <LabeledInput label="Distance" value={feature.distance ?? ''} onChange={(v) => set('distance', v || undefined)} />
-        <LabeledInput label="Target" value={feature.target ?? ''} onChange={(v) => set('target', v || undefined)} />
+        <Field label="Keywords" compact><Input value={(feature.keywords ?? []).join(', ')} onChange={(e) => set('keywords', e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))} /></Field>
+        <Field label="Distance" compact><Input value={feature.distance ?? ''} onChange={(e) => set('distance', e.target.value || undefined)} /></Field>
+        <Field label="Target" compact><Input value={feature.target ?? ''} onChange={(e) => set('target', e.target.value || undefined)} /></Field>
       </div>
 
       {/* Trigger (for triggered actions) */}
       {feature.trigger != null && (
-        <LabeledInput label="Trigger" value={feature.trigger} onChange={(v) => set('trigger', v || undefined)} />
+        <Field label="Trigger" compact><Input value={feature.trigger} onChange={(e) => set('trigger', e.target.value || undefined)} /></Field>
       )}
 
       {/* Power Roll */}
@@ -421,21 +434,23 @@ function TraitFeatureEditor({
 }) {
   return (
     <div className="grid grid-cols-[1fr_2fr] gap-2">
-      <LabeledInput
-        label="Name"
-        value={feature.name}
-        onChange={(v) => onChange((f) => ({ ...f, name: v }))}
-      />
-      <LabeledInput
-        label="Description"
-        value={feature.effects[0]?.effect ?? ''}
-        onChange={(v) =>
-          onChange((f) => ({
-            ...f,
-            effects: [{ ...f.effects[0], effect: v }],
-          }))
-        }
-      />
+      <Field label="Name" compact>
+        <Input
+          value={feature.name}
+          onChange={(e) => onChange((f) => ({ ...f, name: e.target.value }))}
+        />
+      </Field>
+      <Field label="Description" compact>
+        <Input
+          value={feature.effects[0]?.effect ?? ''}
+          onChange={(e) =>
+            onChange((f) => ({
+              ...f,
+              effects: [{ ...f.effects[0], effect: e.target.value }],
+            }))
+          }
+        />
+      </Field>
     </div>
   );
 }
@@ -449,63 +464,6 @@ function Section({ label, children }: { label: string; children: React.ReactNode
         {label}
       </h4>
       {children}
-    </div>
-  );
-}
-
-function LabeledInput({
-  label,
-  value,
-  onChange,
-  type = 'text',
-  placeholder,
-}: {
-  label: string;
-  value: string | number;
-  onChange: (value: string) => void;
-  type?: string;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <div className={labelClass}>{label}</div>
-      <input
-        type={type}
-        className={`${inputClass} w-full`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-      />
-    </div>
-  );
-}
-
-function LabeledSelect({
-  label,
-  value,
-  onChange,
-  options,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: string[];
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <div className={labelClass}>{label}</div>
-      <select
-        className={`${inputClass} w-full`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="">{placeholder ?? `Select ${label.toLowerCase()}`}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>{opt}</option>
-        ))}
-      </select>
     </div>
   );
 }
@@ -525,14 +483,3 @@ const ABILITY_USAGES = [
   'Free triggered action',
 ];
 
-function AddButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors cursor-pointer"
-    >
-      <Plus size={14} aria-hidden="true" />
-      {children}
-    </button>
-  );
-}

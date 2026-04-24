@@ -1,6 +1,7 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { inputBaseClass, inputSizeClass } from '@/lib/formStyles';
 import type { IndexItem } from '@/data/types';
 
 interface MonsterGroupSelectorProps {
@@ -12,8 +13,7 @@ interface MonsterGroupSelectorProps {
   className?: string;
 }
 
-const inputClass =
-  'w-full bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
+const inputClass = cn('w-full', inputBaseClass, inputSizeClass.md);
 
 export function MonsterGroupSelector({
   groups,
