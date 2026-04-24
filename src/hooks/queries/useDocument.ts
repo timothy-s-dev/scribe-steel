@@ -4,8 +4,10 @@ import {
   createDocument,
   updateDocument,
   removeDocument,
+  type CachedDriveIndex,
 } from '@/services/google-drive';
 import { isVirtualId, loadStaticDocument, loadVirtualDocument } from './staticData';
+import { indexQueryKey } from './useIndex';
 import type { Category } from '@/data/types';
 
 // The cache stores { data, md5, source } for every document query. md5 is
@@ -104,20 +106,33 @@ type SaveArgs =
 export function useSaveDocument() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (args: SaveArgs) =>
-      args.mode === 'create'
-        ? createDocument(args)
-        : updateDocument(args),
+    mutationFn: (args: SaveArgs) => {
+      // Pass the current cached index into the service so it can do the
+      // md5-skip optimization (meta-only GET instead of full re-fetch
+      // when nothing else has changed index.json since we last read it).
+      // Signed-in because every Drive call requires an auth token.
+      const cachedIndex = queryClient.getQueryData<CachedDriveIndex>(
+        indexQueryKey(args.category, true),
+      ) ?? null;
+      return args.mode === 'create'
+        ? createDocument({ ...args, cachedIndex })
+        : updateDocument({ ...args, cachedIndex });
+    },
     onSuccess: (result, args) => {
-      // The service layer has already patched the index cache with the new
-      // entry + fresh md5 as part of the write. For the document cache,
-      // update md5 *without* touching data — if the user typed something
-      // while this save was in flight, the cache already has the newer
-      // value and we'd clobber it otherwise. If the cache is empty (first
-      // save right after create), seed it from the result.
+      // Patch the document cache: update md5 *without* touching data —
+      // if the user typed something while this save was in flight, the
+      // cache already has the newer value and we'd clobber it otherwise.
+      // If the cache is empty (first save right after create), seed it
+      // from the result.
       queryClient.setQueryData<DocumentEnvelope<unknown>>(
         [args.category, 'document', result.fileId],
         (prev) => prev ? { ...prev, md5: result.md5 } : { data: result.data, md5: result.md5, source: 'drive' },
+      );
+      // Apply the index update returned by the service so useIndex
+      // observers see the new entry without a refetch.
+      queryClient.setQueryData<CachedDriveIndex>(
+        indexQueryKey(args.category, true),
+        result.updatedIndex,
       );
     },
   });
@@ -126,11 +141,18 @@ export function useSaveDocument() {
 export function useDeleteDocument() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (args: { category: Category; fileId: string }) =>
-      removeDocument(args.category, args.fileId),
-    onSuccess: (_data, args) => {
-      // Service already patched the index cache in removeDocument.
+    mutationFn: (args: { category: Category; fileId: string }) => {
+      const cachedIndex = queryClient.getQueryData<CachedDriveIndex>(
+        indexQueryKey(args.category, true),
+      ) ?? null;
+      return removeDocument(args.category, args.fileId, cachedIndex);
+    },
+    onSuccess: (result, args) => {
       queryClient.removeQueries({ queryKey: [args.category, 'document', args.fileId] });
+      queryClient.setQueryData<CachedDriveIndex>(
+        indexQueryKey(args.category, true),
+        result.updatedIndex,
+      );
     },
   });
 }

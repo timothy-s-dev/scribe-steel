@@ -1,5 +1,4 @@
 import { getAccessToken } from './google-auth';
-import { queryClient } from '@/lib/queryClient';
 import type { Category, IndexFile, IndexItem } from '@/data/types';
 
 // ── Drive API internals ─────────────────────────────────────────────────────
@@ -252,30 +251,23 @@ function slugify(name: string): string {
 
 // ── Index operations (private) ──────────────────────────────────────────────
 
-// Cache value for per-category index state. `items` is the raw Drive
-// side of the list — useIndex's `select` layers static items on top for
-// the UI, and the service keeps items+fileId+md5 in sync here so we can
-// do md5-based optimistic concurrency on mutation without re-fetching
-// the full content. fileId/md5 are null until the first index.json is
-// created for that category.
+// Per-category index state. `items` is the raw Drive-side list —
+// useIndex's `select` layers static items on top for the UI. fileId/md5
+// are null until the first index.json is created for that category.
+// The cache entry lives in TanStack (see `indexQueryKey` in useIndex);
+// the service is stateless here — callers pass in their current cached
+// value so the md5-skip optimization works, and receive the updated
+// value in mutation results.
 export interface CachedDriveIndex {
   items: IndexItem[];
   fileId: string | null;
   md5: string | null;
 }
 
-// Shared with useIndex so the hook and the service read/write the same
-// react-query entry. isSignedIn is always true for service-initiated
-// access because every drive call requires an auth token.
-export const indexQueryKey = (category: Category, isSignedIn: boolean) =>
-  [category, 'index', isSignedIn] as const;
-
 function emptyCachedIndex(): CachedDriveIndex {
   return { items: [], fileId: null, md5: null };
 }
 
-// Populated on first read and refreshed in place on every mutation —
-// see refreshDriveIndex / writeDriveIndex below.
 export async function loadIndex(category: Category): Promise<CachedDriveIndex> {
   const layout = await getLayout();
   const indexFileId = layout.indexFiles[category] ?? null;
@@ -287,49 +279,32 @@ export async function loadIndex(category: Category): Promise<CachedDriveIndex> {
   return { items: index.items, fileId: indexFileId, md5: meta.md5 };
 }
 
-function getCachedIndex(category: Category): CachedDriveIndex | undefined {
-  return queryClient.getQueryData<CachedDriveIndex>(indexQueryKey(category, true));
-}
-
-function setCachedIndex(category: Category, next: CachedDriveIndex): void {
-  queryClient.setQueryData<CachedDriveIndex>(indexQueryKey(category, true), next);
-}
-
-// Returns the Drive-side index we should mutate against. When our cached
-// md5 matches Drive's current md5 (via a tiny meta-only GET), we trust
-// the cached items and skip the full-content re-fetch. On mismatch —
-// a cross-device edit since load — we re-read the file and refresh the
-// cache. When there's no cache yet (service called before useIndex
-// populated it) or no file yet, we fall through to a full load.
-async function refreshDriveIndex(category: Category): Promise<CachedDriveIndex> {
-  const cached = getCachedIndex(category);
-  if (!cached || !cached.fileId || !cached.md5) {
-    const fresh = await loadIndex(category);
-    setCachedIndex(category, fresh);
-    return fresh;
-  }
+// Resolve the Drive-side index we should mutate against. When the
+// caller's cached md5 matches Drive's current md5 (via a tiny meta-only
+// GET), we trust the cached items and skip the full-content re-fetch.
+// On mismatch — a cross-device edit since load — we re-read the file.
+// When there's no cached entry or no file yet, we fall through to a
+// full load.
+async function refreshDriveIndex(
+  category: Category,
+  cached: CachedDriveIndex | null,
+): Promise<CachedDriveIndex> {
+  if (!cached || !cached.fileId || !cached.md5) return loadIndex(category);
   const meta = await getFileMeta(cached.fileId);
   if (meta.md5 === cached.md5) return cached;
   const fresh = await readFile<IndexFile>(cached.fileId);
-  const next: CachedDriveIndex = {
-    items: fresh.items,
-    fileId: cached.fileId,
-    md5: meta.md5,
-  };
-  setCachedIndex(category, next);
-  return next;
+  return { items: fresh.items, fileId: cached.fileId, md5: meta.md5 };
 }
 
 async function writeDriveIndex(
   category: Category,
   base: CachedDriveIndex,
   nextItems: IndexItem[],
-): Promise<void> {
+): Promise<CachedDriveIndex> {
   const body: IndexFile = { items: nextItems };
   if (base.fileId) {
     const { md5 } = await updateFile(base.fileId, body);
-    setCachedIndex(category, { ...base, items: nextItems, md5 });
-    return;
+    return { ...base, items: nextItems, md5 };
   }
   const layout = await getLayout();
   const created = await createFile(layout.folders[category], 'index.json', body);
@@ -338,28 +313,33 @@ async function writeDriveIndex(
     ...prev,
     indexFiles: { ...prev.indexFiles, [category]: created },
   }));
-  setCachedIndex(category, { items: nextItems, fileId: created, md5: meta.md5 });
+  return { items: nextItems, fileId: created, md5: meta.md5 };
 }
 
-async function updateIndexEntry(
+async function applyIndexEntry(
   category: Category,
   fileId: string,
   entry: IndexItem,
-): Promise<void> {
-  const base = await refreshDriveIndex(category);
+  cached: CachedDriveIndex | null,
+): Promise<CachedDriveIndex> {
+  const base = await refreshDriveIndex(category, cached);
   const idx = base.items.findIndex((item) => item.fileId === fileId);
   const items = idx >= 0
     ? base.items.map((item, i) => (i === idx ? entry : item))
     : [...base.items, entry];
-  await writeDriveIndex(category, base, items);
+  return writeDriveIndex(category, base, items);
 }
 
-async function removeIndexEntry(category: Category, fileId: string): Promise<void> {
-  const base = await refreshDriveIndex(category);
-  if (!base.fileId) return;
+async function removeIndexEntry(
+  category: Category,
+  fileId: string,
+  cached: CachedDriveIndex | null,
+): Promise<CachedDriveIndex> {
+  const base = await refreshDriveIndex(category, cached);
+  if (!base.fileId) return base;
   const items = base.items.filter((item) => item.fileId !== fileId);
-  if (items.length === base.items.length) return;
-  await writeDriveIndex(category, base, items);
+  if (items.length === base.items.length) return base;
+  return writeDriveIndex(category, base, items);
 }
 
 // ── Public API ──────────────────────────────────────────────────────────────
@@ -393,27 +373,36 @@ export async function loadDocument<T = unknown>(
   return { data, md5: meta.md5 };
 }
 
+export interface DocumentMutationResult {
+  fileId: string;
+  md5: string;
+  updatedAt: string;
+  data: unknown;
+  updatedIndex: CachedDriveIndex;
+}
+
 export async function createDocument(args: {
   category: Category;
   name: string;
   data: unknown;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
-  const { category, name, data, extraIndexFields } = args;
+  cachedIndex: CachedDriveIndex | null;
+}): Promise<DocumentMutationResult> {
+  const { category, name, data, extraIndexFields, cachedIndex } = args;
   const folderId = (await getLayout()).folders[category];
   const now = new Date().toISOString();
 
   const fileId = await createFile(folderId, slugify(name) + '.json', data);
   const meta = await getFileMeta(fileId);
 
-  await updateIndexEntry(category, fileId, {
+  const updatedIndex = await applyIndexEntry(category, fileId, {
     fileId,
     name,
     updatedAt: now,
     ...extraIndexFields,
-  });
+  }, cachedIndex);
 
-  return { fileId, md5: meta.md5, updatedAt: now, data };
+  return { fileId, md5: meta.md5, updatedAt: now, data, updatedIndex };
 }
 
 export async function updateDocument(args: {
@@ -423,8 +412,9 @@ export async function updateDocument(args: {
   fileId: string;
   expectedMd5: string;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
-  const { category, name, data, fileId, expectedMd5, extraIndexFields } = args;
+  cachedIndex: CachedDriveIndex | null;
+}): Promise<DocumentMutationResult> {
+  const { category, name, data, fileId, expectedMd5, extraIndexFields, cachedIndex } = args;
 
   // Application-level optimistic concurrency: Drive has no native If-Match
   // for media uploads, so we GET the current content checksum and bail if
@@ -440,19 +430,24 @@ export async function updateDocument(args: {
   const now = new Date().toISOString();
   const { md5 } = await updateFile(fileId, data);
 
-  await updateIndexEntry(category, fileId, {
+  const updatedIndex = await applyIndexEntry(category, fileId, {
     fileId,
     name,
     updatedAt: now,
     ...extraIndexFields,
-  });
+  }, cachedIndex);
 
-  return { fileId, md5, updatedAt: now, data };
+  return { fileId, md5, updatedAt: now, data, updatedIndex };
 }
 
-export async function removeDocument(category: Category, fileId: string): Promise<void> {
+export async function removeDocument(
+  category: Category,
+  fileId: string,
+  cachedIndex: CachedDriveIndex | null,
+): Promise<{ updatedIndex: CachedDriveIndex }> {
   await deleteFile(fileId);
-  await removeIndexEntry(category, fileId);
+  const updatedIndex = await removeIndexEntry(category, fileId, cachedIndex);
+  return { updatedIndex };
 }
 
 export { DriveError };

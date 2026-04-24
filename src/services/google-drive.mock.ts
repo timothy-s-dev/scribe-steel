@@ -4,7 +4,6 @@
 // Drive data survives re-login.
 
 import { getAccessToken } from './google-auth.mock';
-import { queryClient } from '@/lib/queryClient';
 import type { Category, IndexFile, IndexItem } from '@/data/types';
 
 export interface CachedDriveIndex {
@@ -13,19 +12,12 @@ export interface CachedDriveIndex {
   md5: string | null;
 }
 
-export const indexQueryKey = (category: Category, isSignedIn: boolean) =>
-  [category, 'index', isSignedIn] as const;
-
-// Mirror the real service's cache-update behavior so useIndex observers
-// re-render after a mutation without needing a refetch. The mock has no
-// real md5; we synthesize new ones so any cache identity checks behave
-// the same way (new write → new md5).
-function syncIndexCache(category: Category, index: IndexFile): void {
-  queryClient.setQueryData<CachedDriveIndex>(indexQueryKey(category, true), {
+function toCachedIndex(category: Category, index: IndexFile): CachedDriveIndex {
+  return {
     items: index.items,
     fileId: `mock-index-${category}`,
     md5: newId(),
-  });
+  };
 }
 
 class DriveError extends Error {
@@ -226,12 +218,23 @@ export async function loadDocument<T = unknown>(
   return { data: doc.data as T, md5: doc.md5 };
 }
 
+export interface DocumentMutationResult {
+  fileId: string;
+  md5: string;
+  updatedAt: string;
+  data: unknown;
+  updatedIndex: CachedDriveIndex;
+}
+
 export async function createDocument(args: {
   category: Category;
   name: string;
   data: unknown;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
+  // Accepted for parity with the real service; the mock keeps its own
+  // authoritative state in localStorage so the cached value is unused.
+  cachedIndex?: CachedDriveIndex | null;
+}): Promise<DocumentMutationResult> {
   requireAuth();
   maybeInjectFailure('save');
   await delay();
@@ -249,9 +252,8 @@ export async function createDocument(args: {
   index.items.push(entry);
   state.indexes[category] = index;
   persist(state);
-  syncIndexCache(category, index);
 
-  return { fileId, md5, updatedAt: now, data };
+  return { fileId, md5, updatedAt: now, data, updatedIndex: toCachedIndex(category, index) };
 }
 
 export async function updateDocument(args: {
@@ -261,7 +263,8 @@ export async function updateDocument(args: {
   fileId: string;
   expectedMd5: string;
   extraIndexFields?: Record<string, unknown>;
-}): Promise<{ fileId: string; md5: string; updatedAt: string; data: unknown }> {
+  cachedIndex?: CachedDriveIndex | null;
+}): Promise<DocumentMutationResult> {
   requireAuth();
   maybeInjectFailure('save');
   await delay();
@@ -290,23 +293,25 @@ export async function updateDocument(args: {
   }
   state.indexes[category] = index;
   persist(state);
-  syncIndexCache(category, index);
 
-  return { fileId, md5, updatedAt: now, data };
+  return { fileId, md5, updatedAt: now, data, updatedIndex: toCachedIndex(category, index) };
 }
 
-export async function removeDocument(category: Category, fileId: string): Promise<void> {
+export async function removeDocument(
+  category: Category,
+  fileId: string,
+  cachedIndex?: CachedDriveIndex | null,
+): Promise<{ updatedIndex: CachedDriveIndex }> {
+  void cachedIndex; // Accepted for signature parity with the real service.
   requireAuth();
   await delay();
   const state = load();
   delete state.documents[fileId];
-  const index = state.indexes[category];
-  if (index) {
-    index.items = index.items.filter((item) => item.fileId !== fileId);
-    state.indexes[category] = index;
-    syncIndexCache(category, index);
-  }
+  const index = state.indexes[category] ?? emptyIndex();
+  index.items = index.items.filter((item) => item.fileId !== fileId);
+  state.indexes[category] = index;
   persist(state);
+  return { updatedIndex: toCachedIndex(category, index) };
 }
 
 export { DriveError, DriveConflictError };
