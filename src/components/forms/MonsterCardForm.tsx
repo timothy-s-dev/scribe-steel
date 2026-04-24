@@ -80,7 +80,8 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
     return ids;
   }, [selectedByGroup, groups]);
 
-  const { data: groupData } = useDocuments<MonsterGroup>('monsters', selectedGroupIds);
+  const { data: groupData, isLoading: groupDataLoading } =
+    useDocuments<MonsterGroup>('monsters', selectedGroupIds);
 
   const loadedMonsters = useMemo(() => {
     const monsters: Monster[] = [];
@@ -106,12 +107,21 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
   // cache-roundtrips that bump `value`'s identity but leave loadedMonsters
   // alone don't re-fire this effect. Without that guard, every save
   // success would re-emit and loop.
+  //
+  // Rapid selection changes (e.g., clicking groups in quick succession)
+  // fire off N overlapping group-document fetches that resolve at
+  // slightly staggered times. Emitting on each partial resolution
+  // cascades N onChange→buildSource→compile cycles with increasingly
+  // large payloads, which can starve the renderer. We hold the emit
+  // until the set has fully settled — no in-flight fetches — so the
+  // pipeline downstream sees one change instead of a staircase.
   const emit = useEffectEvent((monsters: Monster[]) => {
     onChange({ ...value, monsters });
   });
   useEffect(() => {
+    if (groupDataLoading) return;
     emit(loadedMonsters);
-  }, [loadedMonsters]);
+  }, [loadedMonsters, groupDataLoading]);
 
   return (
     <FormPanel
