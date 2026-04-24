@@ -16,34 +16,15 @@ import { MonsterGroupSelector } from '@/components/selectors/MonsterGroupSelecto
 import { MonsterSelector } from '@/components/selectors/MonsterSelector';
 import { removeById, updateById } from '@/lib/arrays';
 import type { IndexItem } from '@/data/types';
-import type {
-  EncounterCreature,
-  EncounterDocument,
-  EncounterGroup,
-  EncounterMalice,
+import {
+  emptyCreature,
+  emptyGroup,
+  emptyMalice,
+  type EncounterCreature,
+  type EncounterDocument,
+  type EncounterMalice,
 } from '@/documents/encounters';
 import type { DocumentFormProps } from '@/documents/types';
-
-function emptyCreature(): EncounterCreature {
-  return {
-    id: crypto.randomUUID(),
-    name: '',
-    stamina: '',
-    stability: 0,
-    speed: 5,
-    freeStrike: '',
-    distance: 'Melee 1',
-    notes: '',
-  };
-}
-
-function emptyGroup(): EncounterGroup {
-  return { id: crypto.randomUUID(), label: '', creatures: [emptyCreature()] };
-}
-
-function emptyMalice(): EncounterMalice {
-  return { id: crypto.randomUUID(), cost: 3, name: '', description: '' };
-}
 
 function maliceFromFeature(f: Feature): EncounterMalice {
   return {

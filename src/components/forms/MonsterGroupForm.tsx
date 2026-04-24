@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Copy } from 'lucide-react';
-import { cloneMonster, emptyMonster, loadMonsterByName } from '@/data/bestiary';
+import { cloneMonster, emptyMaliceFeature, emptyMonster, loadMonsterByName } from '@/data/bestiary';
 import { MonsterEditor } from '@/components/MonsterEditor';
 import { AddButton, FormPanel, Input, RemoveButton, SectionHeader } from '@/components/form';
 import { MonsterSelector } from '@/components/selectors/MonsterSelector';
@@ -9,17 +9,6 @@ import { removeById, updateById } from '@/lib/arrays';
 import type { Feature } from '@/data/bestiary';
 import type { MonsterGroupDocument } from '@/documents/monster-groups';
 import type { DocumentFormProps } from '@/documents/types';
-
-function emptyMaliceFeature(): Feature {
-  return {
-    id: crypto.randomUUID(),
-    type: 'feature',
-    feature_type: 'trait',
-    name: '',
-    cost: '3',
-    effects: [{ effect: '' }],
-  };
-}
 
 function maliceDescription(f: Feature): string {
   return f.effects.map((e) => e.effect).filter(Boolean).join(' ');

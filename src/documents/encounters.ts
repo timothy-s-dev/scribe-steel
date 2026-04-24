@@ -42,6 +42,27 @@ export interface EncounterDocument extends DocumentMetaFields {
   content: string;
 }
 
+export function emptyCreature(): EncounterCreature {
+  return {
+    id: crypto.randomUUID(),
+    name: '',
+    stamina: '',
+    stability: 0,
+    speed: 5,
+    freeStrike: '',
+    distance: 'Melee 1',
+    notes: '',
+  };
+}
+
+export function emptyGroup(): EncounterGroup {
+  return { id: crypto.randomUUID(), label: '', creatures: [emptyCreature()] };
+}
+
+export function emptyMalice(): EncounterMalice {
+  return { id: crypto.randomUUID(), cost: 3, name: '', description: '' };
+}
+
 export const encountersMetadata: DocumentMetadata<EncounterDocument> = {
   category: 'encounters',
   noun: 'encounter sheet',

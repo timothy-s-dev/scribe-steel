@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Monster, Feature, Effect } from '@/data/bestiary';
+import { emptyAbilityFeature, emptyTraitFeature, type Monster, type Feature, type Effect } from '@/data/bestiary';
 import { ChevronDown, ChevronUp, ChevronRight, X, Plus, ArrowUp, ArrowDown } from 'lucide-react';
 import { removeById, updateById } from '@/lib/arrays';
 
@@ -7,35 +7,6 @@ import { removeById, updateById } from '@/lib/arrays';
 
 const inputClass = 'bg-surface-container-high text-on-surface text-sm font-body px-2 py-1.5 rounded-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary';
 const labelClass = 'text-[10px] font-label text-on-surface-variant/70';
-
-// ── Empty defaults ───────────────────────────────────────────────────────────
-
-function emptyAbilityFeature(): Feature {
-  return {
-    id: crypto.randomUUID(),
-    type: 'feature',
-    feature_type: 'ability',
-    name: '',
-    ability_type: '',
-    usage: '',
-    keywords: [],
-    distance: '',
-    target: '',
-    effects: [
-      { name: 'Effect', effect: '' },
-    ],
-  };
-}
-
-function emptyTraitFeature(): Feature {
-  return {
-    id: crypto.randomUUID(),
-    type: 'feature',
-    feature_type: 'trait',
-    name: '',
-    effects: [{ effect: '' }],
-  };
-}
 
 // ── Main component ───────────────────────────────────────────────────────────
 

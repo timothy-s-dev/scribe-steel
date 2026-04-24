@@ -18,6 +18,44 @@ export function sortedMonsters<T extends MonsterSummary>(monsters: T[]): T[] {
   });
 }
 
+export function emptyAbilityFeature(): Feature {
+  return {
+    id: crypto.randomUUID(),
+    type: 'feature',
+    feature_type: 'ability',
+    name: '',
+    ability_type: '',
+    usage: '',
+    keywords: [],
+    distance: '',
+    target: '',
+    effects: [
+      { name: 'Effect', effect: '' },
+    ],
+  };
+}
+
+export function emptyTraitFeature(): Feature {
+  return {
+    id: crypto.randomUUID(),
+    type: 'feature',
+    feature_type: 'trait',
+    name: '',
+    effects: [{ effect: '' }],
+  };
+}
+
+export function emptyMaliceFeature(): Feature {
+  return {
+    id: crypto.randomUUID(),
+    type: 'feature',
+    feature_type: 'trait',
+    name: '',
+    cost: '3',
+    effects: [{ effect: '' }],
+  };
+}
+
 export function emptyMonster(): Monster {
   return {
     id: crypto.randomUUID(),
