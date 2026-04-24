@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { compileSvg, type VirtualFile } from '@/typst/compiler';
+import { parseSvgPages, type ParsedPage } from './parseSvgPages';
 
-export interface ParsedPage {
-  width: number;
-  height: number;
-  svg: string;
-}
+export type { ParsedPage };
 
 interface TypstCompilerResult {
   pages: ParsedPage[];
@@ -55,35 +52,4 @@ export function useTypstCompiler(
   const pages = useMemo(() => parseSvgPages(svg), [svg]);
 
   return { pages, error, loading };
-}
-
-function parseSvgPages(svg: string | null): ParsedPage[] {
-  if (!svg) return [];
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(svg, 'image/svg+xml');
-  const svgEl = doc.querySelector('svg');
-  if (!svgEl) return [];
-
-  const pageGroups = svgEl.querySelectorAll('g.typst-page');
-  if (pageGroups.length === 0) {
-    const width = parseFloat(svgEl.getAttribute('data-width') || svgEl.getAttribute('width') || '596');
-    const height = parseFloat(svgEl.getAttribute('data-height') || svgEl.getAttribute('height') || '842');
-    return [{ width, height, svg }];
-  }
-
-  const styles = svgEl.querySelector('style')?.outerHTML || '';
-  const defs = svgEl.querySelector('defs')?.outerHTML || '';
-
-  return Array.from(pageGroups).map((group) => {
-    const width = parseFloat(group.getAttribute('data-page-width') || '596');
-    const height = parseFloat(group.getAttribute('data-page-height') || '842');
-
-    const cloned = group.cloneNode(true) as Element;
-    cloned.setAttribute('transform', 'translate(0, 0)');
-
-    const pageSvg = `<svg class="typst-doc" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${styles}${defs}${cloned.outerHTML}</svg>`;
-
-    return { width, height, svg: pageSvg };
-  });
 }
