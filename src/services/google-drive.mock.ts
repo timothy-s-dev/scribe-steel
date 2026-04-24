@@ -173,6 +173,11 @@ function delay(): Promise<void> {
   return new Promise((r) => setTimeout(r, LATENCY_MS));
 }
 
+// The mock has no storage layout to cache (everything is just keyed in
+// localStorage), so resetLayout is a no-op — exported only to match the
+// real service's public surface.
+export function resetLayout(): void {}
+
 export async function loadSettings<T = unknown>(): Promise<{ data: T; fileId: string | null }> {
   requireAuth();
   await delay();

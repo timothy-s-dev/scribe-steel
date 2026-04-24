@@ -125,7 +125,6 @@ interface StorageLayout {
   settingsFile: string | null;
 }
 
-const LAYOUT_QUERY_KEY = ['internal', 'storage-layout'] as const;
 const ALL_CATEGORIES: Category[] = ['monsters', 'encounters', 'handwritten', 'lore-books', 'monster-cards'];
 const ROOT_FOLDER_NAME = 'Scribe Steel';
 
@@ -218,21 +217,33 @@ async function initStorageLayout(): Promise<StorageLayout> {
   return reconcileLayout(partial);
 }
 
-async function getLayout(): Promise<StorageLayout> {
-  return queryClient.ensureQueryData({
-    queryKey: LAYOUT_QUERY_KEY,
-    queryFn: initStorageLayout,
-    staleTime: Infinity,
-  });
+// Module-level memoization for the resolved layout. Layout state is
+// purely a service-internal concern — no hook reads it — so there's no
+// need to route it through TanStack. Concurrent callers during the
+// initial load all await the same promise; post-load, patchLayout
+// chains onto it so subsequent reads see the updated state.
+let layoutPromise: Promise<StorageLayout> | null = null;
+
+function getLayout(): Promise<StorageLayout> {
+  if (!layoutPromise) layoutPromise = initStorageLayout();
+  return layoutPromise;
 }
 
-// Patch the cached layout in place. Called when we lazily create a file
-// whose id we want to remember for the session (index.json on first
-// write, settings.json on first save).
+// Patch the cached layout. Called when we lazily create a file whose id
+// we want to remember for the session (index.json on first write,
+// settings.json on first save). The assignment is synchronous — the
+// chained promise immediately supersedes the old one — so callers
+// don't need to await.
 function patchLayout(update: (prev: StorageLayout) => StorageLayout): void {
-  const current = queryClient.getQueryData<StorageLayout>(LAYOUT_QUERY_KEY);
-  if (!current) return;
-  queryClient.setQueryData<StorageLayout>(LAYOUT_QUERY_KEY, update(current));
+  if (!layoutPromise) return;
+  layoutPromise = layoutPromise.then(update);
+}
+
+// Drop the cached layout so the next getLayout re-discovers from
+// scratch. Called on sign-out, where folder ids are no longer
+// meaningful (a different user may sign in next).
+export function resetLayout(): void {
+  layoutPromise = null;
 }
 
 function slugify(name: string): string {

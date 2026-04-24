@@ -18,6 +18,7 @@ import {
   isConfigured,
 } from '@/services/google-auth';
 import { clearSessionExpired } from '@/services/session-expiry';
+import { resetLayout } from '@/services/google-drive';
 import { queryClient, clearCache } from '@/lib/queryClient';
 
 interface AuthState {
@@ -63,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(() => {
     authSignOut();
     clearCache();
+    resetLayout();
     clearSessionExpired();
   }, []);
 
