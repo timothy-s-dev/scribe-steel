@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
@@ -130,8 +130,8 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
           group={group}
           selected={selected}
           isCollapsed={!expanded.has(group.name)}
-          onToggleCollapse={() => toggleExpanded(group.name)}
-          onToggleGroup={() => toggleGroup(group.name)}
+          onToggleCollapse={toggleExpanded}
+          onToggleGroup={toggleGroup}
           onToggleMonster={toggleMonster}
         />
       ))}
@@ -144,21 +144,46 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
   );
 }
 
-function GroupPicker({
+interface GroupPickerProps {
+  group: IndexItem;
+  selected: Set<string>;
+  isCollapsed: boolean;
+  onToggleCollapse: (groupName: string) => void;
+  onToggleGroup: (groupName: string) => void;
+  onToggleMonster: (groupName: string, name: string) => void;
+}
+
+// Re-render only when something that actually affects this group changes.
+// `selected` is a single Set shared across all groups and gets a new
+// identity on every toggle — the default shallow compare would rerender
+// every GroupPicker on every click. Instead, compare selection membership
+// for this group's monsters only.
+function arePropsEqual(prev: GroupPickerProps, next: GroupPickerProps) {
+  if (
+    prev.group !== next.group ||
+    prev.isCollapsed !== next.isCollapsed ||
+    prev.onToggleCollapse !== next.onToggleCollapse ||
+    prev.onToggleGroup !== next.onToggleGroup ||
+    prev.onToggleMonster !== next.onToggleMonster
+  ) {
+    return false;
+  }
+  if (prev.selected === next.selected) return true;
+  for (const m of monstersOf(prev.group)) {
+    const key = monsterKey(prev.group.name, m.name);
+    if (prev.selected.has(key) !== next.selected.has(key)) return false;
+  }
+  return true;
+}
+
+const GroupPicker = memo(function GroupPicker({
   group,
   selected,
   isCollapsed,
   onToggleCollapse,
   onToggleGroup,
   onToggleMonster,
-}: {
-  group: IndexItem;
-  selected: Set<string>;
-  isCollapsed: boolean;
-  onToggleCollapse: () => void;
-  onToggleGroup: () => void;
-  onToggleMonster: (groupName: string, name: string) => void;
-}) {
+}: GroupPickerProps) {
   const monsters = useMemo(() => sortedMonsters(monstersOf(group)), [group]);
   const allChecked = monsters.length > 0 && monsters.every((m) => selected.has(monsterKey(group.name, m.name)));
   const someChecked = monsters.some((m) => selected.has(monsterKey(group.name, m.name)));
@@ -167,7 +192,7 @@ function GroupPicker({
     <div>
       <div className="flex items-center gap-0.5 mb-1">
         <button
-          onClick={onToggleCollapse}
+          onClick={() => onToggleCollapse(group.name)}
           className="flex items-center justify-center w-5 h-5 text-on-surface-variant/50 hover:text-on-surface-variant transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label={isCollapsed ? `Expand ${group.name}` : `Collapse ${group.name}`}
         >
@@ -180,7 +205,7 @@ function GroupPicker({
             ref={(el) => {
               if (el) el.indeterminate = someChecked && !allChecked;
             }}
-            onChange={onToggleGroup}
+            onChange={() => onToggleGroup(group.name)}
             className="accent-primary -mt-px"
           />
           <span className="text-xs font-label font-bold tracking-wide uppercase text-on-surface-variant">
@@ -226,4 +251,4 @@ function GroupPicker({
       )}
     </div>
   );
-}
+}, arePropsEqual);
