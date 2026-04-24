@@ -22,11 +22,15 @@ export function listTitle(meta: HasNoun): string {
 }
 
 export function errorLabel(meta: HasNoun): string {
-  return `Failed to load ${meta.noun}`;
+  return `Failed to load ${meta.noun}. Try again later.`;
 }
 
 export function notFoundLabel(meta: HasNoun): string {
   return `${pageTitle(meta)} not found`;
+}
+
+export function signInToViewLabel(meta: HasNoun): string {
+  return `Sign in with Google to view custom ${pluralize(meta.noun)}.`;
 }
 
 export { titleCase, pluralize };

@@ -7,6 +7,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Plus, CloudOff, FileText, ChevronRight } from 'lucide-react';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
 import { PageHeader } from '@/components/PageHeader';
+import { SignInButton } from '@/components/SignInButton';
 import { getCreateDialog } from '@/components/documents/registry';
 import type { DocumentMetadata } from '@/documents';
 import { listTitle, pluralize, titleCase } from '@/documents/titles';
@@ -76,6 +77,7 @@ export function DocumentList<Data>({ type }: DocumentListProps<Data>) {
             <p className="text-sm font-body text-on-surface-variant">
               Sign in with Google to save and manage {nounPlural}.
             </p>
+            <SignInButton />
             {type.demoEnabled && (
               <button
                 onClick={() => navigate('demo')}

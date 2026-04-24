@@ -1,15 +1,24 @@
 import { useCallback, useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CloudOff } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ConflictDialog } from '@/components/ConflictDialog';
 import { SaveRetryBanner } from '@/components/SaveRetryBanner';
+import { SignInButton } from '@/components/SignInButton';
 import { DocumentPreview } from '@/components/preview';
+import { useAuth } from '@/contexts/AuthContext';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocumentMutation, type SaveStatus } from '@/hooks/useDocumentMutation';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { errorLabel, listTitle, notFoundLabel, pageTitle } from '@/documents/titles';
+import {
+  errorLabel,
+  listTitle,
+  notFoundLabel,
+  pageTitle,
+  signInToViewLabel,
+} from '@/documents/titles';
+import { DriveError } from '@/services/google-drive';
 import type { DocumentMetadata } from '@/documents';
 import type { DocumentMetaFields } from '@/data/types';
 
@@ -79,7 +88,7 @@ interface DocumentEditorProps<T extends DocumentMetaFields & { name: string }> {
 // the cache synchronously via useDocumentMutation before the debounced save
 // ever talks to Drive. Demo docs flow through the same path — the query
 // layer synthesizes a default envelope, and the mutation layer no-ops the
-// network save — so there's no isDemo branch here.
+// network save.
 function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
   type,
   fileId,
@@ -92,8 +101,14 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
   // EncounterForm) remount to pick up the fresh data.
   const [formResetToken, setFormResetToken] = useState(0);
 
-  const { data: envelope, isLoading, error: loadError } = useDocument<T>(type.category, fileId);
-  const { data: indexData } = useIndex(type.category, { enabled: fileId !== 'demo' });
+  const { isSignedIn, isLoading: authLoading } = useAuth();
+  const isDemo = fileId === 'demo';
+  const needsSignIn = !isDemo && !authLoading && !isSignedIn;
+
+  const { data: envelope, isLoading, error: loadError } = useDocument<T>(type.category, fileId, {
+    enabled: !needsSignIn,
+  });
+  const { data: indexData } = useIndex(type.category, { enabled: !isDemo && isSignedIn });
 
   const deriveIndexFields = useCallback(
     (data: T): Record<string, unknown> => type.indexFields?.(data) ?? {},
@@ -111,16 +126,31 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
     setFormResetToken((t) => t + 1);
   }, [mutation]);
 
-  const error = loadError
-    ? errorLabel(type)
-    : !envelope && !isLoading
-      ? notFoundLabel(type)
-      : null;
-
-  if (error) {
+  if (needsSignIn) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <p className="text-sm font-body text-tertiary">{error}</p>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center px-4">
+        <CloudOff size={48} className="text-on-surface-variant/30" aria-hidden="true" />
+        <p className="text-sm font-body text-on-surface-variant">
+          {signInToViewLabel(type)}
+        </p>
+        <SignInButton />
+      </div>
+    );
+  }
+
+  const is404 = loadError instanceof DriveError && loadError.status === 404;
+  const errorMessage = is404
+    ? notFoundLabel(type)
+    : loadError
+      ? errorLabel(type)
+      : !envelope && !isLoading
+        ? notFoundLabel(type)
+        : null;
+
+  if (errorMessage) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center px-4">
+        <p className="text-sm font-body text-tertiary">{errorMessage}</p>
         {!hideBackButton && (
           <button
             onClick={onNavigateBack}
@@ -133,7 +163,6 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
     );
   }
 
-  const isDemo = fileId === 'demo';
   const data = envelope?.data;
   const indexName = !isDemo
     ? indexData?.items.find((i) => i.fileId === fileId)?.name

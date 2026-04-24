@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import { SignInButton } from '@/components/SignInButton';
+import { NavBarSignInButton } from '@/components/NavBarSignInButton';
 import { SessionExpiryDialog } from '@/components/SessionExpiryDialog';
 import { VersionBadge } from '@/components/VersionBadge';
 import { Menu, X, PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
@@ -134,7 +134,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         {footerActions.map((item) => (
           <SidebarLink key={item.label} item={item} small onClick={onNavigate} />
         ))}
-        <SignInButton />
+        <NavBarSignInButton />
       </div>
     </>
   );
