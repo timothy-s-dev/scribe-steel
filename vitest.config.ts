@@ -6,6 +6,11 @@ export default defineConfig({
   plugins: [react()],
   define: {
     __APP_VERSION__: JSON.stringify('test'),
+    __APP_COMMIT__: JSON.stringify('test'),
+    __APP_BUILD_TIME__: JSON.stringify('1970-01-01T00:00:00Z'),
+    __APP_COMMITS_SINCE_TAG__: JSON.stringify(0),
+    __APP_DIRTY__: JSON.stringify(false),
+    __APP_REPO_URL__: JSON.stringify(''),
   },
   resolve: {
     alias: {

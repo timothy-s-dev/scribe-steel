@@ -5,17 +5,47 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 
-function resolveVersion(): string {
+type BuildInfo = {
+  tag: string
+  commitsSinceTag: number
+  commit: string
+  buildTime: string
+  dirty: boolean
+  repoUrl: string
+}
+
+function parseGitHubRepoUrl(remote: string): string {
+  // Accepts `git@github.com:owner/repo.git` or `https://github.com/owner/repo(.git)?`.
+  const ssh = remote.match(/^git@github\.com:([^/]+\/[^/]+?)(?:\.git)?$/)
+  if (ssh) return `https://github.com/${ssh[1]}`
+  const https = remote.match(/^https:\/\/github\.com\/([^/]+\/[^/]+?)(?:\.git)?\/?$/)
+  if (https) return `https://github.com/${https[1]}`
+  return ''
+}
+
+function resolveBuildInfo(): BuildInfo {
+  const run = (cmd: string) => execSync(cmd, { encoding: 'utf8' }).trim()
+  const buildTime = new Date().toISOString()
+  let tag = '0.0.0'
+  let commitsSinceTag = 0
+  let dirty = false
   try {
-    return execSync(
-      "git describe --tags --match 'v[0-9]*' --always --dirty",
-      { encoding: 'utf8' },
-    )
-      .trim()
-      .replace(/^v/, '')
+    const describe = run("git describe --tags --match 'v[0-9]*' --always --dirty")
+    dirty = describe.endsWith('-dirty')
+    const trimmed = dirty ? describe.slice(0, -'-dirty'.length) : describe
+    const match = trimmed.match(/^v?(\d+\.\d+\.\d+)(?:-(\d+)-g[0-9a-f]+)?$/)
+    if (match) {
+      tag = match[1]
+      commitsSinceTag = match[2] ? Number(match[2]) : 0
+    }
   } catch {
-    return '0.0.0-dev'
+    /* no git — keep defaults */
   }
+  let commit = ''
+  try { commit = run('git rev-parse --short HEAD') } catch { /* no git */ }
+  let repoUrl = ''
+  try { repoUrl = parseGitHubRepoUrl(run('git config --get remote.origin.url')) } catch { /* no git */ }
+  return { tag, commitsSinceTag, commit, buildTime, dirty, repoUrl }
 }
 
 export default defineConfig(({ mode }) => {
@@ -30,7 +60,7 @@ export default defineConfig(({ mode }) => {
       }
     : {}
 
-  const version = resolveVersion()
+  const build = resolveBuildInfo()
 
   const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN
   const sentryOrg = process.env.SENTRY_ORG
@@ -39,7 +69,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     define: {
-      __APP_VERSION__: JSON.stringify(version),
+      __APP_VERSION__: JSON.stringify(build.tag),
+      __APP_COMMIT__: JSON.stringify(build.commit),
+      __APP_BUILD_TIME__: JSON.stringify(build.buildTime),
+      __APP_COMMITS_SINCE_TAG__: JSON.stringify(build.commitsSinceTag),
+      __APP_DIRTY__: JSON.stringify(build.dirty),
+      __APP_REPO_URL__: JSON.stringify(build.repoUrl),
     },
     build: {
       // Only emit source maps when we're uploading them to Sentry — otherwise
@@ -54,7 +89,7 @@ export default defineConfig(({ mode }) => {
         project: sentryProject,
         authToken: sentryAuthToken,
         disable: !sentryEnabled,
-        release: { name: `scribe-steel@${version}` },
+        release: { name: `scribe-steel@${build.tag}` },
         sourcemaps: {
           filesToDeleteAfterUpload: ['./dist/**/*.map'],
         },

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { SignInButton } from '@/components/SignInButton';
 import { SessionExpiryDialog } from '@/components/SessionExpiryDialog';
+import { VersionBadge } from '@/components/VersionBadge';
 import { Menu, X, PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
 
 interface NavItem {
@@ -22,6 +23,7 @@ type NavEntry = NavItem | NavGroup;
 function isGroup(entry: NavEntry): entry is NavGroup {
   return 'items' in entry;
 }
+
 
 const mainNav: NavEntry[] = [
   {
@@ -103,7 +105,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         </h1>
         <p className="font-label text-xs tracking-widest uppercase text-outline opacity-70 flex items-end justify-between">
           <span>Print-Ready Play Aids</span>
-          <span className="text-[10px] tracking-normal opacity-50">v{__APP_VERSION__}</span>
+          <VersionBadge />
         </p>
       </Link>
 
