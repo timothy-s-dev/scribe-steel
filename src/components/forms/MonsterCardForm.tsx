@@ -88,15 +88,19 @@ export function MonsterCardForm({ value, onChange }: DocumentFormProps<MonsterCa
     const groupMap = new Map(
       selectedGroupIds.map((id, i) => [id, groupData[i]]),
     );
-    for (const [groupName, monsterNames] of selectedByGroup) {
+    // Emit monsters in a stable, meaningful order: group name ascending,
+    // then (within a group) level → role → name via sortedMonsters.
+    // Matches the ordering used in the picker and MonsterSelector.
+    const orderedGroupNames = Array.from(selectedByGroup.keys()).sort((a, b) =>
+      a.localeCompare(b),
+    );
+    for (const groupName of orderedGroupNames) {
       const entry = groups.find((g) => g.name === groupName);
       const group = entry ? groupMap.get(entry.fileId) : null;
-      if (group) {
-        for (const name of monsterNames) {
-          const m = group.monsters.find((mon) => mon.name === name);
-          if (m) monsters.push(m);
-        }
-      }
+      if (!group) continue;
+      const selectedNames = new Set(selectedByGroup.get(groupName));
+      const picked = group.monsters.filter((m) => selectedNames.has(m.name));
+      for (const m of sortedMonsters(picked)) monsters.push(m);
     }
     return monsters;
   }, [selectedByGroup, groups, selectedGroupIds, groupData]);

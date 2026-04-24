@@ -8,7 +8,7 @@ function roleRank(monster: MonsterSummary): number {
 }
 
 // Shared ordering: level ascending, then minion → regular → leader, then name.
-export function sortedMonsters(monsters: MonsterSummary[]): MonsterSummary[] {
+export function sortedMonsters<T extends MonsterSummary>(monsters: T[]): T[] {
   return [...monsters].sort((a, b) => {
     if (a.level !== b.level) return a.level - b.level;
     const ar = roleRank(a);
