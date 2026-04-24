@@ -2,7 +2,6 @@ import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSaveDocument, type DocumentEnvelope } from '@/hooks/queries/useDocument';
-import { isVirtualId } from '@/hooks/queries/staticData';
 import { DriveError, DriveConflictError } from '@/services/google-drive';
 import { invalidateToken } from '@/services/google-auth';
 import { reportSessionExpired } from '@/services/session-expiry';
@@ -43,8 +42,9 @@ function canonicalize(data: unknown): string {
 interface UseDocumentMutationOptions<T> {
   category: Category;
   // Identifier used for both the cache key and (for real documents) the
-  // Drive fileId. Virtual ids like 'demo' flow through the same paths but
-  // skip the network save — see staticData.isVirtualId.
+  // Drive fileId. Non-Drive envelopes (virtual demo, static bestiary
+  // entries) flow through the same paths but skip the network save —
+  // see the `envelope.source !== 'drive'` gates below.
   fileId: string;
   deriveIndexFields?: (data: T) => Record<string, unknown>;
 }
@@ -126,7 +126,18 @@ export function useDocumentMutation<T extends { name: string }>({
 
   const runSave = useCallback(
     async (data: T) => {
-      if (isVirtualId(fileId) || !isSignedIn) return;
+      if (!isSignedIn) return;
+
+      const cached = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
+      if (!cached) {
+        // edit() only fires after a read has populated the cache, so this
+        // branch should be unreachable — fail loud if the invariant breaks.
+        throw new Error('useDocumentMutation: no cached document for fileId');
+      }
+      // Non-persistent envelopes (virtual demo, static bestiary entries)
+      // live entirely in the cache and have no Drive-backed file.
+      if (cached.source !== 'drive') return;
+
       // Serialize: if another save is mid-flight, queue this attempt so it
       // fires once the current one resolves. Without this, two saves would
       // both read the pre-save md5 from the cache and the second one would
@@ -134,13 +145,6 @@ export function useDocumentMutation<T extends { name: string }>({
       if (saveInFlightRef.current) {
         pendingRef.current = data;
         return;
-      }
-
-      const cached = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
-      if (!cached) {
-        // edit() only fires after a read has populated the cache, so this
-        // branch should be unreachable — fail loud if the invariant breaks.
-        throw new Error('useDocumentMutation: no cached document for fileId');
       }
       // Skip no-op saves: outgoing data matches what we last synced with
       // the server. Catches reverts and Strict-Mode double invocations.
@@ -247,19 +251,20 @@ export function useDocumentMutation<T extends { name: string }>({
 
   const edit = useCallback(
     (next: T) => {
+      const current = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
       // Seed the "last synced" marker on first edit from the pre-edit
       // cache, which still reflects server-authoritative state at this
       // point. After the optimistic setQueryData below, that information
       // is no longer recoverable from the cache alone.
-      if (lastSyncedCanonicalRef.current === null) {
-        const current = queryClient.getQueryData<DocumentEnvelope<T>>([category, 'document', fileId]);
-        if (current) lastSyncedCanonicalRef.current = canonicalize(current.data);
+      if (lastSyncedCanonicalRef.current === null && current) {
+        lastSyncedCanonicalRef.current = canonicalize(current.data);
       }
       queryClient.setQueryData<DocumentEnvelope<T>>([category, 'document', fileId], (prev) =>
         prev ? { ...prev, data: next } : prev,
       );
-      // Virtual ids live entirely in the cache — no network save to schedule.
-      if (isVirtualId(fileId) || conflict) return;
+      // Non-persistent envelopes live entirely in the cache — no network
+      // save to schedule.
+      if (current?.source !== 'drive' || conflict) return;
       scheduleSave(next);
     },
     [queryClient, category, fileId, conflict, scheduleSave],

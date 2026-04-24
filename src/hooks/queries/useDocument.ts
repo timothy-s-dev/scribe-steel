@@ -8,16 +8,21 @@ import {
 import { isVirtualId, loadStaticDocument, loadVirtualDocument } from './staticData';
 import type { Category } from '@/data/types';
 
-// The cache stores { data, md5 } for every document query. md5 is Drive's
-// md5Checksum of the stored content — used for optimistic concurrency on
-// save. We use md5 rather than Drive's `version` field because `version`
-// reflects internal server bookkeeping (async metadata bumps) that
-// doesn't correspond to actual content changes; md5 only moves when
-// bytes change. Callers that only want the data unwrap as needed (see
-// useDocuments / useFetchDocument below).
+// The cache stores { data, md5, source } for every document query. md5 is
+// Drive's md5Checksum of the stored content — used for optimistic
+// concurrency on save. We use md5 rather than Drive's `version` field
+// because `version` reflects internal server bookkeeping (async metadata
+// bumps) that doesn't correspond to actual content changes; md5 only
+// moves when bytes change. `source` tags where the envelope came from so
+// downstream callers (mutation hook, editor UI) can branch on
+// persistability without reparsing the fileId. Callers that only want
+// the data unwrap as needed (see useDocuments / useFetchDocument below).
+export type DocumentSource = 'virtual' | 'static' | 'drive';
+
 export interface DocumentEnvelope<T> {
   data: T;
   md5: string;
+  source: DocumentSource;
 }
 
 async function loadDocument<T>(category: Category, id: string): Promise<DocumentEnvelope<T>> {
@@ -25,7 +30,8 @@ async function loadDocument<T>(category: Category, id: string): Promise<Document
   if (virtualResult) return virtualResult as Promise<DocumentEnvelope<T>>;
   const staticResult = loadStaticDocument(category, id);
   if (staticResult) return staticResult as Promise<DocumentEnvelope<T>>;
-  return loadDriveDocument<T>(id);
+  const drive = await loadDriveDocument<T>(id);
+  return { ...drive, source: 'drive' };
 }
 
 export function useDocument<T = unknown>(category: Category, id: string | undefined, options?: { enabled?: boolean }) {
@@ -111,7 +117,7 @@ export function useSaveDocument() {
       // save right after create), seed it from the result.
       queryClient.setQueryData<DocumentEnvelope<unknown>>(
         [args.category, 'document', result.fileId],
-        (prev) => prev ? { ...prev, md5: result.md5 } : { data: result.data, md5: result.md5 },
+        (prev) => prev ? { ...prev, md5: result.md5 } : { data: result.data, md5: result.md5, source: 'drive' },
       );
     },
   });

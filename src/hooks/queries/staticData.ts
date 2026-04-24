@@ -35,29 +35,32 @@ export function isVirtualId(id: string): boolean {
 }
 
 // Synthesizes a demo envelope from the category's createDefault so the
-// editor can treat demo exactly like any other document — no isDemo branch
-// in the UI. Returns null for non-virtual ids so the caller can fall
-// through to static or Drive loading.
+// editor can treat demo exactly like any other document. The `source`
+// tag lets downstream code (mutation hook, editor UI) recognize this as
+// non-persistent without reparsing the fileId. Returns null for
+// non-virtual ids so the caller can fall through to static or Drive
+// loading.
 export function loadVirtualDocument(
   category: Category,
   id: string,
-): Promise<{ data: unknown; md5: string }> | null {
+): Promise<{ data: unknown; md5: string; source: 'virtual' }> | null {
   if (!isVirtualId(id)) return null;
   const meta = documentMetadataByCategory[category];
   if (!meta) return null;
-  return Promise.resolve({ data: meta.createDefault(''), md5: '' });
+  return Promise.resolve({ data: meta.createDefault(''), md5: '', source: 'virtual' });
 }
 
-// Static documents are immutable and have no real content hash. The editor
-// never saves them, so the md5 is only here to keep the cache shape
-// uniform with Drive-loaded documents.
+// Static documents are immutable and have no real content hash. The
+// editor never saves them — `source: 'static'` flags them so the
+// mutation hook short-circuits the save path. The md5 is only here to
+// keep the envelope shape uniform with Drive-loaded documents.
 export function loadStaticDocument(
   category: Category,
   id: string,
-): Promise<{ data: unknown; md5: string }> | null {
+): Promise<{ data: unknown; md5: string; source: 'static' }> | null {
   const data = registry.get(category);
   if (!data) return null;
   const isStatic = data.entries().some((e) => e.fileId === id);
   if (!isStatic) return null;
-  return data.loadDocument(id).then((d) => ({ data: d, md5: '' }));
+  return data.loadDocument(id).then((d) => ({ data: d, md5: '', source: 'static' }));
 }
