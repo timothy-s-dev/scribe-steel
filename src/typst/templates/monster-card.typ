@@ -8,6 +8,25 @@
 //   Back page:  content rotated +90 deg (header at right — corrects for long-edge flip)
 
 #let _print = sys.inputs.at("print", default: "false") == "true"
+#let _preview = sys.inputs.at("preview", default: "false") == "true"
+
+// When previewing, cap output so the browser doesn't have to render the
+// full bestiary. 6 pages = 3 physical sheets (front + back). PDF export
+// passes preview="false" and gets the full document.
+//
+// The cap is expressed in Typst pages (not sheets) so it's reusable for
+// templates that aren't double-sided. It must be even so front/back
+// pairing stays balanced — 6 works.
+//
+// Each emitted page holds 3 card slots, so at most `cap * 3` card sides
+// can fit; we stop accumulating sides past that point.
+#let _preview-page-cap  = 6
+#let _preview-sides-cap = _preview-page-cap * 3
+
+// Marker string emitted (invisibly) on page 1 when output was actually
+// truncated. The React preview pane greps for this to decide whether to
+// show a "preview truncated" banner. Kept in sync with the JS side.
+#let _truncation-marker = "SCRIBE_STEEL_PREVIEW_TRUNCATED"
 
 // Dimensions
 #let _cw  = 5in    // card slot width  (landscape, on page)
@@ -318,8 +337,19 @@
 
   // Build a flat list of card sides: (monster, features, full-header?)
   // Each monster gets ceil(pages/2)*2 sides (padded to even for front/back pairing).
+  //
+  // In preview mode, bail out of the loop once we've accumulated enough
+  // sides to fill the page cap — saves the measurement + pagination work
+  // for monsters past the cap. If the last monster we include pushes us
+  // over the cap, we slice down to an exact fit below so the user never
+  // sees an inconsistent "partial" overflow monster.
   let sides = ()
+  let truncated = false
   for m in monsters {
+    if _preview and sides.len() >= _preview-sides-cap {
+      truncated = true
+      break
+    }
     let pages = _paginate(m)
     if pages.len() == 0 { pages = ((),) }
 
@@ -335,6 +365,10 @@
     if calc.rem(pages.len(), 2) != 0 {
       sides.push(none)  // blank back
     }
+  }
+  if _preview and sides.len() > _preview-sides-cap {
+    sides = sides.slice(0, _preview-sides-cap)
+    truncated = true
   }
 
   // Group sides into pairs (front, back)
@@ -353,6 +387,15 @@
   while si < pairs.len() {
     slots.push(pairs.slice(si, calc.min(si + 3, pairs.len())))
     si += 3
+  }
+
+  // Invisible marker that the React preview pane greps for to show a
+  // "preview truncated" banner. Transparent fill keeps it out of the
+  // rendered output; `place` with `top + left` takes it out of flow so
+  // it doesn't push layout around. Only emitted when truncation
+  // actually happened — the whole point is to avoid false positives.
+  if truncated {
+    place(top + left, text(size: 1pt, fill: rgb(0, 0, 0, 0))[#_truncation-marker])
   }
 
   for (gi, group) in slots.enumerate() {

@@ -93,6 +93,51 @@ test.describe('Monster Cards page', () => {
         page.getByText(/0 monsters selected/).filter({ visible: true }),
       ).toBeVisible();
     });
+
+    test('small selections render without a truncation banner', async ({ page }) => {
+      await page.goto('/monster-cards');
+
+      // Arixx is a small group — single digit monsters, well inside the
+      // preview cap. The banner should NOT appear.
+      const arixxLabel = page
+        .locator('#main-content label')
+        .filter({ visible: true })
+        .filter({ hasText: 'Arixx' })
+        .first();
+      await arixxLabel.locator('input[type="checkbox"]').check();
+
+      await expect(page.locator('svg.typst-doc').first()).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText('Preview truncated').filter({ visible: true })).toHaveCount(0);
+    });
+
+    test('selections past the preview cap show the truncation banner and stop at 6 pages', async ({
+      page,
+    }) => {
+      await page.goto('/monster-cards');
+
+      // Enough groups to exceed the 6-page preview cap (cap = 3 sheets ≈ 9
+      // small monsters). These five groups together are well over that.
+      for (const name of ['Angulotls', 'Animals', 'Arixx', 'Basilisks', 'Bugbears']) {
+        const label = page
+          .locator('#main-content label')
+          .filter({ visible: true })
+          .filter({ hasText: name })
+          .first();
+        await label.locator('input[type="checkbox"]').check();
+      }
+
+      // Wait for the banner specifically — it only appears once the
+      // compile lands, so this covers the compile wait too.
+      await expect(
+        page.getByText(/Preview truncated\. Export PDF to see the full document\./).filter({
+          visible: true,
+        }),
+      ).toBeVisible({ timeout: 30_000 });
+
+      // The cap is 6 pages hardcoded in monster-card.typ. If that
+      // changes, update here too — the tight coupling is intentional.
+      await expect(page.locator('svg.typst-doc')).toHaveCount(6);
+    });
   });
 
   test.describe('Signed-in', () => {

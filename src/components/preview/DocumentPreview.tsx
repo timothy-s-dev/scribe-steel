@@ -24,12 +24,24 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
     [buildSource, document.data],
   );
 
-  const inputs = useMemo(
+  // Preview and PDF paths pass different `inputs` to Typst: the preview
+  // sets `preview=true` so templates can cap output (we don't want the
+  // full bestiary rendering into the DOM just to scroll past it). The
+  // PDF export always gets the full document.
+  const previewInputs = useMemo(
+    () => ({ print: printMode ? 'true' : 'false', preview: 'true' }),
+    [printMode],
+  );
+  const pdfInputs = useMemo(
     () => ({ print: printMode ? 'true' : 'false' }),
     [printMode],
   );
 
-  const { pages, error, loading } = useTypstCompiler(built.source, built.files, inputs);
+  const { pages, error, loading, truncated } = useTypstCompiler(
+    built.source,
+    built.files,
+    previewInputs,
+  );
 
   const { setPageDimensions } = zoom;
   const firstPageWidth = pages.length > 0 ? pages[0].width : 0;
@@ -43,7 +55,7 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
   async function handleExportPdf() {
     setExporting(true);
     try {
-      const pdfBytes = await compilePdf(built.source, built.files, inputs);
+      const pdfBytes = await compilePdf(built.source, built.files, pdfInputs);
       if (!pdfBytes) return;
       const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
@@ -77,7 +89,7 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
         onExportPdf={handleExportPdf}
         exporting={exporting}
       />
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden relative">
         {loading && pages.length === 0 ? (
           <div className="flex h-full items-center justify-center text-sm text-outline">
             Loading Typst compiler...
@@ -99,6 +111,14 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
                 ))}
               </div>
             )}
+          </div>
+        )}
+        {truncated && pages.length > 0 && (
+          <div
+            className="pointer-events-none absolute top-4 left-1/2 -translate-x-1/2 text-xs font-label text-on-surface-variant bg-surface-container px-3 py-2 rounded-sm border border-outline-variant/30 shadow-sm"
+            role="status"
+          >
+            Preview truncated. Export PDF to see the full document.
           </div>
         )}
       </div>

@@ -8,7 +8,13 @@ interface TypstCompilerResult {
   pages: ParsedPage[];
   error: string | null;
   loading: boolean;
+  truncated: boolean;
 }
+
+// Kept in sync with `_truncation-marker` in monster-card.typ. Any template
+// that wants to surface "output was truncated" to the preview pane emits
+// this string invisibly; we grep the compiled SVG for it.
+const TRUNCATION_MARKER = 'SCRIBE_STEEL_PREVIEW_TRUNCATED';
 
 export function useTypstCompiler(
   content: string,
@@ -60,6 +66,7 @@ export function useTypstCompiler(
   }, [content, filesDigest, inputs]);
 
   const pages = useMemo(() => parseSvgPages(svg), [svg]);
+  const truncated = useMemo(() => svg != null && svg.includes(TRUNCATION_MARKER), [svg]);
 
-  return { pages, error, loading };
+  return { pages, error, loading, truncated };
 }
