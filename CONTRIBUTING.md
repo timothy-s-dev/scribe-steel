@@ -47,6 +47,35 @@ Thanks for your interest in contributing to Scribe Steel!
 5. Run the e2e tests: `npm run test:e2e`
 6. Open a pull request
 
+## Commit Messages
+
+Commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) format — a `commit-msg` hook runs commitlint and will reject anything else.
+
+```
+<type>(<optional scope>): <subject>
+
+<optional body>
+
+<optional footer>
+```
+
+- **Type** (required, lowercase): `feat`, `fix`, `perf`, `refactor`, `docs`, `style`, `test`, `build`, `ci`, `chore`, `revert`.
+- **Subject** (required): short, no trailing period; header max 100 chars.
+- **Breaking changes** are signalled by `!` after the type/scope (`feat(api)!: drop legacy fields`) or a `BREAKING CHANGE:` footer.
+
+### How commits drive releases
+
+Every push to `main` runs semantic-release, which aggregates the commits since the last release tag and picks the next version:
+
+| Commit types present | Bump |
+|---|---|
+| `feat:` | minor (0.1.0 → 0.2.0) |
+| only `fix:` / `perf:` | patch (0.1.0 → 0.1.1) |
+| any `!` or `BREAKING CHANGE:` | major (0.1.0 → 1.0.0) |
+| only `chore`/`docs`/`ci`/`style`/`refactor`/`test`/`build`/`revert` | no release |
+
+The highest-level change wins — a push containing two `fix:` and one `feat:` produces a single minor release. The in-app version and Sentry release name come from `git describe --tags` at build time, so the deployed bundle always reflects the tag semantic-release just created.
+
 ## CI E2E Tests
 
 The `Deploy to Firebase Hosting` workflows run the Playwright e2e suite (`npm run test:e2e`) against the mock-Drive dev server before deploying. If the suite fails, the deploy is skipped.
