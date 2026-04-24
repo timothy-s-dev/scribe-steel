@@ -5,7 +5,7 @@ import { SvgPage } from './SvgPage';
 import { useTypstCompiler } from '@/hooks/useTypstCompiler';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
-import { compilePdf } from '@/typst/compiler';
+import { compilePdf, resetCompiler } from '@/typst/compiler';
 import type { Document } from '@/documents';
 
 interface DocumentPreviewProps<T> {
@@ -60,6 +60,11 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
       });
     } finally {
       setExporting(false);
+      // PDF compiles are the largest single allocation the worker makes;
+      // reclaim its WASM memory before the user comes back for another
+      // edit. The next preview compile will pay the worker-startup cost
+      // (WASM init + font preload) but that window is idle anyway.
+      resetCompiler();
     }
   }
 

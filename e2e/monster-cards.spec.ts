@@ -60,6 +60,11 @@ test.describe('Monster Cards page', () => {
       await expect(
         page.getByText(/1 monster selected/).filter({ visible: true }),
       ).toBeVisible();
+
+      // Preview compiles asynchronously in a Web Worker; when the
+      // pipeline is wired up correctly the Typst output lands in the
+      // DOM as one or more svg.typst-doc elements.
+      await expect(page.locator('svg.typst-doc').first()).toBeVisible({ timeout: 15_000 });
     });
 
     test('selecting the group checkbox selects every monster in it', async ({ page }) => {

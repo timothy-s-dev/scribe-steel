@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { compileSvg, type VirtualFile } from '@/typst/compiler';
+import { compileSvg, CompilerResetError, resetCompiler, type VirtualFile } from '@/typst/compiler';
 import { parseSvgPages, type ParsedPage } from './parseSvgPages';
 
 export type { ParsedPage };
@@ -19,6 +19,7 @@ export function useTypstCompiler(
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const generationRef = useRef(0);
+  const inFlightRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const filesRef = useRef(files);
   filesRef.current = files;
@@ -29,8 +30,15 @@ export function useTypstCompiler(
     const generation = ++generationRef.current;
     setLoading(true);
 
+    // If the previous compile has already made it past the debounce
+    // and is running inside the worker, killing the worker reclaims
+    // its WASM memory and frees us from waiting for a result we'd
+    // discard anyway. The rejection lands as CompilerResetError below.
+    if (inFlightRef.current) resetCompiler();
+
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(async () => {
+      inFlightRef.current = true;
       try {
         const result = await compileSvg(content, filesRef.current, inputs);
         if (generation !== generationRef.current) return;
@@ -38,9 +46,11 @@ export function useTypstCompiler(
         setError(null);
       } catch (e) {
         if (generation !== generationRef.current) return;
+        if (e instanceof CompilerResetError) return;
         setError(e instanceof Error ? e.message : String(e));
       } finally {
         if (generation === generationRef.current) {
+          inFlightRef.current = false;
           setLoading(false);
         }
       }
