@@ -4,12 +4,13 @@ import { ArrowLeft, CloudOff } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ConflictDialog } from '@/components/ConflictDialog';
 import { SaveRetryBanner } from '@/components/SaveRetryBanner';
+import { SaveStatusBadge } from '@/components/SaveStatusBadge';
 import { SignInButton } from '@/components/SignInButton';
 import { DocumentPreview } from '@/components/preview';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDocument } from '@/hooks/queries/useDocument';
 import { useIndex } from '@/hooks/queries/useIndex';
-import { useDocumentMutation, type SaveStatus } from '@/hooks/useDocumentMutation';
+import { useDocumentMutation } from '@/hooks/useDocumentMutation';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import {
   errorLabel,
@@ -21,21 +22,6 @@ import {
 import { DriveError } from '@/services/google-drive';
 import type { DocumentMetadata } from '@/documents';
 import type { DocumentMetaFields } from '@/data/types';
-
-function saveStatusLabel(status: SaveStatus): string {
-  switch (status) {
-    case 'saving':
-      return 'Saving...';
-    case 'saved':
-      return 'Saved';
-    case 'retrying':
-      return 'Retrying save...';
-    case 'error':
-      return 'Save failed';
-    default:
-      return '';
-  }
-}
 
 type MobileTab = 'edit' | 'preview';
 
@@ -208,12 +194,6 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
     formPanel
   );
 
-  const statusText = isLoading
-    ? 'Loading...'
-    : !isDemo
-      ? saveStatusLabel(mutation.saveStatus)
-      : '';
-
   return (
     <>
       <div className="relative z-10 flex items-center gap-3 px-4 py-2 bg-surface-container flex-shrink-0 border-b border-outline-variant/20">
@@ -230,11 +210,14 @@ function DocumentEditor<T extends DocumentMetaFields & { name: string }>({
         <div className="text-sm font-semibold font-body text-on-surface truncate flex-1 min-w-0">
           {docName || pageTitle(type)}
         </div>
-        {statusText && (
-          <span className="text-xs font-label text-on-surface-variant/50">
-            {statusText}
-          </span>
-        )}
+        {isLoading ? (
+          <span className="text-xs font-label text-on-surface-variant/50">Loading...</span>
+        ) : !isDemo ? (
+          <SaveStatusBadge
+            status={mutation.saveStatus}
+            lastSavedAt={mutation.lastSavedAt}
+          />
+        ) : null}
       </div>
       {!isDemo && <SaveRetryBanner retry={mutation.retry} />}
       <div className="flex-1 min-h-0 overflow-hidden">{editorBody}</div>

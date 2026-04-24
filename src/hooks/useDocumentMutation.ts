@@ -61,6 +61,10 @@ export interface UseDocumentMutationResult<T> {
   // armed via setTimeout. Cleared on success, on a fresh user edit, or on
   // an unrecoverable terminal state (conflict / 401).
   retry: RetryState | null;
+  // Wall-clock ms (Date.now()) of the most recent successful save in this
+  // session, or null if no save has succeeded yet. Used by the status badge
+  // to surface a "saved N min ago" hover.
+  lastSavedAt: number | null;
   // Discard local edits: invalidate the cache so the next read pulls
   // authoritative state from Drive. Resolves the conflict state.
   resolveUseRemote: () => void;
@@ -85,6 +89,7 @@ export function useDocumentMutation<T extends { name: string }>({
   const { mutateAsync } = mutation;
   const [conflict, setConflict] = useState<ConflictState | null>(null);
   const [retry, setRetry] = useState<RetryState | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingRef = useRef<T | null>(null);
@@ -157,6 +162,7 @@ export function useDocumentMutation<T extends { name: string }>({
         });
         lastSyncedCanonicalRef.current = canonical;
         cancelRetry();
+        setLastSavedAt(Date.now());
         succeeded = true;
       } catch (err) {
         if (err instanceof DriveConflictError) {
@@ -329,5 +335,5 @@ export function useDocumentMutation<T extends { name: string }>({
       ? (mutation.error as Error).message
       : null;
 
-  return { edit, saveStatus, error, conflict, retry, resolveUseRemote, resolveKeepLocal };
+  return { edit, saveStatus, error, conflict, retry, lastSavedAt, resolveUseRemote, resolveKeepLocal };
 }
