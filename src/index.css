@@ -38,6 +38,7 @@
   --color-primary-fixed: #c1e8fc;
   --color-primary-fixed-dim: #a5ccdf;
   --color-on-primary: #073544;
+  --color-primary-foreground: var(--color-on-primary);
   --color-on-primary-container: #002e3c;
   --color-on-primary-fixed: #001f29;
   --color-on-primary-fixed-variant: #244b5b;

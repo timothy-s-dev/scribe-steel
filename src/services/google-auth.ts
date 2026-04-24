@@ -1,4 +1,5 @@
 import type { TokenClient } from './gis';
+import { reportSessionExpired } from './session-expiry';
 
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
@@ -18,6 +19,21 @@ let expiryTimer: ReturnType<typeof setTimeout> | undefined;
 
 function notify() {
   for (const fn of listeners) fn(accessToken);
+}
+
+// Dev-only knob. Set localStorage["scribe-steel-dev-token-ttl-seconds"] to a
+// number (e.g. "120") to clamp how long we treat a newly-issued token as
+// valid, so the scheduleExpiry → silent-refresh cycle happens in minutes
+// instead of an hour. The token on Google's side still lives its full
+// lifetime; we just pretend it doesn't. Below ~90s stops being useful —
+// loadPersistedToken's 60s grace window starts dropping tokens on reload.
+function effectiveExpiresIn(serverExpiresIn: number): number {
+  if (!import.meta.env.DEV) return serverExpiresIn;
+  const raw = localStorage.getItem('scribe-steel-dev-token-ttl-seconds');
+  if (!raw) return serverExpiresIn;
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isFinite(n) || n <= 0) return serverExpiresIn;
+  return Math.min(n, serverExpiresIn);
 }
 
 function persistToken(token: string, expiresIn: number) {
@@ -79,19 +95,27 @@ export async function initAuth(): Promise<void> {
     scope: SCOPES,
     callback: (response) => {
       if (response.error) {
+        // If we had a token a moment ago and a silent refresh just failed,
+        // surface the session-expired modal. First-time sign-in cancels
+        // (no prior token) stay quiet.
+        const wasSignedIn = !!accessToken;
         accessToken = null;
         clearPersistedToken();
+        if (wasSignedIn) reportSessionExpired();
         notify();
         return;
       }
       accessToken = response.access_token;
-      persistToken(response.access_token, response.expires_in);
-      scheduleExpiry(response.expires_in);
+      const ttl = effectiveExpiresIn(response.expires_in);
+      persistToken(response.access_token, ttl);
+      scheduleExpiry(ttl);
       notify();
     },
     error_callback: () => {
+      const wasSignedIn = !!accessToken;
       accessToken = null;
       clearPersistedToken();
+      if (wasSignedIn) reportSessionExpired();
       notify();
     },
   });
@@ -105,7 +129,7 @@ export async function initAuth(): Promise<void> {
     if (raw) {
       const data: StoredToken = JSON.parse(raw);
       const remainingSec = Math.floor((data.expiresAt - Date.now()) / 1000);
-      scheduleExpiry(remainingSec);
+      scheduleExpiry(effectiveExpiresIn(remainingSec));
     }
     notify();
   }
@@ -148,4 +172,24 @@ export function onTokenChange(fn: Listener): () => void {
 
 export function isConfigured(): boolean {
   return !!CLIENT_ID;
+}
+
+// Dev-only: open the console and run `__scribeExpireSession()` to simulate
+// a silent-refresh failure. Mirrors the error_callback path exactly so
+// you can reproduce the session-expired modal on demand.
+declare global {
+  interface Window {
+    __scribeExpireSession?: () => void;
+  }
+}
+
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  window.__scribeExpireSession = () => {
+    const wasSignedIn = !!accessToken;
+    clearTimeout(expiryTimer);
+    accessToken = null;
+    clearPersistedToken();
+    if (wasSignedIn) reportSessionExpired();
+    notify();
+  };
 }

@@ -2,6 +2,8 @@
 // VITE_USE_MOCK_DRIVE is set. The signed-in state is fully local — signIn()
 // flips a flag in localStorage, no Google round-trip.
 
+import { reportSessionExpired } from './session-expiry';
+
 const STATE_KEY = 'scribe-steel-mock-signed-in';
 const MOCK_TOKEN = 'mock-access-token';
 
@@ -52,4 +54,24 @@ export function onTokenChange(fn: Listener): () => void {
 
 export function isConfigured(): boolean {
   return true;
+}
+
+// Test-only escape hatch. Mirrors what a real silent-refresh failure does:
+// null the token, clear the persisted flag, surface the session-expired modal.
+// Exposed on window so e2e tests can trigger it with page.evaluate without
+// needing a localStorage flag + polling dance.
+declare global {
+  interface Window {
+    __scribeMockExpireSession?: () => void;
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.__scribeMockExpireSession = () => {
+    if (!accessToken) return;
+    accessToken = null;
+    localStorage.removeItem(STATE_KEY);
+    reportSessionExpired();
+    notify();
+  };
 }

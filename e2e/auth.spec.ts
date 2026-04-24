@@ -66,4 +66,34 @@ test.describe('Auth', () => {
       ).toBeVisible();
     });
   });
+
+  test.describe('Proactive session expiry', () => {
+    test.use({ signedIn: true });
+
+    test('expiring mid-session surfaces the modal; sign-in dismisses it', async ({ page }) => {
+      await page.goto('/handwritten');
+      await expect(
+        page.locator('#main-content').getByText(/Sign in with Google to save/),
+      ).toHaveCount(0);
+
+      // Simulate a silent-refresh failure: null the token and fire the
+      // session-expired signal, same as the real error_callback path.
+      await page.evaluate(() => window.__scribeMockExpireSession?.());
+
+      await expect(
+        page.getByRole('heading', { name: 'Your session expired' }),
+      ).toBeVisible();
+
+      // Clicking Sign in with Google in the modal flips the mock back to
+      // signed-in, which AuthContext observes and clears the expired flag.
+      await page.getByRole('button', { name: 'Sign in with Google' }).click();
+
+      await expect(
+        page.getByRole('heading', { name: 'Your session expired' }),
+      ).toHaveCount(0);
+      await expect(
+        page.locator('#main-content').getByText(/Sign in with Google to save/),
+      ).toHaveCount(0);
+    });
+  });
 });
