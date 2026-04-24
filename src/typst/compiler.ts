@@ -6,6 +6,11 @@ export interface VirtualFile {
   content: string;
 }
 
+const VERSION = '0.7.0-rc2';
+const CDN = 'https://cdn.jsdelivr.net/npm';
+const COMPILER_WASM_URL = `${CDN}/@myriaddreamin/typst-ts-web-compiler@${VERSION}/pkg/typst_ts_web_compiler_bg.wasm`;
+const RENDERER_WASM_URL = `${CDN}/@myriaddreamin/typst-ts-renderer@${VERSION}/pkg/typst_ts_renderer_bg.wasm`;
+
 // The WASM Typst compiler lives inside a Web Worker. Each compile call
 // consumes some linear memory the compiler never gives back, so the
 // main-thread proxy exposes `resetCompiler()` — terminate + respawn the
@@ -13,6 +18,12 @@ export interface VirtualFile {
 // debounced recompile supersedes an in-flight one, killing the worker
 // stops the stale job mid-WASM rather than letting it run to completion
 // and pile on to the memory ceiling.
+//
+// Respawn would be expensive if every worker had to refetch and compile
+// the WASM from scratch, so we compile the two modules once on the main
+// thread and hand the resulting WebAssembly.Module instances to each
+// worker as an init message. Module instances are structured-cloneable
+// and wasm-bindgen accepts them directly via `module_or_path`.
 
 type Resolver = {
   method: 'compileSvg' | 'compilePdf';
@@ -27,12 +38,27 @@ export class CompilerResetError extends Error {
   }
 }
 
-let worker: Worker | null = null;
+interface CachedModules {
+  compilerModule: WebAssembly.Module;
+  rendererModule: WebAssembly.Module;
+}
+
+let modulesPromise: Promise<CachedModules> | null = null;
+let workerPromise: Promise<Worker> | null = null;
 let nextId = 1;
 const pending = new Map<number, Resolver>();
 
-function ensureWorker(): Worker {
-  if (worker) return worker;
+function getModules(): Promise<CachedModules> {
+  if (!modulesPromise) {
+    modulesPromise = Promise.all([
+      WebAssembly.compileStreaming(fetch(COMPILER_WASM_URL)),
+      WebAssembly.compileStreaming(fetch(RENDERER_WASM_URL)),
+    ]).then(([compilerModule, rendererModule]) => ({ compilerModule, rendererModule }));
+  }
+  return modulesPromise;
+}
+
+async function spawnWorker(): Promise<Worker> {
   const w = new TypstWorker();
   w.onmessage = (e: MessageEvent<CompileResponse>) => {
     const msg = e.data;
@@ -43,25 +69,30 @@ function ensureWorker(): Worker {
     else resolver.reject(new Error(msg.error));
   };
   w.onerror = (e) => {
-    // Worker-level failure: reject everything outstanding and force a
-    // fresh spawn on the next request.
     const err = new Error(e.message || 'typst worker error');
     for (const r of pending.values()) r.reject(err);
     pending.clear();
     w.terminate();
-    if (worker === w) worker = null;
+    // Clear cache so the next call spawns a fresh worker.
+    if (workerPromise) workerPromise = null;
   };
-  worker = w;
+  const { compilerModule, rendererModule } = await getModules();
+  w.postMessage({ type: 'init', compilerModule, rendererModule });
   return w;
 }
 
-function send<T>(
+function ensureWorker(): Promise<Worker> {
+  if (!workerPromise) workerPromise = spawnWorker();
+  return workerPromise;
+}
+
+async function send<T>(
   method: 'compileSvg' | 'compilePdf',
   source: string,
   files: VirtualFile[],
   inputs?: Record<string, string>,
 ): Promise<T> {
-  const w = ensureWorker();
+  const w = await ensureWorker();
   const id = nextId++;
   return new Promise<T>((resolve, reject) => {
     pending.set(id, { method, resolve: resolve as (v: unknown) => void, reject });
@@ -87,12 +118,13 @@ export function compilePdf(
 
 // Terminate the worker and reject any outstanding requests. Callers
 // should treat the rejection as benign cancellation — the next compile
-// call will spawn a fresh worker on demand.
+// call will spawn a fresh worker on demand, reusing the cached WASM
+// modules.
 export function resetCompiler(): void {
-  if (!worker) return;
-  const w = worker;
-  worker = null;
+  if (!workerPromise) return;
+  const promise = workerPromise;
+  workerPromise = null;
   for (const r of pending.values()) r.reject(new CompilerResetError());
   pending.clear();
-  w.terminate();
+  promise.then((w) => w.terminate()).catch(() => {});
 }

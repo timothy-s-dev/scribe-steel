@@ -1,32 +1,15 @@
 /// <reference lib="webworker" />
 import { $typst, TypstSnippet } from '@myriaddreamin/typst.ts/contrib/snippet';
 
-const VERSION = '0.7.0-rc2';
-const CDN = 'https://cdn.jsdelivr.net/npm';
-
-$typst.setCompilerInitOptions({
-  getModule: () => ({
-    module_or_path: `${CDN}/@myriaddreamin/typst-ts-web-compiler@${VERSION}/pkg/typst_ts_web_compiler_bg.wasm`,
-  }),
-});
-
-$typst.setRendererInitOptions({
-  getModule: () => ({
-    module_or_path: `${CDN}/@myriaddreamin/typst-ts-renderer@${VERSION}/pkg/typst_ts_renderer_bg.wasm`,
-  }),
-});
-
-$typst.use(
-  TypstSnippet.preloadFonts([
-    '/fonts/Caveat.ttf',
-    '/fonts/EBGaramond.ttf',
-    '/fonts/EBGaramond-Italic.ttf',
-  ]),
-);
-
 export interface VirtualFile {
   path: string;
   content: string;
+}
+
+interface InitRequest {
+  type: 'init';
+  compilerModule: WebAssembly.Module;
+  rendererModule: WebAssembly.Module;
 }
 
 type CompileRequest =
@@ -45,10 +28,17 @@ type CompileRequest =
       inputs?: Record<string, string>;
     };
 
+type IncomingMessage = InitRequest | CompileRequest;
+
 export type CompileResponse =
   | { id: number; ok: true; method: 'compileSvg'; result: string }
   | { id: number; ok: true; method: 'compilePdf'; result: Uint8Array | undefined }
   | { id: number; ok: false; error: string };
+
+let initResolve!: () => void;
+const initialized = new Promise<void>((r) => {
+  initResolve = r;
+});
 
 async function ensureFiles(files: VirtualFile[]) {
   for (const file of files) {
@@ -56,9 +46,33 @@ async function ensureFiles(files: VirtualFile[]) {
   }
 }
 
-self.onmessage = async (e: MessageEvent<CompileRequest>) => {
-  const req = e.data;
+self.onmessage = async (e: MessageEvent<IncomingMessage>) => {
+  const msg = e.data;
+
+  if (msg.type === 'init') {
+    // The main thread compiles these WebAssembly.Modules once and ships
+    // the same instances to every worker we spawn, so respawn cost is
+    // "instantiate" (tens of ms) rather than "fetch + compile" (hundreds).
+    $typst.setCompilerInitOptions({
+      getModule: () => ({ module_or_path: msg.compilerModule }),
+    });
+    $typst.setRendererInitOptions({
+      getModule: () => ({ module_or_path: msg.rendererModule }),
+    });
+    $typst.use(
+      TypstSnippet.preloadFonts([
+        '/fonts/Caveat.ttf',
+        '/fonts/EBGaramond.ttf',
+        '/fonts/EBGaramond-Italic.ttf',
+      ]),
+    );
+    initResolve();
+    return;
+  }
+
+  const req = msg;
   try {
+    await initialized;
     await ensureFiles(req.files);
     if (req.method === 'compileSvg') {
       const result = await $typst.svg({ mainContent: req.source, inputs: req.inputs });
