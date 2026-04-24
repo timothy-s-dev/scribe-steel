@@ -9,6 +9,8 @@ import {
 } from '@/components/shadcn/hover-card';
 import type { SaveStatus } from '@/hooks/useDocumentMutation';
 
+const RELATIVE_TIME_REFRESH_MS = 15_000;
+
 interface SaveStatusBadgeProps {
   status: SaveStatus;
   lastSavedAt: number | null;
@@ -37,7 +39,7 @@ function formatAbsolute(ms: number): string {
 function LastSavedInfo({ lastSavedAt }: { lastSavedAt: number }) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 15_000);
+    const id = setInterval(() => setNow(Date.now()), RELATIVE_TIME_REFRESH_MS);
     return () => clearInterval(id);
   }, []);
   return (

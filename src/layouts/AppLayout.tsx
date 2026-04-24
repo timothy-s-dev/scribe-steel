@@ -205,7 +205,7 @@ export function AppLayout() {
         </>
       )}
 
-      <main id="main-content" className="flex-1 overflow-y-auto custom-scrollbar bg-surface relative pt-12 md:pt-0">
+      <main id="main-content" className="flex-1 overflow-y-auto custom-scrollbar bg-surface relative pt-(--mobile-header-height) md:pt-0">
         <BackgroundAccent />
         <Outlet />
       </main>
