@@ -7,7 +7,6 @@ Thanks for your interest in contributing to Scribe Steel!
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (LTS recommended)
-- A Google Cloud project with OAuth credentials (see [docs/google-cloud-setup.md](docs/google-cloud-setup.md))
 
 ### Getting Started
 
@@ -24,19 +23,24 @@ Thanks for your interest in contributing to Scribe Steel!
    npm install
    ```
 
-3. Copy the example env file and fill in your values:
+3. Start the mock dev server:
 
    ```bash
-   cp .env.example .env.local
+   npm run dev:mock
    ```
 
-   See [docs/google-cloud-setup.md](docs/google-cloud-setup.md) for how to get a Google OAuth Client ID. Sentry DSN is optional.
+   This swaps in an in-browser mock for Google auth and Drive — no Google account or env setup required. Documents persist to `localStorage`. This is the recommended path for most contributions.
 
-4. Start the dev server:
+### Working against real Google Drive
 
-   ```bash
-   npm run dev
-   ```
+If your change touches the auth or Drive integration specifically (and you want to test against the real API rather than the mock), you'll need a Google OAuth Client ID. See [GCP_SETUP.md](GCP_SETUP.md) for the walkthrough. Once it's set up:
+
+```bash
+cp .env.example .env.local   # then paste your client ID into VITE_GOOGLE_CLIENT_ID
+npm run dev                  # real Drive
+```
+
+`VITE_SENTRY_DSN` is optional and only used when you want to test error reporting locally.
 
 ## Making Changes
 

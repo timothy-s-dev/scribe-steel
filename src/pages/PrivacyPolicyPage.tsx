@@ -11,7 +11,7 @@ export function PrivacyPolicyPage() {
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6">
         <div className="max-w-2xl space-y-6 text-sm font-body text-on-surface-variant leading-relaxed">
           <p className="text-xs font-label text-on-surface-variant/50">
-            Last updated: April 14, 2026
+            Last updated: April 25, 2026
           </p>
 
           <section className="space-y-2">
@@ -42,6 +42,30 @@ export function PrivacyPolicyPage() {
             <p>
               The app does not access your Google profile, contacts, email, or
               any other Google services.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h2 className="text-base font-headline font-semibold text-on-surface">
+              Limited Use of Google User Data
+            </h2>
+            <p>
+              Scribe Steel's use and transfer to any other app of information
+              received from Google APIs will adhere to the{' '}
+              <a
+                href="https://developers.google.com/terms/api-services-user-data-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline underline-offset-2 hover:text-primary/80"
+              >
+                Google API Services User Data Policy
+              </a>
+              , including the Limited Use requirements. Document content (the
+              bodies of files you save through Scribe Steel) is stored only in
+              your own Google Drive and is not transmitted to any third party.
+              Diagnostic telemetry sent to Sentry (described under "Error
+              Monitoring" below) consists of error metadata and request URLs,
+              not document content.
             </p>
           </section>
 
@@ -90,10 +114,19 @@ export function PrivacyPolicyPage() {
               >
                 Sentry
               </a>{' '}
-              to detect and diagnose errors. When something goes wrong, Sentry
-              receives technical details about the error (such as the stack
-              trace and browser information). No advertising, analytics, or
-              other third-party tracking is used.
+              for error monitoring and a small amount of performance
+              diagnostics. When an error occurs, Sentry receives the stack
+              trace, the page URL, browser/device information, and a
+              breadcrumb trail of recent activity (clicks, navigation, and
+              outgoing API request URLs with status codes). On a small sampled
+              fraction of normal page loads, Sentry also records timing data
+              for navigations and fetches.
+            </p>
+            <p>
+              Sentry does not store your IP address, cookies, document
+              content, or any user account information. Drive API request URLs
+              recorded in breadcrumbs may contain fileIds, but never document
+              bodies. No advertising or third-party analytics tracking is used.
             </p>
           </section>
 
