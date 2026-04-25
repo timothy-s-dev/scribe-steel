@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
-import { AddButton, Field, Input } from '@/components/form';
+import { AddButton, Field, Input } from '@/components/forms/common';
 import { emptyAbilityFeature, emptyTraitFeature, type Feature, type Monster } from '@/data/bestiary';
 import { removeById, updateById } from '@/lib/arrays';
 import { AbilityFeatureEditor } from './AbilityFeatureEditor';

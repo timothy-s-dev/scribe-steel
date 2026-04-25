@@ -1,7 +1,7 @@
 import { PenTool } from 'lucide-react';
-import handwrittenTyp from '@/typst/templates/handwritten.typ?raw';
+import handwrittenTyp from '@/lib/typst/templates/handwritten.typ?raw';
 import { HandwrittenForm } from '@/components/forms/HandwrittenForm';
-import { jsonBackedBuildSource } from '@/typst/preamble';
+import { jsonBackedBuildSource } from '@/lib/typst/preamble';
 import type { DocumentMetadata, TemplateDocument } from './types';
 
 export type HandwrittenDocument = TemplateDocument;

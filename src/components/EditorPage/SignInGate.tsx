@@ -1,8 +1,8 @@
 import { CloudOff } from 'lucide-react';
-import { SignInButton } from '@/components/SignInButton';
-import { signInToViewLabel } from '@/documents/titles';
-import type { DocumentMetadata } from '@/documents';
-import type { DocumentMetaFields } from '@/data/types';
+import { SignInButton } from '@/components/auth/SignInButton';
+import { signInToViewLabel } from '@/data/documents/titles';
+import type { DocumentMetadata } from '@/data/documents';
+import type { DocumentMetaFields } from '@/data/documents/types';
 
 interface SignInGateProps<T extends DocumentMetaFields & { name: string }> {
   type: DocumentMetadata<T>;

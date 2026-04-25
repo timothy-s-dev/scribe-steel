@@ -1,8 +1,8 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { inputBaseClass, inputSizeClass } from '@/lib/formStyles';
-import type { IndexItem } from '@/data/types';
+import { inputBaseClass, inputSizeClass } from '@/components/forms/common/formStyles';
+import type { IndexItem } from '@/data/documents/types';
 
 interface MonsterGroupSelectorProps {
   groups: IndexItem[];

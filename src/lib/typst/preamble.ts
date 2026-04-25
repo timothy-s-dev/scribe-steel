@@ -1,4 +1,4 @@
-import type { VirtualFile } from '@/typst/compiler';
+import type { VirtualFile } from '@/lib/typst/compiler';
 
 // Small helpers for building Typst preambles in metadata's buildSource.
 

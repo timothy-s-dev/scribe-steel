@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { inputBaseClass, inputSizeClass } from '@/lib/formStyles';
+import { inputBaseClass, inputSizeClass } from '@/components/forms/common/formStyles';
 import { cn } from '@/lib/utils';
 import type { Effect } from '@/data/bestiary';
 

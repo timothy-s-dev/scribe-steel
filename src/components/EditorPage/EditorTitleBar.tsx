@@ -1,8 +1,8 @@
 import { ArrowLeft } from 'lucide-react';
 import { SaveStatusBadge } from '@/components/SaveStatusBadge';
-import { pageTitle } from '@/documents/titles';
-import type { DocumentMetadata } from '@/documents';
-import type { DocumentMetaFields } from '@/data/types';
+import { pageTitle } from '@/data/documents/titles';
+import type { DocumentMetadata } from '@/data/documents';
+import type { DocumentMetaFields } from '@/data/documents/types';
 import type { SaveStatus } from '@/hooks/useDocumentMutation';
 
 interface EditorTitleBarProps<T extends DocumentMetaFields & { name: string }> {

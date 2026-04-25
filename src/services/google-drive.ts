@@ -1,5 +1,5 @@
 import { getAccessToken } from './google-auth';
-import type { Category, IndexFile, IndexItem } from '@/data/types';
+import type { Category, IndexFile, IndexItem } from '@/data/documents/types';
 
 // ── Drive API internals ─────────────────────────────────────────────────────
 

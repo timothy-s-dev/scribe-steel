@@ -2,10 +2,10 @@ import { useCallback, useEffect, useEffectEvent, useMemo, useState } from 'react
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useDocuments } from '@/hooks/queries/useDocument';
 import { sortedMonsters } from '@/data/bestiary';
-import type { IndexItem } from '@/data/types';
+import type { IndexItem } from '@/data/documents/types';
 import type { Monster, MonsterGroup, MonsterSummary } from '@/data/bestiary';
-import type { MonsterCardsDocument } from '@/documents/monster-cards';
-import type { DocumentFormProps } from '@/documents/types';
+import type { MonsterCardsDocument } from '@/data/documents/monster-cards';
+import type { DocumentFormProps } from '@/data/documents/types';
 
 // Picker state is purely transient — nothing derives from `value.monsters`,
 // the hook only *writes* to it via onChange. The monster-cards form is always

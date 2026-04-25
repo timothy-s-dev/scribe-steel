@@ -8,7 +8,7 @@ import {
 } from '@/services/google-drive';
 import { isVirtualId, loadStaticDocument, loadVirtualDocument } from './staticData';
 import { indexQueryKey } from './useIndex';
-import type { Category } from '@/data/types';
+import type { Category } from '@/data/documents/types';
 
 // The cache stores { data, md5, source } for every document query. md5 is
 // Drive's md5Checksum of the stored content — used for optimistic

@@ -1,7 +1,7 @@
 import { BookOpen } from 'lucide-react';
-import lorebookTyp from '@/typst/templates/lorebook.typ?raw';
+import lorebookTyp from '@/lib/typst/templates/lorebook.typ?raw';
 import { LoreBookForm } from '@/components/forms/LoreBookForm';
-import { jsonBackedBuildSource } from '@/typst/preamble';
+import { jsonBackedBuildSource } from '@/lib/typst/preamble';
 import type { DocumentMetadata, TemplateDocument } from './types';
 
 export interface LoreBookDocument extends TemplateDocument {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { compileSvg, CompilerResetError, resetCompiler, type VirtualFile } from '@/typst/compiler';
-import { parseSvgPages, type ParsedPage } from './parseSvgPages';
+import { compileSvg, CompilerResetError, resetCompiler, type VirtualFile } from '@/lib/typst/compiler';
+import { parseSvgPages, type ParsedPage } from '@/lib/typst/parseSvgPages';
 
 export type { ParsedPage };
 

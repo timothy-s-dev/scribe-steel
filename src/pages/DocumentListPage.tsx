@@ -7,10 +7,10 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Plus, CloudOff, FileText, ChevronRight } from 'lucide-react';
 import { CreatingOverlay } from '@/components/CreatingOverlay';
 import { PageHeader } from '@/components/PageHeader';
-import { SignInButton } from '@/components/SignInButton';
-import { getCreateDialog } from '@/components/documents/registry';
-import type { DocumentMetadata } from '@/documents';
-import { listTitle, pluralize, titleCase } from '@/documents/titles';
+import { SignInButton } from '@/components/auth/SignInButton';
+import { getCreateDialog } from '@/components/createDialogs/registry';
+import type { DocumentMetadata } from '@/data/documents';
+import { listTitle, pluralize, titleCase } from '@/data/documents/titles';
 
 interface DocumentListProps<Data> {
   type: DocumentMetadata<Data>;

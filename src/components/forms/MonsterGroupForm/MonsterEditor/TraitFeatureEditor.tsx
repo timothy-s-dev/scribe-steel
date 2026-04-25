@@ -1,4 +1,4 @@
-import { Field, Input } from '@/components/form';
+import { Field, Input } from '@/components/forms/common';
 import type { Feature } from '@/data/bestiary';
 
 interface TraitFeatureEditorProps {

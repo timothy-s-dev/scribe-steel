@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getAccessToken } from '@/services/google-auth';
 import { loadIndex, type CachedDriveIndex } from '@/services/google-drive';
 import { getStaticEntries } from './staticData';
-import type { Category, IndexFile } from '@/data/types';
+import type { Category, IndexFile } from '@/data/documents/types';
 
 // Key shape for per-category index cache entries. Shared with the
 // document mutation hooks (useSaveDocument / useDeleteDocument), which

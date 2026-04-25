@@ -1,4 +1,4 @@
-import { loreBooksMetadata, type LoreBookDocument } from '@/documents/lore-books';
+import { loreBooksMetadata, type LoreBookDocument } from '@/data/documents/lore-books';
 import { NameOnlyCreateDialog, type CreateDialogProps } from './NameOnlyCreateDialog';
 
 export function CreateLoreBookDialog(props: CreateDialogProps<LoreBookDocument>) {

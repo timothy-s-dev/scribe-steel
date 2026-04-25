@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageHeader } from '@/components/PageHeader';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { listTitle, pageTitle } from '@/documents/titles';
-import type { DocumentMetadata } from '@/documents';
-import type { DocumentMetaFields } from '@/data/types';
+import { listTitle, pageTitle } from '@/data/documents/titles';
+import type { DocumentMetadata } from '@/data/documents';
+import type { DocumentMetaFields } from '@/data/documents/types';
 import { DocumentEditor } from './DocumentEditor';
 
 interface EditorPageProps<T extends DocumentMetaFields & { name: string }> {

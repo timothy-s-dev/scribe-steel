@@ -1,6 +1,6 @@
 import { getGroupSummaries, loadGroup } from '@/data/bestiary';
-import { documentMetadataByCategory } from '@/documents';
-import type { Category, IndexItem } from '@/data/types';
+import { documentMetadataByCategory } from '@/data/documents';
+import type { Category, IndexItem } from '@/data/documents/types';
 
 interface StaticCategoryData {
   entries: () => IndexItem[];

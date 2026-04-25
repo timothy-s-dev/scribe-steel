@@ -1,8 +1,8 @@
 import { Skull } from 'lucide-react';
-import monsterCardTyp from '@/typst/templates/monster-card.typ?raw';
+import monsterCardTyp from '@/lib/typst/templates/monster-card.typ?raw';
 import { MonsterCardForm } from '@/components/forms/MonsterCardForm';
-import { jsonBackedBuildSource } from '@/typst/preamble';
-import type { DocumentMetaFields } from '@/data/types';
+import { jsonBackedBuildSource } from '@/lib/typst/preamble';
+import type { DocumentMetaFields } from '@/data/documents/types';
 import type { Monster } from '@/data/bestiary';
 import type { DocumentMetadata } from './types';
 

@@ -1,7 +1,7 @@
 import { TypstEditor } from '@/components/TypstEditor';
-import { Field, FormPanel, Input, Textarea } from '@/components/form';
-import { type LoreBookDocument } from '@/documents/lore-books';
-import type { DocumentFormProps } from '@/documents/types';
+import { Field, FormPanel, Input, Textarea } from '@/components/forms/common';
+import { type LoreBookDocument } from '@/data/documents/lore-books';
+import type { DocumentFormProps } from '@/data/documents/types';
 
 export function LoreBookForm({ value, onChange }: DocumentFormProps<LoreBookDocument>) {
   return (

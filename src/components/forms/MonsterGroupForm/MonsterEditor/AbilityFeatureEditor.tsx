@@ -1,4 +1,4 @@
-import { AddButton, Field, Input, Select } from '@/components/form';
+import { AddButton, Field, Input, Select } from '@/components/forms/common';
 import type { Effect, Feature } from '@/data/bestiary';
 import { ABILITY_TYPES, ABILITY_USAGES } from './constants';
 import { NamedEffectsEditor } from './NamedEffectsEditor';

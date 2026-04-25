@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { compactLabelClass, inputBaseClass, inputSizeClass, type InputSize } from '@/lib/formStyles';
+import { compactLabelClass, inputBaseClass, inputSizeClass, type InputSize } from '@/components/forms/common/formStyles';
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & { inputSize?: InputSize };
 

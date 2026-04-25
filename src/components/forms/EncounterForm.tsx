@@ -11,11 +11,11 @@ import {
   RemoveButton,
   SectionHeader,
   Textarea,
-} from '@/components/form';
+} from '@/components/forms/common';
 import { MonsterGroupSelector } from '@/components/selectors/MonsterGroupSelector';
 import { MonsterSelector } from '@/components/selectors/MonsterSelector';
 import { removeById, updateById } from '@/lib/arrays';
-import type { IndexItem } from '@/data/types';
+import type { IndexItem } from '@/data/documents/types';
 import {
   emptyCreature,
   emptyGroup,
@@ -23,8 +23,8 @@ import {
   type EncounterCreature,
   type EncounterDocument,
   type EncounterMalice,
-} from '@/documents/encounters';
-import type { DocumentFormProps } from '@/documents/types';
+} from '@/data/documents/encounters';
+import type { DocumentFormProps } from '@/data/documents/types';
 
 function maliceFromFeature(f: Feature): EncounterMalice {
   return {

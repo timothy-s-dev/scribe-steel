@@ -5,7 +5,7 @@ export { encountersMetadata, type EncounterDocument } from './encounters';
 export { monsterGroupsMetadata, type MonsterGroupDocument } from './monster-groups';
 export { monsterCardsMetadata, type MonsterCardsDocument } from './monster-cards';
 
-import type { Category } from '@/data/types';
+import type { Category } from '@/data/documents/types';
 import type { DocumentMetadata } from './types';
 import { handwrittenMetadata } from './handwritten';
 import { loreBooksMetadata } from './lore-books';

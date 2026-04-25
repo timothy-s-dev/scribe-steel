@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
-import { FormPanel } from '@/components/form';
+import { FormPanel } from '@/components/forms/common';
 import { sortedMonsters } from '@/data/bestiary';
-import type { IndexItem } from '@/data/types';
-import type { MonsterCardsDocument } from '@/documents/monster-cards';
-import type { DocumentFormProps } from '@/documents/types';
+import type { IndexItem } from '@/data/documents/types';
+import type { MonsterCardsDocument } from '@/data/documents/monster-cards';
+import type { DocumentFormProps } from '@/data/documents/types';
 import { monsterKey, monstersOf, useMonsterCardSelection } from './useMonsterCardSelection';
 
 export function MonsterCardForm(props: DocumentFormProps<MonsterCardsDocument>) {

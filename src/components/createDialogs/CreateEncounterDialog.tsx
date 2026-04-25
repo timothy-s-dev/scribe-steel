@@ -1,4 +1,4 @@
-import { encountersMetadata, type EncounterDocument } from '@/documents/encounters';
+import { encountersMetadata, type EncounterDocument } from '@/data/documents/encounters';
 import { NameOnlyCreateDialog, type CreateDialogProps } from './NameOnlyCreateDialog';
 
 export function CreateEncounterDialog(props: CreateDialogProps<EncounterDocument>) {

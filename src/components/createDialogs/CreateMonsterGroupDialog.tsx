@@ -12,9 +12,9 @@ import { Button } from '@/components/shadcn/button';
 import { MonsterGroupSelector } from '@/components/selectors/MonsterGroupSelector';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { useFetchDocument } from '@/hooks/queries/useDocument';
-import { monsterGroupsMetadata, type MonsterGroupDocument } from '@/documents/monster-groups';
+import { monsterGroupsMetadata, type MonsterGroupDocument } from '@/data/documents/monster-groups';
 import { cloneFeature, type MonsterGroup } from '@/data/bestiary';
-import type { IndexItem } from '@/data/types';
+import type { IndexItem } from '@/data/documents/types';
 import type { CreateDialogProps } from './NameOnlyCreateDialog';
 
 export function CreateMonsterGroupDialog({

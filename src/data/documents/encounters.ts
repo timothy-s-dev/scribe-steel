@@ -1,8 +1,8 @@
 import { Swords } from 'lucide-react';
-import encounterTyp from '@/typst/templates/encounter.typ?raw';
+import encounterTyp from '@/lib/typst/templates/encounter.typ?raw';
 import { EncounterForm } from '@/components/forms/EncounterForm';
-import { jsonBackedBuildSource } from '@/typst/preamble';
-import type { DocumentMetaFields } from '@/data/types';
+import { jsonBackedBuildSource } from '@/lib/typst/preamble';
+import type { DocumentMetaFields } from '@/data/documents/types';
 import type { DocumentMetadata } from './types';
 
 const IMPORT_PATH = '/templates/encounter.typ';

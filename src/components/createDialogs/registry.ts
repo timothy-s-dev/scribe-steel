@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
-import type { Category } from '@/data/types';
-import type { DocumentDataByCategory } from '@/documents';
+import type { Category } from '@/data/documents/types';
+import type { DocumentDataByCategory } from '@/data/documents';
 import type { CreateDialogProps } from './NameOnlyCreateDialog';
 import { CreateHandwrittenDocumentDialog } from './CreateHandwrittenDocumentDialog';
 import { CreateLoreBookDialog } from './CreateLoreBookDialog';

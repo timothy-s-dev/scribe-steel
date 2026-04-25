@@ -4,7 +4,7 @@
 // Drive data survives re-login.
 
 import { getAccessToken } from './google-auth.mock';
-import type { Category, IndexFile, IndexItem } from '@/data/types';
+import type { Category, IndexFile, IndexItem } from '@/data/documents/types';
 
 export interface CachedDriveIndex {
   items: IndexItem[];

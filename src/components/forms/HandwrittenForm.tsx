@@ -1,7 +1,7 @@
 import { TypstEditor } from '@/components/TypstEditor';
-import { Field, FormPanel, Input } from '@/components/form';
-import { type HandwrittenDocument } from '@/documents/handwritten';
-import type { DocumentFormProps } from '@/documents/types';
+import { Field, FormPanel, Input } from '@/components/forms/common';
+import { type HandwrittenDocument } from '@/data/documents/handwritten';
+import type { DocumentFormProps } from '@/data/documents/types';
 
 export function HandwrittenForm({ value, onChange }: DocumentFormProps<HandwrittenDocument>) {
   return (

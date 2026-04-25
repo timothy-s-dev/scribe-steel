@@ -10,7 +10,7 @@ import {
   type AutosaveRetry,
   type AutosaveStatus,
 } from '@/lib/autosaveController';
-import type { Category } from '@/data/types';
+import type { Category } from '@/data/documents/types';
 
 export type SaveStatus = AutosaveStatus;
 export type ConflictState = AutosaveConflict;

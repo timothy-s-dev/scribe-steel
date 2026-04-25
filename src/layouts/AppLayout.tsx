@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import { NavBarSignInButton } from '@/components/NavBarSignInButton';
-import { SessionExpiryDialog } from '@/components/SessionExpiryDialog';
+import { NavBarSignInButton } from '@/components/auth/NavBarSignInButton';
+import { SessionExpiryDialog } from '@/components/auth/SessionExpiryDialog';
 import { VersionBadge } from '@/components/VersionBadge';
 import { Menu, X, PenTool, BookOpen, Users, Skull, Swords, Bug, History, Shield, Settings, type LucideIcon } from 'lucide-react';
 

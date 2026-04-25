@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { DocumentPreview } from '@/components/preview';
-import type { DocumentMetadata } from '@/documents';
-import type { DocumentMetaFields } from '@/data/types';
+import type { DocumentMetadata } from '@/data/documents';
+import type { DocumentMetaFields } from '@/data/documents/types';
 
 type MobileTab = 'edit' | 'preview';
 

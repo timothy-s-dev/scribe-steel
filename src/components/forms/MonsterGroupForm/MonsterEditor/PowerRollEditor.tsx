@@ -1,4 +1,4 @@
-import { compactLabelClass, inputBaseClass, inputSizeClass } from '@/lib/formStyles';
+import { compactLabelClass, inputBaseClass, inputSizeClass } from '@/components/forms/common/formStyles';
 import { cn } from '@/lib/utils';
 import type { Effect } from '@/data/bestiary';
 

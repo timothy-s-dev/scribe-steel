@@ -1,12 +1,32 @@
 import type { ComponentType } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import type { Category, DocumentMetaFields } from '@/data/types';
-import type { VirtualFile } from '@/typst/compiler';
+import type { VirtualFile } from '@/lib/typst/compiler';
 import type { EncounterDocument } from './encounters';
 import type { HandwrittenDocument } from './handwritten';
 import type { LoreBookDocument } from './lore-books';
 import type { MonsterCardsDocument } from './monster-cards';
 import type { MonsterGroupDocument } from './monster-groups';
+
+// ── Storage types ────────────────────────────────────────────────────────────
+
+export type Category = 'monsters' | 'encounters' | 'handwritten' | 'lore-books' | 'monster-cards';
+
+export interface IndexItem {
+  fileId: string;
+  name: string;
+  updatedAt: string;
+  [key: string]: unknown;
+}
+
+export interface IndexFile {
+  items: IndexItem[];
+}
+
+export interface DocumentMetaFields {
+  name: string;
+}
+
+// ── Document-type registry ───────────────────────────────────────────────────
 
 export interface DocumentFormProps<Data> {
   value: Data;

@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 import { Copy } from 'lucide-react';
 import { cloneMonster, emptyMaliceFeature, emptyMonster, loadMonsterByName } from '@/data/bestiary';
-import { MonsterEditor } from '@/components/MonsterEditor';
-import { AddButton, FormPanel, Input, RemoveButton, SectionHeader } from '@/components/form';
+import { MonsterEditor } from '@/components/forms/MonsterGroupForm/MonsterEditor';
+import { AddButton, FormPanel, Input, RemoveButton, SectionHeader } from '@/components/forms/common';
 import { MonsterSelector } from '@/components/selectors/MonsterSelector';
 import { useIndex } from '@/hooks/queries/useIndex';
 import { removeById, updateById } from '@/lib/arrays';
 import type { Feature } from '@/data/bestiary';
-import type { MonsterGroupDocument } from '@/documents/monster-groups';
-import type { DocumentFormProps } from '@/documents/types';
+import type { MonsterGroupDocument } from '@/data/documents/monster-groups';
+import type { DocumentFormProps } from '@/data/documents/types';
 
 function maliceDescription(f: Feature): string {
   return f.effects.map((e) => e.effect).filter(Boolean).join(' ');

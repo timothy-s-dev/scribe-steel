@@ -1,4 +1,4 @@
-import type { Monster, Feature, MonsterSummary } from './bestiary.types';
+import type { Monster, Feature, MonsterSummary } from './types';
 
 function roleRank(monster: MonsterSummary): number {
   const roles = monster.roles.map((r) => r.toLowerCase());

@@ -5,8 +5,8 @@ import { SvgPage } from './SvgPage';
 import { useTypstCompiler } from '@/hooks/useTypstCompiler';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
-import { compilePdf, resetCompiler } from '@/typst/compiler';
-import type { Document } from '@/documents';
+import { compilePdf, resetCompiler } from '@/lib/typst/compiler';
+import type { Document } from '@/data/documents';
 
 interface DocumentPreviewProps<T> {
   document: Document<T>;
