@@ -25,6 +25,12 @@ A GM toolkit for [Draw Steel](https://mcdmproductions.com/draw-steel) that lets 
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for local development setup.
 
+## AI Use Disclosure
+
+Scribe Steel was built with heavy AI assistance. Most of the code here was written with large language models, with me reviewing and editing the output. 
+
+For contributors: see the [AI-Assisted Contributions](CONTRIBUTING.md#ai-assisted-contributions) section in CONTRIBUTING.
+
 ## License
 
 [MIT](LICENSE)

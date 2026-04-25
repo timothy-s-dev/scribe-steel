@@ -42,6 +42,12 @@ npm run dev                  # real Drive
 
 `VITE_SENTRY_DSN` is optional and only used when you want to test error reporting locally.
 
+## AI-Assisted Contributions
+
+AI tools are welcome. PRs written with AI assistance are fine, and you don't need to disclose specific tools.
+
+What I do ask is that you've actually read your own code before submitting it. If a PR looks like it was generated wholesale and submitted unread (untested changes, hallucinated APIs, comments contradicting the code, sweeping rewrites of unrelated areas, etc.), I'll close it with little or no discussion.
+
 ## Making Changes
 
 1. Create a branch from `main`
