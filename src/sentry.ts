@@ -10,7 +10,7 @@ if (dsn) {
     integrations: [
       Sentry.browserTracingIntegration(),
     ],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.1,
     enableLogs: true,
   });
 }

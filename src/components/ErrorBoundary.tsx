@@ -22,7 +22,9 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Unhandled error:', error, info.componentStack);
+    if (import.meta.env.DEV) {
+      console.error('Unhandled error:', error, info.componentStack);
+    }
     Sentry.captureException(error, { extra: { componentStack: info.componentStack } });
   }
 
