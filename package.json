@@ -8,6 +8,7 @@
     "dev:mock": "VITE_USE_MOCK_DRIVE=1 vite --port 5174",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "typecheck": "tsc -b",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -77,8 +77,8 @@ export function SaveStatusBadge({ status, lastSavedAt }: SaveStatusBadgeProps) {
   if (lastSavedAt === null) return badge;
 
   return (
-    <HoverCard openDelay={150}>
-      <HoverCardTrigger render={badge} />
+    <HoverCard>
+      <HoverCardTrigger delay={150} render={badge} />
       <HoverCardContent className="w-auto text-xs font-label" side="bottom" align="end">
         <LastSavedInfo lastSavedAt={lastSavedAt} />
       </HoverCardContent>

@@ -77,7 +77,7 @@ async function spawnWorker(): Promise<Worker> {
     if (workerPromise) workerPromise = null;
   };
   const { compilerModule, rendererModule } = await getModules();
-  w.postMessage({ type: 'init', compilerModule, rendererModule });
+  w.postMessage({ method: 'init', compilerModule, rendererModule });
   return w;
 }
 

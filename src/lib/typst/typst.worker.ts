@@ -7,7 +7,7 @@ export interface VirtualFile {
 }
 
 interface InitRequest {
-  type: 'init';
+  method: 'init';
   compilerModule: WebAssembly.Module;
   rendererModule: WebAssembly.Module;
 }
@@ -49,7 +49,7 @@ async function ensureFiles(files: VirtualFile[]) {
 self.onmessage = async (e: MessageEvent<IncomingMessage>) => {
   const msg = e.data;
 
-  if (msg.type === 'init') {
+  if (msg.method === 'init') {
     // The main thread compiles these WebAssembly.Modules once and ships
     // the same instances to every worker we spawn, so respawn cost is
     // "instantiate" (tens of ms) rather than "fetch + compile" (hundreds).
