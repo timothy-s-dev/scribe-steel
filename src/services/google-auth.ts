@@ -15,6 +15,14 @@ const TOKEN_KEY = 'scribe-steel-auth-token';
 // verifier is single-use, never needs to outlive the popup round-trip,
 // and we don't want it lingering across browser sessions.
 const PKCE_KEY = 'scribe-steel-pkce-flow';
+// BroadcastChannel name used by the popup's /auth/callback page to
+// deliver the authorization code back to the opener. We use a channel
+// instead of window.opener.postMessage because COOP on accounts.google.com
+// severs the popup-opener relationship during the auth round-trip — once
+// the popup navigates back to /auth/callback, window.opener is null in
+// production. BroadcastChannel is same-origin-only by spec and survives
+// COOP severance.
+const CHANNEL_NAME = 'scribe-steel-oauth';
 
 // Fire the session-expired modal this many seconds before the token's
 // actual expiry, so the user is alerted before any save would have hit
@@ -35,7 +43,6 @@ interface PkceFlow {
 }
 
 interface CallbackPayload {
-  type: 'scribe-steel-oauth-callback';
   code: string | null;
   state: string | null;
   error: string | null;
@@ -180,11 +187,9 @@ let cancelCurrentFlow: (() => void) | null = null;
 const POPUP_TIMEOUT_MS = 5 * 60 * 1000;
 
 function isCallbackPayload(data: unknown): data is CallbackPayload {
-  return (
-    typeof data === 'object'
-    && data !== null
-    && (data as { type?: unknown }).type === 'scribe-steel-oauth-callback'
-  );
+  if (typeof data !== 'object' || data === null) return false;
+  const d = data as Record<string, unknown>;
+  return ('code' in d) && ('state' in d) && ('error' in d);
 }
 
 // Best-effort popup close. Cross-Origin-Opener-Policy on accounts.google.com
@@ -232,12 +237,19 @@ async function openSignInPopup(): Promise<void> {
   }
 
   return new Promise<void>((resolve, reject) => {
+    const channel = new BroadcastChannel(CHANNEL_NAME);
+
     const onMessage = async (event: MessageEvent) => {
-      // Only accept messages from our own origin (the callback page).
-      if (event.origin !== window.location.origin) return;
       if (!isCallbackPayload(event.data)) return;
-      cleanup();
       const payload = event.data;
+
+      // Filter by state — multiple tabs could be listening on the same
+      // channel simultaneously, but only the tab whose flow this message
+      // belongs to should consume it.
+      const flow = loadPkceFlow();
+      if (!flow || payload.state !== flow.state) return;
+
+      cleanup();
 
       if (payload.error) {
         clearPkceFlow();
@@ -245,14 +257,9 @@ async function openSignInPopup(): Promise<void> {
         return;
       }
 
-      const flow = loadPkceFlow();
       clearPkceFlow();
-      if (!flow) {
-        reject(new Error('OAuth flow state missing. Please try signing in again.'));
-        return;
-      }
-      if (!payload.code || payload.state !== flow.state) {
-        reject(new Error('OAuth state mismatch. Please try signing in again.'));
+      if (!payload.code) {
+        reject(new Error('OAuth flow returned no code. Please try signing in again.'));
         return;
       }
 
@@ -269,9 +276,9 @@ async function openSignInPopup(): Promise<void> {
       }
     };
 
-    // Backstop for the abandoned-popup case: if no postMessage arrives
-    // within POPUP_TIMEOUT_MS, give up silently. Treated as soft cancel
-    // — same as the user closing the popup intentionally.
+    // Backstop for the abandoned-popup case: if no message arrives within
+    // POPUP_TIMEOUT_MS, give up silently. Treated as soft cancel — same
+    // as the user closing the popup intentionally.
     const timeoutHandle = setTimeout(() => {
       cleanup();
       clearPkceFlow();
@@ -280,7 +287,8 @@ async function openSignInPopup(): Promise<void> {
     }, POPUP_TIMEOUT_MS);
 
     const cleanup = () => {
-      window.removeEventListener('message', onMessage);
+      channel.removeEventListener('message', onMessage);
+      channel.close();
       clearTimeout(timeoutHandle);
       cancelCurrentFlow = null;
     };
@@ -292,7 +300,7 @@ async function openSignInPopup(): Promise<void> {
       resolve();
     };
 
-    window.addEventListener('message', onMessage);
+    channel.addEventListener('message', onMessage);
   });
 }
 

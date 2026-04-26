@@ -30,7 +30,16 @@ function resolveBuildInfo(): BuildInfo {
   let commitsSinceTag = 0
   let dirty = false
   try {
-    const describe = run("git describe --tags --match 'v[0-9]*' --always --dirty")
+    // CI checkouts are inherently from a known commit; any working-tree
+    // modifications during the build (npm install touching the lockfile,
+    // semantic-release plugins writing files, etc.) aren't meaningful as
+    // "the build doesn't match what's in git." The dirty marker is only
+    // useful in local dev for catching "I rebuilt without committing."
+    const inCI = process.env.CI === 'true'
+    const describeCmd = inCI
+      ? "git describe --tags --match 'v[0-9]*' --always"
+      : "git describe --tags --match 'v[0-9]*' --always --dirty"
+    const describe = run(describeCmd)
     dirty = describe.endsWith('-dirty')
     const trimmed = dirty ? describe.slice(0, -'-dirty'.length) : describe
     const match = trimmed.match(/^v?(\d+\.\d+\.\d+)(?:-(\d+)-g[0-9a-f]+)?$/)
