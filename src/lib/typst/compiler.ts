@@ -1,3 +1,12 @@
+// CSP NOTE: the typst.ts library uses `new Function(...)` internally, which
+// requires `'unsafe-eval'` in script-src. We grant that only inside this
+// worker — the document CSP keeps the strict default. firebase.json applies
+// a per-file CSP override matching `**/typst.worker-*.js`, which depends on
+// Vite's worker-output naming preserving the `typst.worker-` prefix. If you
+// rename this file or change Vite's worker output config, update the glob
+// in firebase.json to match — otherwise the worker silently inherits the
+// strict document CSP and Typst compilation breaks (fail-safe, but visible
+// only as broken previews in production).
 import TypstWorker from './typst.worker.ts?worker';
 import type { CompileResponse } from './typst.worker';
 
