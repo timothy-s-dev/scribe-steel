@@ -39,10 +39,16 @@ Navigate to **APIs & Services → Credentials**, click **Create Credentials → 
 2. **Name:** anything
 3. **Authorized JavaScript origins:** add the URL(s) you'll run the dev server on:
    - `http://localhost:5173` (the default Vite port)
-   - Add any other origins you need (e.g. `http://localhost:5174` for `dev:mock`, or a deployed preview URL)
-4. **Authorized redirect URIs:** leave empty. Scribe Steel uses the [Google Identity Services](https://developers.google.com/identity/oauth2/web) implicit token flow, which doesn't use a redirect URI.
+   - Add any other origins you need (e.g. a deployed preview URL)
+4. **Authorized redirect URIs:** for each origin above, add the matching `/auth/callback` URL:
+   - `http://localhost:5173/auth/callback`
+   - Add the corresponding callback URL for any other origins
 
-Click **Create**. Copy the resulting **Client ID** (the long string ending in `.apps.googleusercontent.com`).
+   Scribe Steel runs the OAuth code flow with PKCE in a popup; the callback URL receives the authorization code and posts it back to the main window before closing itself.
+
+Click **Create**. Copy both the **Client ID** (ending in `.apps.googleusercontent.com`) and the **Client Secret**.
+
+> **About the Client Secret:** Google issues a client secret for Web application clients even when used by a single-page app. The secret would normally be kept server-side, but Scribe Steel has no backend, so it's bundled with the frontend code. PKCE — which Scribe Steel always uses — is what actually protects the token exchange: an attacker who scrapes the secret from the bundle still needs the per-flow `code_verifier` (generated client-side, never persisted) to exchange a stolen authorization code. See the comment in `.env.example` for more on this design choice.
 
 ### 5. Configure the env file
 
@@ -52,7 +58,11 @@ In your local checkout:
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and paste the client ID into `VITE_GOOGLE_CLIENT_ID`. Leave `VITE_USE_MOCK_DRIVE` unset.
+Edit `.env.local` and paste in:
+- `VITE_GOOGLE_CLIENT_ID` — the client ID from step 4
+- `VITE_GOOGLE_CLIENT_SECRET` — the client secret from step 4
+
+Leave `VITE_USE_MOCK_DRIVE` unset.
 
 ### 6. Run the dev server
 
@@ -65,5 +75,6 @@ Open http://localhost:5173 and use the **Sign in with Google** button. The OAuth
 ## Troubleshooting
 
 - **"Access blocked: ... has not completed the Google verification process"**: your Google account isn't on the test users list. Add it under **APIs & Services → OAuth consent screen → Audience → Test users**.
-- **Sign-in pop-up closes immediately with no token**: check the browser's developer console. The most common cause is a mismatch between your dev server's origin and the **Authorized JavaScript origins** list — they must match exactly, including `http` vs `https` and port number.
+- **Sign-in pop-up closes immediately with no token**: check the browser's developer console. Two common causes — (a) a mismatch between your dev server's origin and the **Authorized JavaScript origins** list, or (b) a missing/mismatched **Authorized redirect URI** for `…/auth/callback`. Both must match exactly, including `http` vs `https` and port number.
+- **`Token exchange failed (400)` in the console after sign-in**: the most common cause is a wrong or missing `VITE_GOOGLE_CLIENT_SECRET`. Re-paste the secret from the GCP credentials page and restart the dev server.
 - **`drive.file` scope errors**: confirm the Google Drive API is enabled in your project (step 2). Newly-enabled APIs can take a minute to propagate.

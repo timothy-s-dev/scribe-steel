@@ -14,6 +14,7 @@ const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.H
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
 const PrivacyPolicyPage = lazy(() => import('@/pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
+const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage').then(m => ({ default: m.AuthCallbackPage })));
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
       <BrowserRouter>
         <Suspense>
           <Routes>
+            {/* Outside AppLayout — popup window, no chrome needed. Closes itself. */}
+            <Route path="auth/callback" element={<AuthCallbackPage />} />
             <Route element={<AppLayout />}>
               <Route index element={<HomePage />} />
               <Route path="monster-cards" element={<EditorPage type={monsterCardsMetadata} forceDemo hideBackButton />} />

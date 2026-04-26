@@ -1,9 +1,26 @@
-import type { TokenClient } from './gis';
 import { reportSessionExpired } from './session-expiry';
 
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
+const CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET as string;
+
+const AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth';
+const TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token';
+const REVOKE_ENDPOINT = 'https://oauth2.googleapis.com/revoke';
+
 const TOKEN_KEY = 'scribe-steel-auth-token';
+// PKCE verifier + state are stashed in sessionStorage between the
+// authorization request and the token exchange. sessionStorage is
+// per-tab and clears on tab close, which is the right scope: the
+// verifier is single-use, never needs to outlive the popup round-trip,
+// and we don't want it lingering across browser sessions.
+const PKCE_KEY = 'scribe-steel-pkce-flow';
+
+// Fire the session-expired modal this many seconds before the token's
+// actual expiry, so the user is alerted before any save would have hit
+// a 401. Bigger buffer = friendlier proactive notification at the cost
+// of a slightly shorter usable window per token.
+const EXPIRY_BUFFER_SECONDS = 30;
 
 type Listener = (token: string | null) => void;
 
@@ -12,8 +29,19 @@ interface StoredToken {
   expiresAt: number; // unix ms
 }
 
+interface PkceFlow {
+  verifier: string;
+  state: string;
+}
+
+interface CallbackPayload {
+  type: 'scribe-steel-oauth-callback';
+  code: string | null;
+  state: string | null;
+  error: string | null;
+}
+
 let accessToken: string | null = null;
-let tokenClient: TokenClient | null = null;
 let listeners: Listener[] = [];
 let expiryTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -23,10 +51,10 @@ function notify() {
 
 // Dev-only knob. Set localStorage["scribe-steel-dev-token-ttl-seconds"] to a
 // number (e.g. "120") to clamp how long we treat a newly-issued token as
-// valid, so the scheduleExpiry → silent-refresh cycle happens in minutes
-// instead of an hour. The token on Google's side still lives its full
-// lifetime; we just pretend it doesn't. Below ~90s stops being useful —
-// loadPersistedToken's 60s grace window starts dropping tokens on reload.
+// valid, so the proactive-expiry modal fires in minutes instead of an hour.
+// The token on Google's side still lives its full lifetime; we just pretend
+// it doesn't. Below ~90s stops being useful — loadPersistedToken's grace
+// window starts dropping tokens on reload.
 function effectiveExpiresIn(serverExpiresIn: number): number {
   if (!import.meta.env.DEV) return serverExpiresIn;
   const raw = localStorage.getItem('scribe-steel-dev-token-ttl-seconds');
@@ -44,17 +72,19 @@ function persistToken(token: string, expiresIn: number) {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(data));
 }
 
-function loadPersistedToken(): string | null {
+function loadPersistedToken(): { token: string; remainingSec: number } | null {
   try {
     const raw = localStorage.getItem(TOKEN_KEY);
     if (!raw) return null;
     const data: StoredToken = JSON.parse(raw);
-    // Consider expired if less than 60s remaining
-    if (data.expiresAt - Date.now() < 60_000) {
+    const remainingMs = data.expiresAt - Date.now();
+    // Drop anything within the buffer window — too close to expiry to be
+    // worth using; the proactive-expiry timer would fire immediately.
+    if (remainingMs < EXPIRY_BUFFER_SECONDS * 1000) {
       localStorage.removeItem(TOKEN_KEY);
       return null;
     }
-    return data.accessToken;
+    return { token: data.accessToken, remainingSec: Math.floor(remainingMs / 1000) };
   } catch {
     localStorage.removeItem(TOKEN_KEY);
     return null;
@@ -65,87 +95,280 @@ function clearPersistedToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
-function waitForGis(): Promise<void> {
-  if (typeof google !== 'undefined') return Promise.resolve();
-  return new Promise((resolve) => {
-    const check = () => {
-      if (typeof google !== 'undefined') resolve();
-      else setTimeout(check, 100);
-    };
-    check();
-  });
-}
-
 function scheduleExpiry(expiresIn: number) {
   clearTimeout(expiryTimer);
-  // Refresh 60s before actual expiry
-  const ms = (expiresIn - 60) * 1000;
+  // Fire the modal `EXPIRY_BUFFER_SECONDS` before actual expiry. Without
+  // a backend we can't silently refresh (X-Frame-Options blocks
+  // accounts.google.com from being iframed), so the timer's job is to
+  // proactively prompt the user — not to renew silently.
+  const ms = (expiresIn - EXPIRY_BUFFER_SECONDS) * 1000;
   if (ms > 0) {
     expiryTimer = setTimeout(() => {
-      tokenClient?.requestAccessToken({ prompt: 'none' });
-    }, ms);
-  }
-}
-
-export async function initAuth(): Promise<void> {
-  if (!CLIENT_ID) return;
-  await waitForGis();
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
-    callback: (response) => {
-      if (response.error) {
-        // If we had a token a moment ago and a silent refresh just failed,
-        // surface the session-expired modal. First-time sign-in cancels
-        // (no prior token) stay quiet.
-        const wasSignedIn = !!accessToken;
-        accessToken = null;
-        clearPersistedToken();
-        if (wasSignedIn) reportSessionExpired();
-        notify();
-        return;
-      }
-      accessToken = response.access_token;
-      const ttl = effectiveExpiresIn(response.expires_in);
-      persistToken(response.access_token, ttl);
-      scheduleExpiry(ttl);
-      notify();
-    },
-    error_callback: () => {
       const wasSignedIn = !!accessToken;
       accessToken = null;
       clearPersistedToken();
       if (wasSignedIn) reportSessionExpired();
       notify();
-    },
-  });
+    }, ms);
+  }
+}
 
-  // Restore token from localStorage if still valid
+// ── PKCE helpers ────────────────────────────────────────────────────────────
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let binary = '';
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function randomString(byteLength: number): string {
+  const bytes = new Uint8Array(byteLength);
+  crypto.getRandomValues(bytes);
+  return base64UrlEncode(bytes);
+}
+
+async function generatePkce(): Promise<{ verifier: string; challenge: string }> {
+  // RFC 7636 says the verifier should be 43-128 unreserved chars; 32 random
+  // bytes base64url-encoded is 43 chars, the minimum that still gives a
+  // healthy 256 bits of entropy.
+  const verifier = randomString(32);
+  const challengeBytes = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(verifier),
+  );
+  const challenge = base64UrlEncode(new Uint8Array(challengeBytes));
+  return { verifier, challenge };
+}
+
+function redirectUri(): string {
+  return `${window.location.origin}/auth/callback`;
+}
+
+function savePkceFlow(flow: PkceFlow): void {
+  sessionStorage.setItem(PKCE_KEY, JSON.stringify(flow));
+}
+
+function loadPkceFlow(): PkceFlow | null {
+  try {
+    const raw = sessionStorage.getItem(PKCE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as PkceFlow;
+  } catch {
+    return null;
+  }
+}
+
+function clearPkceFlow(): void {
+  sessionStorage.removeItem(PKCE_KEY);
+}
+
+// ── Popup lifecycle ─────────────────────────────────────────────────────────
+
+// Cancellation hook for the in-flight sign-in flow, if any. Calling it
+// tears down the previous flow's listener + timer and closes its popup.
+// We set this on every signIn so that a second click (whether a true
+// double-click or the user clicking again after walking away from an
+// abandoned popup) replaces the old flow cleanly instead of stacking
+// listeners.
+let cancelCurrentFlow: (() => void) | null = null;
+
+// How long we wait for a postMessage from the callback before treating
+// the flow as abandoned. Generous because users sometimes pause mid-flow
+// (consent screen, account picker, password manager). Shorter than this
+// just leaks the listener and the PKCE verifier in sessionStorage; both
+// are cheap, so erring long is fine.
+const POPUP_TIMEOUT_MS = 5 * 60 * 1000;
+
+function isCallbackPayload(data: unknown): data is CallbackPayload {
+  return (
+    typeof data === 'object'
+    && data !== null
+    && (data as { type?: unknown }).type === 'scribe-steel-oauth-callback'
+  );
+}
+
+// Best-effort popup close. Cross-Origin-Opener-Policy on accounts.google.com
+// can make `popup.close()` throw or silently no-op while the popup is on
+// Google's pages; once it's redirected back to our /auth/callback the page
+// closes itself anyway, so this is just for the abandon path.
+function tryClosePopup(popup: Window): void {
+  try { popup.close(); } catch { /* COOP-blocked or already-closed */ }
+}
+
+async function openSignInPopup(): Promise<void> {
+  // Replace any in-flight flow. The user clicking Sign In is a clear
+  // "open a fresh popup" intent — we can't reliably detect whether an
+  // earlier popup was abandoned (COOP makes `popup.closed` polling
+  // unreliable on cross-origin pages), so we just always start clean.
+  if (cancelCurrentFlow) cancelCurrentFlow();
+
+  const { verifier, challenge } = await generatePkce();
+  const state = randomString(32);
+  savePkceFlow({ verifier, state });
+
+  const url = new URL(AUTH_ENDPOINT);
+  url.searchParams.set('client_id', CLIENT_ID);
+  url.searchParams.set('response_type', 'code');
+  url.searchParams.set('scope', SCOPES);
+  url.searchParams.set('redirect_uri', redirectUri());
+  url.searchParams.set('state', state);
+  url.searchParams.set('code_challenge', challenge);
+  url.searchParams.set('code_challenge_method', 'S256');
+  // include_granted_scopes lets returning users consent incrementally
+  // rather than re-confirming everything; harmless when only drive.file
+  // is ever requested.
+  url.searchParams.set('include_granted_scopes', 'true');
+
+  const width = 480;
+  const height = 640;
+  const left = window.screenX + (window.outerWidth - width) / 2;
+  const top = window.screenY + (window.outerHeight - height) / 2;
+  const features = `width=${width},height=${height},left=${left},top=${top}`;
+
+  const popup = window.open(url.toString(), 'scribe-steel-google-auth', features);
+  if (!popup) {
+    clearPkceFlow();
+    throw new Error('Sign-in popup was blocked. Please allow popups for this site.');
+  }
+
+  return new Promise<void>((resolve, reject) => {
+    const onMessage = async (event: MessageEvent) => {
+      // Only accept messages from our own origin (the callback page).
+      if (event.origin !== window.location.origin) return;
+      if (!isCallbackPayload(event.data)) return;
+      cleanup();
+      const payload = event.data;
+
+      if (payload.error) {
+        clearPkceFlow();
+        reject(new Error(`OAuth error: ${payload.error}`));
+        return;
+      }
+
+      const flow = loadPkceFlow();
+      clearPkceFlow();
+      if (!flow) {
+        reject(new Error('OAuth flow state missing. Please try signing in again.'));
+        return;
+      }
+      if (!payload.code || payload.state !== flow.state) {
+        reject(new Error('OAuth state mismatch. Please try signing in again.'));
+        return;
+      }
+
+      try {
+        const tokenResponse = await exchangeCode(payload.code, flow.verifier);
+        accessToken = tokenResponse.access_token;
+        const ttl = effectiveExpiresIn(tokenResponse.expires_in);
+        persistToken(tokenResponse.access_token, ttl);
+        scheduleExpiry(ttl);
+        notify();
+        resolve();
+      } catch (err) {
+        reject(err instanceof Error ? err : new Error(String(err)));
+      }
+    };
+
+    // Backstop for the abandoned-popup case: if no postMessage arrives
+    // within POPUP_TIMEOUT_MS, give up silently. Treated as soft cancel
+    // — same as the user closing the popup intentionally.
+    const timeoutHandle = setTimeout(() => {
+      cleanup();
+      clearPkceFlow();
+      tryClosePopup(popup);
+      resolve();
+    }, POPUP_TIMEOUT_MS);
+
+    const cleanup = () => {
+      window.removeEventListener('message', onMessage);
+      clearTimeout(timeoutHandle);
+      cancelCurrentFlow = null;
+    };
+
+    cancelCurrentFlow = () => {
+      cleanup();
+      clearPkceFlow();
+      tryClosePopup(popup);
+      resolve();
+    };
+
+    window.addEventListener('message', onMessage);
+  });
+}
+
+async function exchangeCode(code: string, verifier: string): Promise<{
+  access_token: string;
+  expires_in: number;
+  scope: string;
+  token_type: string;
+}> {
+  const body = new URLSearchParams({
+    code,
+    client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET,
+    code_verifier: verifier,
+    grant_type: 'authorization_code',
+    redirect_uri: redirectUri(),
+  });
+  const res = await fetch(TOKEN_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Token exchange failed (${res.status}): ${text}`);
+  }
+  return await res.json();
+}
+
+// ── Public API (interface unchanged from the prior GIS-based module) ────────
+
+export async function initAuth(): Promise<void> {
+  if (!CLIENT_ID || !CLIENT_SECRET) return;
+
   const restored = loadPersistedToken();
   if (restored) {
-    accessToken = restored;
-    // Schedule refresh based on remaining time
-    const raw = localStorage.getItem(TOKEN_KEY);
-    if (raw) {
-      const data: StoredToken = JSON.parse(raw);
-      const remainingSec = Math.floor((data.expiresAt - Date.now()) / 1000);
-      scheduleExpiry(effectiveExpiresIn(remainingSec));
-    }
+    accessToken = restored.token;
+    scheduleExpiry(effectiveExpiresIn(restored.remainingSec));
     notify();
   }
 }
 
 export function signIn(): void {
-  tokenClient?.requestAccessToken({ prompt: 'consent' });
+  void openSignInPopup().catch((err) => {
+    // Surface as a session-expired prompt (the modal that already exists)
+    // so the user has a clear next action; the alternative would be a
+    // toast or console error neither of which is wired up here.
+    console.error('Sign-in failed:', err);
+    if (accessToken) {
+      // We had a token a moment ago and the renewal popup failed —
+      // surface the modal so the user can retry from the standard place.
+      const wasSignedIn = !!accessToken;
+      accessToken = null;
+      clearPersistedToken();
+      if (wasSignedIn) reportSessionExpired();
+      notify();
+    }
+  });
 }
 
 export function signOut(): void {
+  // Best-effort revoke. We don't await because the user-facing sign-out
+  // shouldn't block on a network call to Google; the local clear is what
+  // matters for the session.
   if (accessToken) {
-    google.accounts.oauth2.revoke(accessToken);
+    const url = `${REVOKE_ENDPOINT}?token=${encodeURIComponent(accessToken)}`;
+    void fetch(url, { method: 'POST' }).catch(() => {
+      // Revoke failures are silent — token will expire naturally on
+      // Google's side. Nothing useful to surface to the user.
+    });
   }
   clearTimeout(expiryTimer);
+  if (cancelCurrentFlow) cancelCurrentFlow();
   accessToken = null;
   clearPersistedToken();
+  clearPkceFlow();
   notify();
 }
 
@@ -171,12 +394,12 @@ export function onTokenChange(fn: Listener): () => void {
 }
 
 export function isConfigured(): boolean {
-  return !!CLIENT_ID;
+  return !!CLIENT_ID && !!CLIENT_SECRET;
 }
 
 // Dev-only: open the console and run `__scribeExpireSession()` to simulate
-// a silent-refresh failure. Mirrors the error_callback path exactly so
-// you can reproduce the session-expired modal on demand.
+// the proactive-expiry path. Mirrors the timer fire exactly so you can
+// reproduce the session-expired modal on demand without waiting an hour.
 declare global {
   interface Window {
     __scribeExpireSession?: () => void;
