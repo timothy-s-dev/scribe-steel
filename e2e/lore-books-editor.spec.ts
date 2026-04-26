@@ -26,6 +26,31 @@ test.describe('Lore Books editor', () => {
       await expect(visibleField(page, 'Category')).toHaveValue('');
     });
 
+    test('cursor stays put when typing in the middle of a field', async ({ page }) => {
+      await page.goto('/lore-books/demo');
+
+      const category = visibleField(page, 'Category');
+      await category.fill('abcdef');
+      await expect(category).toHaveValue('abcdef');
+
+      // Place the caret between "c" and "d", then type a single character.
+      // The controlled input flows through the TanStack cache on every
+      // keystroke; if anything in that round-trip causes the input's value
+      // prop to lag the DOM, React resets the selection to the end.
+      await category.evaluate((el: HTMLInputElement) => {
+        el.focus();
+        el.setSelectionRange(3, 3);
+      });
+      await page.keyboard.type('X');
+
+      await expect(category).toHaveValue('abcXdef');
+
+      const selectionStart = await category.evaluate(
+        (el: HTMLInputElement) => el.selectionStart,
+      );
+      expect(selectionStart).toBe(4);
+    });
+
     test('filled fields are compiled into the preview', async ({ page }) => {
       await page.goto('/lore-books/demo');
 
