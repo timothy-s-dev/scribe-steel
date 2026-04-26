@@ -1,9 +1,6 @@
 import { X } from 'lucide-react';
-import { inputBaseClass, inputSizeClass } from '@/components/forms/common/formStyles';
-import { cn } from '@/lib/utils';
+import { Input, Textarea } from '@/components/forms/common';
 import type { Effect } from '@/data/bestiary';
-
-const inputClass = cn(inputBaseClass, inputSizeClass.md);
 
 interface NamedEffect {
   effect: Effect;
@@ -22,14 +19,14 @@ export function NamedEffectsEditor({ effects, onUpdate, onRemove }: NamedEffects
       {effects.map(({ effect: e, index }) => (
         <div key={index} className="space-y-1">
           <div className="flex gap-2 items-center">
-            <input
-              className={cn(inputClass, 'w-24')}
+            <Input
+              className="w-24"
               value={e.name ?? ''}
               onChange={(ev) => onUpdate(index, { name: ev.target.value })}
               placeholder="Label"
             />
-            <input
-              className={cn(inputClass, 'w-16 text-center')}
+            <Input
+              className="w-16 text-center"
               value={e.cost ?? ''}
               onChange={(ev) => onUpdate(index, { cost: ev.target.value || undefined })}
               placeholder="Cost"
@@ -44,8 +41,7 @@ export function NamedEffectsEditor({ effects, onUpdate, onRemove }: NamedEffects
               <X size={14} aria-hidden="true" />
             </button>
           </div>
-          <textarea
-            className={cn(inputClass, 'w-full')}
+          <Textarea
             rows={2}
             value={e.effect ?? ''}
             onChange={(ev) => onUpdate(index, { effect: ev.target.value })}
