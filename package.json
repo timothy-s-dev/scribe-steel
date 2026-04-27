@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "git fetch --tags --quiet || true",
     "dev": "vite",
+    "predev:mock": "git fetch --tags --quiet || true",
     "dev:mock": "VITE_USE_MOCK_DRIVE=1 vite --port 5174",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
