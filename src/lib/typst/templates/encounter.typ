@@ -178,5 +178,6 @@
 
   // Notes
   _section-label("Notes")
+  set par(spacing: 1em)
   pad(x: 4pt)[#body]
 }
