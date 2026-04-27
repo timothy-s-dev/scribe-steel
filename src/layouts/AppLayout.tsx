@@ -46,7 +46,7 @@ const mainNav: NavEntry[] = [
 const footerLinks: NavItem[] = [
   { label: 'Report a Bug', icon: Bug, to: 'https://github.com/timothy-s-dev/scribe-steel/issues/new/choose', external: true },
   { label: 'Release Notes', icon: History, to: 'https://github.com/timothy-s-dev/scribe-steel/releases', external: true },
-  { label: 'Privacy Policy', icon: Shield, to: '/privacy' },
+  { label: 'Privacy & Legal', icon: Shield, to: '/privacy' },
 ];
 
 const footerActions: NavItem[] = [

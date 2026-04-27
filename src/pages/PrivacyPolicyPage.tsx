@@ -3,10 +3,10 @@ import { Shield } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 
 export function PrivacyPolicyPage() {
-  usePageTitle('Privacy Policy');
+  usePageTitle('Privacy & Legal');
   return (
     <div className="h-full flex flex-col">
-      <PageHeader icon={Shield} title="Privacy Policy" />
+      <PageHeader icon={Shield} title="Privacy & Legal" />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6">
         <div className="max-w-2xl space-y-6 text-sm font-body text-on-surface-variant leading-relaxed">
@@ -23,6 +23,24 @@ export function PrivacyPolicyPage() {
               printable play aids for the Draw Steel tabletop roleplaying game.
               It runs entirely in your browser — there is no backend server.
             </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-base font-headline font-semibold text-on-surface">
+              Draw Steel Attribution
+            </h2>
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              <img
+                src="/draw-steel/powered-by-draw-steel-vertical.webp"
+                alt="Powered by Draw Steel"
+                className="h-20 w-auto flex-shrink-0 invert"
+              />
+              <p>
+                Scribe Steel is an independent product published under the DRAW
+                STEEL Creator License and is not affiliated with MCDM
+                Productions, LLC. DRAW STEEL © 2026 MCDM Productions, LLC.
+              </p>
+            </div>
           </section>
 
           <section className="space-y-2">

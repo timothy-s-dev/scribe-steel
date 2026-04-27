@@ -8,7 +8,7 @@ const sidebarLinks = [
   { name: 'Monster Groups', path: '/monster-groups' },
   { name: 'Monster Cards', path: '/monster-cards' },
   { name: 'Encounter Sheets', path: '/encounter-sheets' },
-  { name: 'Privacy Policy', path: '/privacy' },
+  { name: 'Privacy & Legal', path: '/privacy' },
   { name: 'Settings', path: '/settings' },
 ] as const;
 

@@ -88,6 +88,18 @@ export function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Draw Steel attribution — required by the MCDM Creator License */}
+      <footer className="mt-16 pt-8 border-t border-outline-variant/20 flex flex-col sm:flex-row items-center gap-6">
+        <img
+          src="/draw-steel/powered-by-draw-steel-horizontal.webp"
+          alt="Powered by Draw Steel"
+          className="h-16 w-auto flex-shrink-0 invert"
+        />
+        <p className="text-xs font-body text-on-surface-variant/70 leading-relaxed">
+          Scribe Steel is an independent product published under the DRAW STEEL Creator License and is not affiliated with MCDM Productions, LLC. DRAW STEEL © 2026 MCDM Productions, LLC.
+        </p>
+      </footer>
     </div>
   );
 }
