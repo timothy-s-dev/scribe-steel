@@ -1,11 +1,12 @@
 import { memo, useMemo } from 'react';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, InfoIcon } from 'lucide-react';
 import { FormPanel } from '@/components/forms/common';
 import { sortedMonsters } from '@/data/bestiary';
 import type { IndexItem } from '@/data/documents/types';
 import type { MonsterCardsDocument } from '@/data/documents/monster-cards';
 import type { DocumentFormProps } from '@/data/documents/types';
 import { monsterKey, monstersOf, useMonsterCardSelection } from './useMonsterCardSelection';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/shadcn/hover-card';
 
 export function MonsterCardForm(props: DocumentFormProps<MonsterCardsDocument>) {
   const {
@@ -19,11 +20,44 @@ export function MonsterCardForm(props: DocumentFormProps<MonsterCardsDocument>) 
     toggleExpanded,
   } = useMonsterCardSelection(props);
 
+  const header = (<>
+    <span className="text-sm font-semibold font-body text-on-surface">Monsters</span>
+    <HoverCard>
+      <HoverCardTrigger
+        render={
+          <button
+            type="button"
+            aria-label="About the monster cards template"
+            className="ml-auto text-on-surface-variant hover:text-on-surface cursor-help rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
+            <InfoIcon size={16} aria-hidden="true" />
+          </button>
+        }
+      />
+      <HoverCardContent
+        side="bottom"
+        align="end"
+        className="w-72 text-xs"
+      >
+        This template is designed to be printed on Printable Index Card paper. I've used{' '}
+        <a
+          href="https://www.amazon.com/dp/B00006HPWA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline underline-offset-2 hover:text-primary/80"
+        >
+          this paper
+        </a>{' '}
+        in the past. You could also print on regular paper/card-stock and cut to size.
+      </HoverCardContent>
+    </HoverCard>
+  </>);
+
   return (
     <FormPanel
       className="md:w-80"
       bodyClassName="space-y-4"
-      header={<span className="text-sm font-semibold font-body text-on-surface">Monsters</span>}
+      header={header}
       footer={
         <span className="text-xs font-label text-on-surface-variant">
           {selectedCount} monster{selectedCount !== 1 ? 's' : ''} selected

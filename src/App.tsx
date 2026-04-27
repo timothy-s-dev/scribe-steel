@@ -26,7 +26,7 @@ function App() {
             <Route path="auth/callback" element={<AuthCallbackPage />} />
             <Route element={<AppLayout />}>
               <Route index element={<HomePage />} />
-              <Route path="monster-cards" element={<EditorPage type={monsterCardsMetadata} forceDemo hideBackButton />} />
+              <Route path="monster-cards" element={<EditorPage type={monsterCardsMetadata} forceDemo hideBackButton hideTitleBar />} />
               <Route path="encounter-sheets" element={<DocumentList type={encountersMetadata} />} />
               <Route path="encounter-sheets/:fileId" element={<EditorPage type={encountersMetadata} />} />
               <Route path="monster-groups" element={<DocumentList type={monsterGroupsMetadata} />} />

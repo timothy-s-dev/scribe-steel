@@ -18,6 +18,7 @@ interface DocumentEditorProps<T extends DocumentMetaFields & { name: string }> {
   type: DocumentMetadata<T>;
   fileId: string;
   hideBackButton: boolean;
+  hideTitleBar: boolean;
   onNavigateBack: () => void;
 }
 
@@ -32,6 +33,7 @@ export function DocumentEditor<T extends DocumentMetaFields & { name: string }>(
   type,
   fileId,
   hideBackButton,
+  hideTitleBar,
   onNavigateBack,
 }: DocumentEditorProps<T>) {
   // Bumped when the user discards local edits in favor of remote. Forms
@@ -105,7 +107,7 @@ export function DocumentEditor<T extends DocumentMetaFields & { name: string }>(
 
   return (
     <>
-      <EditorTitleBar
+      {!hideTitleBar && <EditorTitleBar
         type={type}
         docName={docName}
         isLoading={isLoading}
@@ -114,7 +116,7 @@ export function DocumentEditor<T extends DocumentMetaFields & { name: string }>(
         lastSavedAt={mutation.lastSavedAt}
         hideBackButton={hideBackButton}
         onNavigateBack={onNavigateBack}
-      />
+      />}
       {canSave && <SaveRetryBanner retry={mutation.retry} />}
       <div className="flex-1 min-h-0 overflow-hidden">
         <EditorBody

@@ -11,6 +11,7 @@ interface EditorPageProps<T extends DocumentMetaFields & { name: string }> {
   type: DocumentMetadata<T>;
   forceDemo?: boolean;
   hideBackButton?: boolean;
+  hideTitleBar?: boolean;
 }
 
 // Outer shell: routes the URL param through to a DocumentEditor keyed on
@@ -19,6 +20,7 @@ export function EditorPage<T extends DocumentMetaFields & { name: string }>({
   type,
   forceDemo = false,
   hideBackButton = false,
+  hideTitleBar = false,
 }: EditorPageProps<T>) {
   usePageTitle(pageTitle(type));
   const navigate = useNavigate();
@@ -38,6 +40,7 @@ export function EditorPage<T extends DocumentMetaFields & { name: string }>({
         type={type}
         fileId={effectiveId}
         hideBackButton={hideBackButton}
+        hideTitleBar={hideTitleBar}
         onNavigateBack={handleNavigateBack}
       />
     </div>

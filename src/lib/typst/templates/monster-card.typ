@@ -29,11 +29,19 @@
 #let _truncation-marker = "SCRIBE_STEEL_PREVIEW_TRUNCATED"
 
 // Dimensions
-#let _cw  = 5in    // card slot width  (landscape, on page)
-#let _ch  = 3in    // card slot height (landscape, on page)
-#let _pw  = _ch    // portrait card content width  = 3in
-#let _ph  = _cw    // portrait card content height = 5in
-#let _gap = 0.5in  // gap between card slots on the page
+//
+// The printer paper has three 3in × 5in card slots butted together in the
+// middle of the sheet (perforated tear line between each pair, with the
+// margin on either side). We render each card 0.1in smaller than its
+// slot — 0.05in of inset on every side — so a slightly off-center paper
+// feed doesn't tear off the edge of the printed art. Adjacent rendered
+// cards therefore have 0.1in between them on the page even though the
+// underlying paper slots share an edge.
+#let _cw  = 4.9in  // rendered card width  (landscape orientation; slot is 5in)
+#let _ch  = 2.9in  // rendered card height (landscape orientation; slot is 3in)
+#let _pw  = _ch    // portrait card content width  = 2.9in
+#let _ph  = _cw    // portrait card content height = 4.9in
+#let _gap = 0.1in  // between rendered cards (= 0.05in inset × 2)
 
 #let _tier-box-w = 28pt
 
@@ -323,7 +331,7 @@
   set page(
     paper: "us-letter",
     flipped: true,
-    margin: (x: 0.5in, top: 1.75in, bottom: 1.75in),
+    margin: (x: 1.05in, top: 1.8in, bottom: 1.8in),
     fill: white,
   )
   set text(size: 10pt, fill: _ink)
