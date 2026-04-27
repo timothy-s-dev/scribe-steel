@@ -28,8 +28,11 @@ test.describe('Auto-save', () => {
 
     await visibleTitleInput(page).pressSequentially('hello world', { delay: 50 });
 
-    // Wait for the debounce window to elapse and the save to land.
-    await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+    // Wait for the debounce window to elapse and the save to land. The 2s
+    // debounce eats most of the default 5s expect window, so on a loaded
+    // CI runner the badge can land just past the deadline — match the
+    // longer timeout used elsewhere in this file.
+    await expect(page.getByText('Saved', { exact: true })).toBeVisible({ timeout: 10_000 });
 
     expect(await readSaveCounter(page)).toBe(1);
   });
