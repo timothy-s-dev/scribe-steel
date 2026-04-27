@@ -95,7 +95,7 @@ describe('App smoke tests', () => {
   it('renders the privacy policy page', async () => {
     render(<TestApp route="/privacy" />);
     const main = await screen.findByRole('main');
-    expect(await within(main).findByRole('heading', { name: 'Privacy Policy' })).toBeInTheDocument();
+    expect(await within(main).findByRole('heading', { name: 'Privacy & Legal' })).toBeInTheDocument();
   });
 
   it('renders the 404 page for unknown routes', async () => {
