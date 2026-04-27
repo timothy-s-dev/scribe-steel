@@ -6,4 +6,3 @@ export { SectionHeader } from './SectionHeader';
 export { AddButton } from './AddButton';
 export { RemoveButton } from './RemoveButton';
 export { FormPanel } from './FormPanel';
-export { type InputSize } from './formStyles';

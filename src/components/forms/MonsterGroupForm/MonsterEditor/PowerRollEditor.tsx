@@ -1,11 +1,7 @@
 import { Input } from '@/components/forms/common';
-import { compactLabelClass, inputBaseClass, inputSizeClass } from '@/components/forms/common/formStyles';
+import { compactLabelClass, inputBaseClass } from '@/components/forms/common/formStyles';
 import { cn } from '@/lib/utils';
 import type { Effect } from '@/data/bestiary';
-
-// Same visual treatment as an input, but non-editable — used for the static
-// tier-range labels next to each result field.
-const inputLikeBoxClass = cn(inputBaseClass, inputSizeClass.md);
 
 interface PowerRollEditorProps {
   effect: Effect;
@@ -39,7 +35,7 @@ export function PowerRollEditor({ effect, onUpdate, onRemove }: PowerRollEditorP
       </div>
       {(['tier1', 'tier2', 'tier3'] as const).map((tier, i) => (
         <div key={tier} className="grid grid-cols-[80px_1fr] gap-2">
-          <span className={cn(inputLikeBoxClass, 'text-center text-xs flex items-center justify-center')}>
+          <span className={cn(inputBaseClass, 'text-center text-xs flex items-center justify-center')}>
             {i === 0 ? '≤11' : i === 1 ? '12-16' : '17+'}
           </span>
           <Input

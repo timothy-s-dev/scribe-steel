@@ -109,7 +109,6 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
           {value.malice.map((m) => (
             <div key={m.id} className="flex gap-1.5 items-start">
               <Input
-                inputSize="sm"
                 type="number"
                 className="w-12 text-center"
                 value={m.cost}
@@ -117,14 +116,12 @@ export function EncounterForm({ value, onChange }: DocumentFormProps<EncounterDo
                 title="Cost"
               />
               <Input
-                inputSize="sm"
                 className="w-28"
                 value={m.name}
                 onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { name: e.target.value }) })}
                 placeholder="Name"
               />
               <Input
-                inputSize="sm"
                 className="flex-1"
                 value={m.description}
                 onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { description: e.target.value }) })}
@@ -231,7 +228,6 @@ function CreatureRow({
     <div className="space-y-1 p-2 rounded-sm bg-surface-container/50">
       <div className="flex gap-1.5 items-center">
         <Input
-          inputSize="sm"
           className="flex-1"
           value={creature.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
@@ -248,23 +244,22 @@ function CreatureRow({
       </div>
       <div className="flex gap-1 items-center flex-wrap">
         <MiniField label="Stam" width="w-14">
-          <Input inputSize="sm" className="text-center" value={creature.stamina} onChange={(e) => onUpdate({ stamina: e.target.value })} />
+          <Input className="text-center" value={creature.stamina} onChange={(e) => onUpdate({ stamina: e.target.value })} />
         </MiniField>
         <MiniField label="Stab" width="w-12">
-          <Input inputSize="sm" type="number" className="text-center" value={creature.stability} onChange={(e) => onUpdate({ stability: parseInt(e.target.value) || 0 })} />
+          <Input type="number" className="text-center" value={creature.stability} onChange={(e) => onUpdate({ stability: parseInt(e.target.value) || 0 })} />
         </MiniField>
         <MiniField label="Spd" width="w-12">
-          <Input inputSize="sm" type="number" className="text-center" value={creature.speed} onChange={(e) => onUpdate({ speed: parseInt(e.target.value) || 0 })} />
+          <Input type="number" className="text-center" value={creature.speed} onChange={(e) => onUpdate({ speed: parseInt(e.target.value) || 0 })} />
         </MiniField>
         <MiniField label="FS" width="w-12">
-          <Input inputSize="sm" className="text-center" value={creature.freeStrike} onChange={(e) => onUpdate({ freeStrike: e.target.value })} />
+          <Input className="text-center" value={creature.freeStrike} onChange={(e) => onUpdate({ freeStrike: e.target.value })} />
         </MiniField>
         <MiniField label="Dist" width="w-20">
-          <Input inputSize="sm" value={creature.distance} onChange={(e) => onUpdate({ distance: e.target.value })} />
+          <Input value={creature.distance} onChange={(e) => onUpdate({ distance: e.target.value })} />
         </MiniField>
         <MiniField label="×" width="w-10">
           <Input
-            inputSize="sm"
             type="number"
             className="text-center"
             value={creature.count ?? ''}
@@ -277,7 +272,6 @@ function CreatureRow({
         </MiniField>
       </div>
       <Input
-        inputSize="sm"
         value={creature.notes}
         onChange={(e) => onUpdate({ notes: e.target.value })}
         placeholder="Notes"

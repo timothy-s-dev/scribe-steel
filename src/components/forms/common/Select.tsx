@@ -1,12 +1,12 @@
 import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
-import { inputBaseClass, inputSizeClass, type InputSize } from './formStyles';
+import { inputBaseClass } from './formStyles';
 
-type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & { inputSize?: InputSize };
+type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>;
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, inputSize = 'md', children, ...props }, ref) => (
-    <select ref={ref} className={cn('w-full', inputBaseClass, inputSizeClass[inputSize], className)} {...props}>
+  ({ className, children, ...props }, ref) => (
+    <select ref={ref} className={cn('w-full', inputBaseClass, className)} {...props}>
       {children}
     </select>
   ),

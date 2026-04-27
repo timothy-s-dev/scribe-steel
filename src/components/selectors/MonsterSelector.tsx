@@ -1,7 +1,7 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { inputBaseClass, inputSizeClass } from '@/components/forms/common/formStyles';
+import { inputBaseClass } from '@/components/forms/common/formStyles';
 import { sortedMonsters } from '@/data/bestiary';
 import type { IndexItem } from '@/data/documents/types';
 import type { MonsterSummary } from '@/data/bestiary';
@@ -25,7 +25,7 @@ interface Group {
   items: Entry[];
 }
 
-const inputClass = cn('w-full', inputBaseClass, inputSizeClass.md);
+const inputClass = cn('w-full', inputBaseClass);
 
 function monstersOf(item: IndexItem): MonsterSummary[] {
   return (item.monsters as MonsterSummary[] | undefined) ?? [];

@@ -35,7 +35,6 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
           <div key={m.id} className="space-y-1 md:space-y-0 md:flex md:gap-1.5 md:items-start">
             <div className="flex gap-1.5 items-start">
               <Input
-                inputSize="sm"
                 className="w-16 text-center"
                 value={m.cost ?? ''}
                 onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { cost: e.target.value }) })}
@@ -43,7 +42,6 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
                 placeholder="3"
               />
               <Input
-                inputSize="sm"
                 className="flex-1 md:w-28 md:flex-none"
                 value={m.name}
                 onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { name: e.target.value }) })}
@@ -56,7 +54,6 @@ export function MonsterGroupForm({ value, onChange }: DocumentFormProps<MonsterG
               />
             </div>
             <Input
-              inputSize="sm"
               className="md:flex-1"
               value={maliceDescription(m)}
               onChange={(e) => onChange({ ...value, malice: updateById(value.malice, m.id, { effects: [{ effect: e.target.value }] }) })}
