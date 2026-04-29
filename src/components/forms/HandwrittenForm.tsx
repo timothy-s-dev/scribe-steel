@@ -3,7 +3,11 @@ import { Field, FormPanel, Input } from '@/components/forms/common';
 import { type HandwrittenDocument } from '@/data/documents/handwritten';
 import type { DocumentFormProps } from '@/data/documents/types';
 
-export function HandwrittenForm({ value, onChange }: DocumentFormProps<HandwrittenDocument>) {
+export function HandwrittenForm({
+  value,
+  onChange,
+  editorDiagnostics,
+}: DocumentFormProps<HandwrittenDocument>) {
   return (
     <FormPanel className="md:w-1/2" bodyClassName="space-y-2">
       <Field label="Title">
@@ -16,6 +20,7 @@ export function HandwrittenForm({ value, onChange }: DocumentFormProps<Handwritt
       <TypstEditor
         value={value.content}
         onChange={(content) => onChange({ ...value, content })}
+        diagnostics={editorDiagnostics}
       />
     </FormPanel>
   );

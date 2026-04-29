@@ -1,9 +1,19 @@
 /// <reference lib="webworker" />
 import { $typst, TypstSnippet } from '@myriaddreamin/typst.ts/contrib/snippet';
+import { CompileFormatEnum } from '@myriaddreamin/typst.ts/compiler';
 
 export interface VirtualFile {
   path: string;
   content: string;
+}
+
+export interface TypstDiagnostic {
+  severity: 'error' | 'warning' | 'info' | 'hint';
+  message: string;
+  // Path the diagnostic refers to. May be empty for trace-only entries.
+  path: string;
+  // Typst's range string, e.g. "2:9-3:15". May be empty.
+  range: string;
 }
 
 interface InitRequest {
@@ -31,19 +41,68 @@ type CompileRequest =
 type IncomingMessage = InitRequest | CompileRequest;
 
 export type CompileResponse =
-  | { id: number; ok: true; method: 'compileSvg'; result: string }
-  | { id: number; ok: true; method: 'compilePdf'; result: Uint8Array | undefined }
-  | { id: number; ok: false; error: string };
+  | {
+      id: number;
+      ok: true;
+      method: 'compileSvg';
+      result: string;
+      mainPath: string;
+      diagnostics: TypstDiagnostic[];
+    }
+  | {
+      id: number;
+      ok: true;
+      method: 'compilePdf';
+      result: Uint8Array | undefined;
+      mainPath: string;
+      diagnostics: TypstDiagnostic[];
+    }
+  | {
+      id: number;
+      ok: false;
+      error: string;
+      mainPath: string;
+      diagnostics: TypstDiagnostic[];
+    };
 
 let initResolve!: () => void;
 const initialized = new Promise<void>((r) => {
   initResolve = r;
 });
 
+let mainCounter = 0;
+
 async function ensureFiles(files: VirtualFile[]) {
   for (const file of files) {
     await $typst.addSource(file.path, file.content);
   }
+}
+
+function normalizeSeverity(s: string): TypstDiagnostic['severity'] {
+  const v = s.toLowerCase();
+  if (v === 'error' || v === 'warning' || v === 'info' || v === 'hint') return v;
+  return 'error';
+}
+
+function toDiagnostics(raw: unknown, mainPath: string): TypstDiagnostic[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((d) => {
+      if (!d || typeof d !== 'object') return null;
+      const obj = d as Record<string, unknown>;
+      const severity = typeof obj.severity === 'string' ? normalizeSeverity(obj.severity) : 'error';
+      const message = typeof obj.message === 'string' ? obj.message : '';
+      const path = typeof obj.path === 'string' ? obj.path : '';
+      const range = typeof obj.range === 'string' ? obj.range : '';
+      return { severity, message, path, range } satisfies TypstDiagnostic;
+    })
+    .filter((d): d is TypstDiagnostic => d != null && d.message.length > 0)
+    .map((d) => ({
+      ...d,
+      // Strip the leading slash from the synthetic main path so callers can
+      // match against their mainPath in either form.
+      path: d.path === mainPath || d.path === mainPath.replace(/^\//, '') ? mainPath : d.path,
+    }));
 }
 
 self.onmessage = async (e: MessageEvent<IncomingMessage>) => {
@@ -71,26 +130,62 @@ self.onmessage = async (e: MessageEvent<IncomingMessage>) => {
   }
 
   const req = msg;
+  const mainPath = `/tmp/main-${++mainCounter}.typ`;
+
   try {
     await initialized;
     await ensureFiles(req.files);
+    await $typst.addSource(mainPath, req.source);
+    const compiler = await $typst.getCompiler();
+
+    const format =
+      req.method === 'compileSvg' ? CompileFormatEnum.vector : CompileFormatEnum.pdf;
+
+    // Asking for `diagnostics: 'full'` switches the compiler from "throw on
+    // error" to "return diagnostics in the result". We surface those to the
+    // editor; warnings/hints come back here too, even on success.
+    const compileResult = await compiler.compile({
+      mainFilePath: mainPath,
+      inputs: req.inputs,
+      format,
+      diagnostics: 'full',
+    });
+
+    const diagnostics = toDiagnostics(compileResult.diagnostics, mainPath);
+    const hasError = diagnostics.some((d) => d.severity === 'error');
+
+    if (!compileResult.result || hasError) {
+      (self as unknown as Worker).postMessage({
+        id: req.id,
+        ok: false,
+        error: 'Typst compilation failed',
+        mainPath,
+        diagnostics,
+      } satisfies CompileResponse);
+      return;
+    }
+
     if (req.method === 'compileSvg') {
-      const result = await $typst.svg({ mainContent: req.source, inputs: req.inputs });
+      const svg = await $typst.svg({ vectorData: compileResult.result });
       (self as unknown as Worker).postMessage({
         id: req.id,
         ok: true,
         method: 'compileSvg',
-        result,
+        result: svg,
+        mainPath,
+        diagnostics,
       } satisfies CompileResponse);
     } else {
-      const result = await $typst.pdf({ mainContent: req.source, inputs: req.inputs });
-      const transfer = result?.buffer ? [result.buffer as ArrayBuffer] : [];
+      const pdf = compileResult.result;
+      const transfer = pdf?.buffer ? [pdf.buffer as ArrayBuffer] : [];
       (self as unknown as Worker).postMessage(
         {
           id: req.id,
           ok: true,
           method: 'compilePdf',
-          result,
+          result: pdf,
+          mainPath,
+          diagnostics,
         } satisfies CompileResponse,
         transfer,
       );
@@ -100,6 +195,15 @@ self.onmessage = async (e: MessageEvent<IncomingMessage>) => {
       id: req.id,
       ok: false,
       error: err instanceof Error ? err.message : String(err),
+      mainPath,
+      diagnostics: [],
     } satisfies CompileResponse);
+  } finally {
+    try {
+      await $typst.unmapShadow(mainPath);
+    } catch {
+      // If unmap fails (e.g. compiler reset mid-flight), there's nothing
+      // useful to do. The worker may already be terminating.
+    }
   }
 };

@@ -3,7 +3,11 @@ import { Field, FormPanel, Input, Textarea } from '@/components/forms/common';
 import { type LoreBookDocument } from '@/data/documents/lore-books';
 import type { DocumentFormProps } from '@/data/documents/types';
 
-export function LoreBookForm({ value, onChange }: DocumentFormProps<LoreBookDocument>) {
+export function LoreBookForm({
+  value,
+  onChange,
+  editorDiagnostics,
+}: DocumentFormProps<LoreBookDocument>) {
   return (
     <FormPanel className="md:w-1/2" bodyClassName="space-y-2">
       <Field label="Title" required>
@@ -43,7 +47,11 @@ export function LoreBookForm({ value, onChange }: DocumentFormProps<LoreBookDocu
           placeholder="Description"
         />
       </Field>
-      <TypstEditor value={value.content} onChange={(content) => onChange({ ...value, content })} />
+      <TypstEditor
+        value={value.content}
+        onChange={(content) => onChange({ ...value, content })}
+        diagnostics={editorDiagnostics}
+      />
     </FormPanel>
   );
 }

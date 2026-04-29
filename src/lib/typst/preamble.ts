@@ -52,7 +52,7 @@ interface JsonBackedOptions<T extends object> {
 // parameter names are kept in sync by convention.
 export function jsonBackedBuildSource<T extends object>(
   opts: JsonBackedOptions<T>,
-): (data: T) => { source: string; files: VirtualFile[] } {
+): (data: T) => { source: string; files: VirtualFile[]; userContentLineOffset: number } {
   const payloadPath = opts.payloadPath ?? '/data/payload.json';
   const contentField = (opts.contentField ?? 'content') as keyof T;
   const excluded = new Set<PropertyKey>([
@@ -67,13 +67,14 @@ export function jsonBackedBuildSource<T extends object>(
 
     const content = (data[contentField] as unknown as string | undefined) ?? '';
 
-    const source = [
+    const preambleLines = [
       importLine(opts.importPath),
       `#let _data = json("${payloadPath}")`,
       showWith(opts.functionName, args),
       '',
-      content,
-    ].join('\n');
+    ];
+    const preamble = preambleLines.join('\n');
+    const source = `${preamble}\n${content}`;
 
     return {
       source,
@@ -81,6 +82,10 @@ export function jsonBackedBuildSource<T extends object>(
         ...opts.templateFiles,
         { path: payloadPath, content: JSON.stringify(data) },
       ],
+      // Number of preamble lines preceding `content`. Used by the editor to
+      // map Typst diagnostic line numbers (which reference the full source)
+      // back into editor-local line numbers.
+      userContentLineOffset: preamble.split('\n').length,
     };
   };
 }

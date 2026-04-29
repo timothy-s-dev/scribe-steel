@@ -1,7 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { DocumentPreview } from '@/components/preview';
 import type { DocumentMetadata } from '@/data/documents';
 import type { DocumentMetaFields } from '@/data/documents/types';
+import { useTypstCompiler } from '@/hooks/useTypstCompiler';
+import { useSettings } from '@/hooks/queries/useSettings';
 
 type MobileTab = 'edit' | 'preview';
 
@@ -22,10 +24,44 @@ export function EditorBody<T extends DocumentMetaFields & { name: string }>({
   formResetToken,
   onEdit,
 }: EditorBodyProps<T>) {
+  const { settings } = useSettings();
   const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
+  const [printMode, setPrintMode] = useState(settings.printFriendly);
 
   const hasPreview = !!type.buildSource;
   const FormComponent = type.FormComponent;
+
+  // The compile pipeline lives here (rather than inside DocumentPreview) so
+  // diagnostics keep flowing while the user is on the mobile "edit" tab —
+  // otherwise the preview unmounts and the editor's lint markers freeze.
+  const buildSource = type.buildSource;
+  const built = useMemo(
+    () =>
+      data && buildSource
+        ? buildSource(data)
+        : { source: '', files: [], userContentLineOffset: 0 },
+    [buildSource, data],
+  );
+
+  // Preview and PDF paths pass different `inputs` to Typst: the preview sets
+  // `preview=true` so templates can cap output (we don't want the full
+  // bestiary rendering into the DOM just to scroll past it). The PDF export
+  // always gets the full document.
+  const previewInputs = useMemo(
+    () => ({ print: printMode ? 'true' : 'false', preview: 'true' }),
+    [printMode],
+  );
+  const pdfInputs = useMemo(
+    () => ({ print: printMode ? 'true' : 'false' }),
+    [printMode],
+  );
+
+  const { pages, error, editorDiagnostics, loading, truncated } = useTypstCompiler(
+    built.source,
+    built.files,
+    previewInputs,
+    built.userContentLineOffset ?? 0,
+  );
 
   // While loading, dim and disable the form. `contents` keeps the wrapper
   // transparent to the surrounding flex layout so the form's own flex
@@ -35,12 +71,27 @@ export function EditorBody<T extends DocumentMetaFields & { name: string }>({
     : 'contents';
   const formPanel = data ? (
     <div className={formPanelWrapperClass}>
-      <FormComponent key={formResetToken} value={data} onChange={onEdit} />
+      <FormComponent
+        key={formResetToken}
+        value={data}
+        onChange={onEdit}
+        editorDiagnostics={editorDiagnostics}
+      />
     </div>
   ) : null;
 
   const previewPanel = hasPreview && data ? (
-    <DocumentPreview document={{ metadata: type, data, fileId }} />
+    <DocumentPreview
+      document={{ metadata: type, data, fileId }}
+      pages={pages}
+      error={error}
+      loading={loading}
+      truncated={truncated}
+      built={built}
+      printMode={printMode}
+      onPrintModeChange={setPrintMode}
+      pdfInputs={pdfInputs}
+    />
   ) : null;
 
   if (!hasPreview) return formPanel;

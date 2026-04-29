@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import type { VirtualFile } from '@/lib/typst/compiler';
+import type { EditorDiagnostic } from '@/hooks/useTypstCompiler';
 import type { EncounterDocument } from './encounters';
 import type { HandwrittenDocument } from './handwritten';
 import type { LoreBookDocument } from './lore-books';
@@ -31,6 +32,9 @@ export interface DocumentMetaFields {
 export interface DocumentFormProps<Data> {
   value: Data;
   onChange: (next: Data) => void;
+  // Diagnostics produced by the most recent Typst compile. Only forms with
+  // an embedded TypstEditor consume this; other forms can ignore it.
+  editorDiagnostics?: EditorDiagnostic[];
 }
 
 export interface DocumentMetadata<Data> {
@@ -41,7 +45,15 @@ export interface DocumentMetadata<Data> {
   sectionTitle?: string;
   createDefault: (name: string) => Data;
   indexFields?(data: Data): Record<string, unknown>;
-  buildSource?(data: Data): { source: string; files: VirtualFile[] };
+  buildSource?(data: Data): {
+    source: string;
+    files: VirtualFile[];
+    // For document types whose form embeds an editable Typst block: how
+    // many lines of preamble precede the user-editable content within
+    // `source`. Used to map Typst diagnostic line numbers back into
+    // editor-local line numbers.
+    userContentLineOffset?: number;
+  };
   FormComponent: ComponentType<DocumentFormProps<Data>>;
 }
 

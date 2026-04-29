@@ -1,47 +1,42 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Toolbar } from './Toolbar';
 import { SvgPage } from './SvgPage';
-import { useTypstCompiler } from '@/hooks/useTypstCompiler';
+import type { ParsedPage } from '@/hooks/useTypstCompiler';
 import { useZoom } from '@/hooks/useZoom';
 import { useSettings } from '@/hooks/queries/useSettings';
-import { compilePdf, resetCompiler } from '@/lib/typst/compiler';
+import { compilePdf, resetCompiler, type VirtualFile } from '@/lib/typst/compiler';
 import type { Document } from '@/data/documents';
 
 interface DocumentPreviewProps<T> {
   document: Document<T>;
+  // Compile state owned by the parent — see EditorBody. Lifting the compile
+  // up keeps it running while the user is on the mobile "edit" tab so the
+  // form's lint markers stay live.
+  pages: ParsedPage[];
+  error: string | null;
+  loading: boolean;
+  truncated: boolean;
+  built: { source: string; files: VirtualFile[] };
+  printMode: boolean;
+  onPrintModeChange: (next: boolean) => void;
+  pdfInputs: Record<string, string>;
 }
 
-export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
+export function DocumentPreview<T>({
+  document,
+  pages,
+  error,
+  loading,
+  truncated,
+  built,
+  printMode,
+  onPrintModeChange,
+  pdfInputs,
+}: DocumentPreviewProps<T>) {
   const { settings } = useSettings();
-  const [printMode, setPrintMode] = useState(settings.printFriendly);
   const [exporting, setExporting] = useState(false);
   const zoom = useZoom(settings.defaultZoom);
-
-  const buildSource = document.metadata.buildSource;
-  const built = useMemo(
-    () => (buildSource ? buildSource(document.data) : { source: '', files: [] }),
-    [buildSource, document.data],
-  );
-
-  // Preview and PDF paths pass different `inputs` to Typst: the preview
-  // sets `preview=true` so templates can cap output (we don't want the
-  // full bestiary rendering into the DOM just to scroll past it). The
-  // PDF export always gets the full document.
-  const previewInputs = useMemo(
-    () => ({ print: printMode ? 'true' : 'false', preview: 'true' }),
-    [printMode],
-  );
-  const pdfInputs = useMemo(
-    () => ({ print: printMode ? 'true' : 'false' }),
-    [printMode],
-  );
-
-  const { pages, error, loading, truncated } = useTypstCompiler(
-    built.source,
-    built.files,
-    previewInputs,
-  );
 
   const { setPageDimensions } = zoom;
   const firstPageWidth = pages.length > 0 ? pages[0].width : 0;
@@ -55,7 +50,8 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
   async function handleExportPdf() {
     setExporting(true);
     try {
-      const pdfBytes = await compilePdf(built.source, built.files, pdfInputs);
+      const result = await compilePdf(built.source, built.files, pdfInputs);
+      const pdfBytes = result.pdf;
       if (!pdfBytes) return;
       const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
@@ -85,7 +81,7 @@ export function DocumentPreview<T>({ document }: DocumentPreviewProps<T>) {
       <Toolbar
         zoom={zoom}
         printMode={printMode}
-        onPrintModeChange={setPrintMode}
+        onPrintModeChange={onPrintModeChange}
         onExportPdf={handleExportPdf}
         exporting={exporting}
       />

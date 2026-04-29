@@ -8,11 +8,36 @@
 // strict document CSP and Typst compilation breaks (fail-safe, but visible
 // only as broken previews in production).
 import TypstWorker from './typst.worker.ts?worker';
-import type { CompileResponse } from './typst.worker';
+import type { CompileResponse, TypstDiagnostic } from './typst.worker';
+
+export type { TypstDiagnostic };
 
 export interface VirtualFile {
   path: string;
   content: string;
+}
+
+export interface SvgCompileResult {
+  svg: string;
+  mainPath: string;
+  diagnostics: TypstDiagnostic[];
+}
+
+export interface PdfCompileResult {
+  pdf: Uint8Array | undefined;
+  mainPath: string;
+  diagnostics: TypstDiagnostic[];
+}
+
+export class TypstCompileError extends Error {
+  readonly mainPath: string;
+  readonly diagnostics: TypstDiagnostic[];
+  constructor(message: string, mainPath: string, diagnostics: TypstDiagnostic[]) {
+    super(message);
+    this.name = 'TypstCompileError';
+    this.mainPath = mainPath;
+    this.diagnostics = diagnostics;
+  }
 }
 
 const VERSION = '0.7.0-rc2';
@@ -74,8 +99,23 @@ async function spawnWorker(): Promise<Worker> {
     const resolver = pending.get(msg.id);
     if (!resolver) return;
     pending.delete(msg.id);
-    if (msg.ok) resolver.resolve(msg.result);
-    else resolver.reject(new Error(msg.error));
+    if (msg.ok) {
+      if (msg.method === 'compileSvg') {
+        resolver.resolve({
+          svg: msg.result,
+          mainPath: msg.mainPath,
+          diagnostics: msg.diagnostics,
+        } satisfies SvgCompileResult);
+      } else {
+        resolver.resolve({
+          pdf: msg.result,
+          mainPath: msg.mainPath,
+          diagnostics: msg.diagnostics,
+        } satisfies PdfCompileResult);
+      }
+    } else {
+      resolver.reject(new TypstCompileError(msg.error, msg.mainPath, msg.diagnostics));
+    }
   };
   w.onerror = (e) => {
     const err = new Error(e.message || 'typst worker error');
@@ -113,16 +153,16 @@ export function compileSvg(
   source: string,
   files: VirtualFile[] = [],
   inputs?: Record<string, string>,
-): Promise<string> {
-  return send<string>('compileSvg', source, files, inputs);
+): Promise<SvgCompileResult> {
+  return send<SvgCompileResult>('compileSvg', source, files, inputs);
 }
 
 export function compilePdf(
   source: string,
   files: VirtualFile[] = [],
   inputs?: Record<string, string>,
-): Promise<Uint8Array | undefined> {
-  return send<Uint8Array | undefined>('compilePdf', source, files, inputs);
+): Promise<PdfCompileResult> {
+  return send<PdfCompileResult>('compilePdf', source, files, inputs);
 }
 
 // Terminate the worker and reject any outstanding requests. Callers
