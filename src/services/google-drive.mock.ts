@@ -99,14 +99,24 @@ interface MockDoc {
   modifiedTime: string;
 }
 
+interface MockImage {
+  name: string;
+  mimeType: string;
+  // Bytes encoded as base64 — JSON can't hold raw binary, and localStorage is
+  // string-only. The few hundred KB of overhead is fine for the dev/test
+  // environment this mock targets.
+  bytesBase64: string;
+}
+
 interface MockState {
   settings: { data: unknown; fileId: string } | null;
   indexes: Partial<Record<Category, IndexFile>>;
   documents: Record<string, MockDoc>;
+  images: Record<string, MockImage>;
 }
 
 function emptyState(): MockState {
-  return { settings: null, indexes: {}, documents: {} };
+  return { settings: null, indexes: {}, documents: {}, images: {} };
 }
 
 function load(): MockState {
@@ -139,6 +149,7 @@ function load(): MockState {
       settings: parsed.settings ?? null,
       indexes: parsed.indexes ?? {},
       documents,
+      images: (parsed as { images?: Record<string, MockImage> }).images ?? {},
     };
   } catch {
     return emptyState();
@@ -312,6 +323,61 @@ export async function removeDocument(
   state.indexes[category] = index;
   persist(state);
   return { updatedIndex: toCachedIndex(category, index) };
+}
+
+// ── Image asset operations ──────────────────────────────────────────────────
+
+export interface DriveImageMeta {
+  id: string;
+  name: string;
+  mimeType: string;
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+function base64ToBytes(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const out = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) out[i] = binary.charCodeAt(i);
+  return out;
+}
+
+export async function uploadImage(file: Blob, name: string): Promise<DriveImageMeta> {
+  requireAuth();
+  await delay();
+  const buf = await file.arrayBuffer();
+  const bytesBase64 = bytesToBase64(new Uint8Array(buf));
+  const mimeType = file.type || 'application/octet-stream';
+  const finalName = name && name.trim().length > 0 ? name : `image-${Date.now()}.bin`;
+  const state = load();
+  const id = newId();
+  state.images[id] = { name: finalName, mimeType, bytesBase64 };
+  persist(state);
+  return { id, name: finalName, mimeType };
+}
+
+export async function listImages(): Promise<DriveImageMeta[]> {
+  requireAuth();
+  await delay();
+  const state = load();
+  return Object.entries(state.images)
+    .map(([id, img]) => ({ id, name: img.name, mimeType: img.mimeType }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export async function fetchImageBytes(
+  fileId: string,
+): Promise<{ bytes: Uint8Array; mimeType: string }> {
+  requireAuth();
+  await delay();
+  const state = load();
+  const img = state.images[fileId];
+  if (!img) throw new DriveError(`Drive API 404: image ${fileId} not found`, 404);
+  return { bytes: base64ToBytes(img.bytesBase64), mimeType: img.mimeType };
 }
 
 export { DriveError, DriveConflictError };

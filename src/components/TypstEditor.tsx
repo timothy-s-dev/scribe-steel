@@ -1,18 +1,19 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { markdown } from '@codemirror/lang-markdown';
 import { EditorView, Decoration, type DecorationSet } from '@codemirror/view';
 import {
   EditorState,
+  EditorSelection,
   StateEffect,
   StateField,
   type Transaction,
 } from '@codemirror/state';
 import { linter, lintGutter, forceLinting, type Diagnostic } from '@codemirror/lint';
-import { Info } from 'lucide-react';
+import { toast } from 'sonner';
 import type { EditorDiagnostic } from '@/hooks/useTypstCompiler';
-
-const TYPST_DOCS_URL = 'https://typst.app/docs/reference/syntax/';
+import { TypstEditorToolbar } from './TypstEditorToolbar';
+import { uploadImage } from '@/services/google-drive';
 
 const editorTheme = EditorView.theme(
   {
@@ -73,6 +74,94 @@ const baseExtensions = [
   linter((view) => view.state.field(externalDiagnosticsField).slice()),
   lintGutter(),
 ];
+
+function inferImageExtension(file: File): string {
+  const dot = file.name.lastIndexOf('.');
+  if (dot > 0 && dot < file.name.length - 1) {
+    return file.name.slice(dot + 1).toLowerCase();
+  }
+  switch (file.type) {
+    case 'image/png':
+      return 'png';
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/gif':
+      return 'gif';
+    case 'image/webp':
+      return 'webp';
+    case 'image/svg+xml':
+      return 'svg';
+    default:
+      return 'png';
+  }
+}
+
+/**
+ * Replace a unique marker string anywhere in the doc with `replacement`.
+ * Used to swap a paste-time placeholder for the final `#image(...)` snippet
+ * after the upload resolves — the user may have typed elsewhere in the
+ * meantime, so we locate the placeholder by content rather than by saved
+ * position.
+ */
+function replaceMarker(view: EditorView, marker: string, replacement: string): void {
+  const idx = view.state.doc.toString().indexOf(marker);
+  if (idx < 0) return;
+  view.dispatch({
+    changes: { from: idx, to: idx + marker.length, insert: replacement },
+  });
+}
+
+function pasteImageExtension(readOnlyPrefixRef: { current: number }) {
+  return EditorView.domEventHandlers({
+    paste(event, view) {
+      const items = event.clipboardData?.files;
+      if (!items || items.length === 0) return false;
+      const images = Array.from(items).filter((f) => f.type.startsWith('image/'));
+      if (images.length === 0) return false;
+
+      event.preventDefault();
+      const sel = view.state.selection.main;
+      if (sel.from < readOnlyPrefixRef.current) return true;
+
+      // Insert placeholders synchronously so the cursor lands somewhere
+      // visible while the upload runs. The marker has to be unique so we can
+      // find and swap it once the upload resolves.
+      const placeholders = images.map((file) => {
+        const id =
+          typeof crypto !== 'undefined' && 'randomUUID' in crypto
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const marker = `/* uploading image ${id}… */`;
+        return { file, marker };
+      });
+
+      const inserted = placeholders.map((p) => p.marker).join('\n');
+      view.dispatch({
+        changes: { from: sel.from, to: sel.to, insert: inserted },
+        selection: EditorSelection.cursor(sel.from + inserted.length),
+      });
+
+      for (const { file, marker } of placeholders) {
+        const ext = inferImageExtension(file);
+        const name = file.name && file.name.length > 0 ? file.name : `pasted-${Date.now()}.${ext}`;
+        uploadImage(file, name)
+          .then((meta) => {
+            const finalExt = (() => {
+              const dot = meta.name.lastIndexOf('.');
+              return dot > 0 ? meta.name.slice(dot + 1).toLowerCase() : ext;
+            })();
+            replaceMarker(view, marker, `#image("/drive/${meta.id}.${finalExt}")`);
+          })
+          .catch((err) => {
+            const message = err instanceof Error ? err.message : String(err);
+            replaceMarker(view, marker, `/* image upload failed: ${message} */`);
+            toast.error('Image upload failed', { description: message });
+          });
+      }
+      return true;
+    },
+  });
+}
 
 /**
  * Creates extensions that protect the first `len` characters from editing
@@ -160,48 +249,51 @@ export function TypstEditor({
   readOnlyPrefix = 0,
   diagnostics,
 }: TypstEditorProps) {
-  const viewRef = useRef<EditorView | null>(null);
+  const [view, setView] = useState<EditorView | null>(null);
+
+  // The paste handler reads `readOnlyPrefix` asynchronously when an image is
+  // pasted, well after render. We hand it a ref instead of the value so the
+  // extensions array doesn't have to rebuild every time the prop changes —
+  // rebuilding tears down and re-creates the EditorView, which would lose
+  // cursor position and selection state.
+  const readOnlyPrefixRef = useRef(readOnlyPrefix);
+  useEffect(() => {
+    readOnlyPrefixRef.current = readOnlyPrefix;
+  }, [readOnlyPrefix]);
+
   const extensions = useMemo(
-    () => [...baseExtensions, ...readOnlyPreambleExtensions(readOnlyPrefix)],
+    () => [
+      ...baseExtensions,
+      // The extension only dereferences this ref from its paste DOM event
+      // handler, never during render — safe to pass.
+      // eslint-disable-next-line react-hooks/refs
+      pasteImageExtension(readOnlyPrefixRef),
+      ...readOnlyPreambleExtensions(readOnlyPrefix),
+    ],
     [readOnlyPrefix],
   );
 
   useEffect(() => {
-    const view = viewRef.current;
     if (!view) return;
     const cmDiags = toCmDiagnostics(view.state, diagnostics ?? []);
     view.dispatch({ effects: externalDiagnosticsEffect.of(cmDiags) });
     forceLinting(view);
-  }, [diagnostics]);
+  }, [view, diagnostics]);
 
   return (
-    <div className="flex-1 min-h-[400px] overflow-hidden relative">
-      <CodeMirror
-        value={value}
-        onChange={onChange}
-        extensions={extensions}
-        theme="dark"
-        height="100%"
-        style={{ height: '100%' }}
-        onCreateEditor={(view) => {
-          viewRef.current = view;
-          // Push any diagnostics that arrived before the editor mounted.
-          if (diagnostics && diagnostics.length > 0) {
-            const cmDiags = toCmDiagnostics(view.state, diagnostics);
-            view.dispatch({ effects: externalDiagnosticsEffect.of(cmDiags) });
-            forceLinting(view);
-          }
-        }}
-      />
-      <a
-        href={TYPST_DOCS_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Typst syntax reference"
-        className="absolute bottom-3 right-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-surface-container/80 text-on-surface-variant backdrop-blur-sm hover:bg-surface-container hover:text-on-surface transition-colors shadow-sm border border-outline-variant/30"
-      >
-        <Info className="h-4 w-4" />
-      </a>
+    <div className="flex-1 min-h-[400px] flex flex-col overflow-hidden">
+      <TypstEditorToolbar view={view} readOnlyPrefix={readOnlyPrefix} />
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <CodeMirror
+          value={value}
+          onChange={onChange}
+          extensions={extensions}
+          theme="dark"
+          height="100%"
+          style={{ height: '100%' }}
+          onCreateEditor={(v) => setView(v)}
+        />
+      </div>
     </div>
   );
 }

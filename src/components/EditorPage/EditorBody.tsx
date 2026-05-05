@@ -3,6 +3,7 @@ import { DocumentPreview } from '@/components/preview';
 import type { DocumentMetadata } from '@/data/documents';
 import type { DocumentMetaFields } from '@/data/documents/types';
 import { useTypstCompiler } from '@/hooks/useTypstCompiler';
+import { useResolvedImageFiles } from '@/hooks/useResolvedImageFiles';
 import { useSettings } from '@/hooks/queries/useSettings';
 
 type MobileTab = 'edit' | 'preview';
@@ -56,11 +57,29 @@ export function EditorBody<T extends DocumentMetaFields & { name: string }>({
     [printMode],
   );
 
-  const { pages, error, editorDiagnostics, loading, truncated } = useTypstCompiler(
+  // Walk the built source for #image("…") references and inject them as
+  // additional VirtualFiles. Failures (CORS, 404, malformed path) surface as
+  // editor diagnostics so the user sees them in the lint gutter.
+  const userContentLineOffset = built.userContentLineOffset ?? 0;
+  const { files: imageFiles, errors: imageErrors } = useResolvedImageFiles(
     built.source,
-    built.files,
+    userContentLineOffset,
+  );
+  const allFiles = useMemo(
+    () => (imageFiles.length === 0 ? built.files : [...built.files, ...imageFiles]),
+    [built.files, imageFiles],
+  );
+
+  const { pages, error, editorDiagnostics: compileDiagnostics, loading, truncated } = useTypstCompiler(
+    built.source,
+    allFiles,
     previewInputs,
-    built.userContentLineOffset ?? 0,
+    userContentLineOffset,
+  );
+
+  const editorDiagnostics = useMemo(
+    () => (imageErrors.length === 0 ? compileDiagnostics : [...compileDiagnostics, ...imageErrors]),
+    [compileDiagnostics, imageErrors],
   );
 
   // While loading, dim and disable the form. `contents` keeps the wrapper
@@ -80,6 +99,13 @@ export function EditorBody<T extends DocumentMetaFields & { name: string }>({
     </div>
   ) : null;
 
+  // Pass the merged file list (preamble + resolved images) to the PDF
+  // export path so generated PDFs include the same images the preview shows.
+  const builtForPreview = useMemo(
+    () => ({ source: built.source, files: allFiles }),
+    [built.source, allFiles],
+  );
+
   const previewPanel = hasPreview && data ? (
     <DocumentPreview
       document={{ metadata: type, data, fileId }}
@@ -87,7 +113,7 @@ export function EditorBody<T extends DocumentMetaFields & { name: string }>({
       error={error}
       loading={loading}
       truncated={truncated}
-      built={built}
+      built={builtForPreview}
       printMode={printMode}
       onPrintModeChange={setPrintMode}
       pdfInputs={pdfInputs}

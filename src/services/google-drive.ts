@@ -122,10 +122,12 @@ interface StorageLayout {
   folders: Record<Category, string>;
   indexFiles: Partial<Record<Category, string>>;
   settingsFile: string | null;
+  imagesFolder: string | null;
 }
 
 const ALL_CATEGORIES: Category[] = ['monsters', 'encounters', 'handwritten', 'lore-books', 'monster-cards'];
 const ROOT_FOLDER_NAME = 'Scribe Steel';
+const IMAGES_FOLDER_NAME = 'images';
 
 interface DiscoveredFile {
   id: string;
@@ -144,6 +146,7 @@ async function discoverLayout(): Promise<Partial<StorageLayout>> {
   const names = [
     ROOT_FOLDER_NAME,
     ...ALL_CATEGORIES,
+    IMAGES_FOLDER_NAME,
     'index.json',
     'settings.json',
   ];
@@ -183,11 +186,19 @@ async function discoverLayout(): Promise<Partial<StorageLayout>> {
     (f) => f.name === 'settings.json' && f.parents?.includes(root.id),
   );
 
+  const imagesFolder = files.find(
+    (f) =>
+      f.mimeType === FOLDER_MIME &&
+      f.name === IMAGES_FOLDER_NAME &&
+      f.parents?.includes(root.id),
+  );
+
   return {
     root: root.id,
     folders: folders as Record<Category, string>,
     indexFiles,
     settingsFile: settings?.id ?? null,
+    imagesFolder: imagesFolder?.id ?? null,
   };
 }
 
@@ -208,6 +219,9 @@ async function reconcileLayout(partial: Partial<StorageLayout>): Promise<Storage
     folders,
     indexFiles: partial.indexFiles ?? {},
     settingsFile: partial.settingsFile ?? null,
+    // images folder is created lazily on first upload — no need to
+    // provision it for users who never insert an image.
+    imagesFolder: partial.imagesFolder ?? null,
   };
 }
 
@@ -448,6 +462,79 @@ export async function removeDocument(
   await deleteFile(fileId);
   const updatedIndex = await removeIndexEntry(category, fileId, cachedIndex);
   return { updatedIndex };
+}
+
+// ── Image asset operations ──────────────────────────────────────────────────
+
+export interface DriveImageMeta {
+  id: string;
+  name: string;
+  mimeType: string;
+}
+
+async function ensureImagesFolderId(): Promise<string> {
+  const layout = await getLayout();
+  if (layout.imagesFolder) return layout.imagesFolder;
+  const created = await createFolder(IMAGES_FOLDER_NAME, layout.root);
+  patchLayout((prev) => ({ ...prev, imagesFolder: created }));
+  return created;
+}
+
+function inferImageExtension(mimeType: string): string {
+  switch (mimeType) {
+    case 'image/png':
+      return 'png';
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/gif':
+      return 'gif';
+    case 'image/webp':
+      return 'webp';
+    case 'image/svg+xml':
+      return 'svg';
+    default:
+      return 'bin';
+  }
+}
+
+export async function uploadImage(file: Blob, name: string): Promise<DriveImageMeta> {
+  const folderId = await ensureImagesFolderId();
+  const mimeType = file.type || 'application/octet-stream';
+  const finalName = name && name.trim().length > 0
+    ? name
+    : `image-${Date.now()}.${inferImageExtension(mimeType)}`;
+  const metadata = { name: finalName, parents: [folderId], mimeType };
+  const body = new FormData();
+  body.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  body.append('file', file);
+  const res = await driveRequest(
+    `${UPLOAD_API}/files?uploadType=multipart&fields=id,name,mimeType`,
+    { method: 'POST', body },
+  );
+  const data = (await res.json()) as { id: string; name: string; mimeType: string };
+  return { id: data.id, name: data.name, mimeType: data.mimeType };
+}
+
+export async function listImages(): Promise<DriveImageMeta[]> {
+  const folderId = await ensureImagesFolderId();
+  const params = new URLSearchParams({
+    q: `'${folderId}' in parents and mimeType contains 'image/' and trashed=false`,
+    fields: 'files(id,name,mimeType)',
+    orderBy: 'name',
+    pageSize: '1000',
+  });
+  const res = await driveRequest(`${API}/files?${params}`);
+  const data = (await res.json()) as { files?: DriveImageMeta[] };
+  return data.files ?? [];
+}
+
+export async function fetchImageBytes(
+  fileId: string,
+): Promise<{ bytes: Uint8Array; mimeType: string }> {
+  const res = await driveRequest(`${API}/files/${fileId}?alt=media`);
+  const mimeType = res.headers.get('Content-Type') ?? 'application/octet-stream';
+  const buf = await res.arrayBuffer();
+  return { bytes: new Uint8Array(buf), mimeType };
 }
 
 export { DriveError };

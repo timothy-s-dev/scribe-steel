@@ -4,7 +4,7 @@ import { CompileFormatEnum } from '@myriaddreamin/typst.ts/compiler';
 
 export interface VirtualFile {
   path: string;
-  content: string;
+  content: string | Uint8Array;
 }
 
 export interface TypstDiagnostic {
@@ -74,7 +74,13 @@ let mainCounter = 0;
 
 async function ensureFiles(files: VirtualFile[]) {
   for (const file of files) {
-    await $typst.addSource(file.path, file.content);
+    if (typeof file.content === 'string') {
+      await $typst.addSource(file.path, file.content);
+    } else {
+      // mapShadow accepts arbitrary bytes; used for images and other
+      // binary assets the user references via #image("...").
+      await $typst.mapShadow(file.path, file.content);
+    }
   }
 }
 

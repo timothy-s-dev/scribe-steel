@@ -14,7 +14,7 @@ export type { TypstDiagnostic };
 
 export interface VirtualFile {
   path: string;
-  content: string;
+  content: string | Uint8Array;
 }
 
 export interface SvgCompileResult {
