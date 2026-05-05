@@ -3,6 +3,7 @@ import { execSync } from 'node:child_process'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import wasm from 'vite-plugin-wasm'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 type BuildInfo = {
@@ -93,6 +94,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      // codemirror-lang-typst uses an ESM Wasm import; vite-plugin-wasm
+      // handles the integration proposal Vite doesn't natively support yet.
+      wasm(),
       sentryVitePlugin({
         org: sentryOrg,
         project: sentryProject,

@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from '@uiw/react-codemirror';
-import { markdown } from '@codemirror/lang-markdown';
 import { EditorView, Decoration, type DecorationSet } from '@codemirror/view';
 import {
   EditorState,
@@ -9,11 +8,14 @@ import {
   StateField,
   type Transaction,
 } from '@codemirror/state';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
+import { tags as t } from '@lezer/highlight';
 import { linter, lintGutter, forceLinting, type Diagnostic } from '@codemirror/lint';
 import { toast } from 'sonner';
 import type { EditorDiagnostic } from '@/hooks/useTypstCompiler';
 import { TypstEditorToolbar } from './TypstEditorToolbar';
 import { uploadImage } from '@/services/google-drive';
+import { typstLanguage } from '@/lib/editor/typst-language';
 
 const editorTheme = EditorView.theme(
   {
@@ -64,10 +66,62 @@ const externalDiagnosticsField = StateField.define<readonly Diagnostic[]>({
   },
 });
 
-// Markdown highlighting is a reasonable approximation for Typst; real Typst
-// language support is a separate concern.
+// `typstLanguage()` wraps codemirror-lang-typst — see that file for why we
+// don't import its `typst()` factory directly. Highlighting comes from our
+// own dark-theme HighlightStyle below; the package's bundled light-theme
+// style is bypassed entirely (we don't include `syntaxHighlighting(...)`
+// for it, since we built `typstLanguage` from primitives).
+const darkSyntaxHighlight = HighlightStyle.define([
+  { tag: t.heading, color: '#79c0ff', fontWeight: 'bold' },
+  { tag: t.strong, color: '#ffa657', fontWeight: 'bold' },
+  { tag: t.emphasis, color: '#e2e2e6', fontStyle: 'italic' },
+  { tag: t.link, color: '#79c0ff', textDecoration: 'underline' },
+  { tag: t.list, color: '#79c0ff' },
+  { tag: t.quote, color: '#a5d6ff' },
+  { tag: t.monospace, color: '#a5d6ff' },
+  { tag: t.escape, color: '#d2a8ff' },
+
+  { tag: t.comment, color: '#6e7681', fontStyle: 'italic' },
+
+  { tag: t.string, color: '#a5d6ff' },
+  { tag: t.literal, color: '#79c0ff' },
+
+  // Keywords and operators — keep them hot enough to read against the gray
+  // surface but not overpowering.
+  { tag: t.controlKeyword, color: '#ff7b72' },
+  { tag: t.moduleKeyword, color: '#ff7b72' },
+  { tag: t.operatorKeyword, color: '#ff7b72' },
+  { tag: t.definitionKeyword, color: '#ff7b72' },
+  { tag: t.definitionOperator, color: '#ff7b72' },
+  { tag: t.arithmeticOperator, color: '#ff7b72' },
+  { tag: t.typeOperator, color: '#ff7b72' },
+  { tag: t.updateOperator, color: '#ff7b72' },
+  { tag: t.compareOperator, color: '#ff7b72' },
+  { tag: t.controlOperator, color: '#ff7b72' },
+
+  { tag: t.variableName, color: '#c9d1d9' },
+  { tag: t.name, color: '#c9d1d9' },
+  { tag: t.labelName, color: '#ffa657' },
+  { tag: t.annotation, color: '#d2a8ff' },
+  { tag: t.processingInstruction, color: '#d2a8ff' },
+  { tag: t.documentMeta, color: '#d2a8ff' },
+
+  // The package's defaults paint these "blue" / "hotpink" / "red" — far too
+  // dark on our background. Pull them up to near-text brightness so braces
+  // and brackets read clearly without competing with content.
+  { tag: t.brace, color: '#e2e2e6' },
+  { tag: t.bracket, color: '#e2e2e6' },
+  { tag: t.paren, color: '#e2e2e6' },
+  { tag: t.separator, color: '#8b949e' },
+  { tag: t.punctuation, color: '#8b949e' },
+  { tag: t.contentSeparator, color: '#8b949e' },
+
+  { tag: t.invalid, color: '#f85149', textDecoration: 'underline' },
+]);
+
 const baseExtensions = [
-  markdown(),
+  typstLanguage(),
+  syntaxHighlighting(darkSyntaxHighlight),
   editorTheme,
   EditorView.lineWrapping,
   externalDiagnosticsField,
